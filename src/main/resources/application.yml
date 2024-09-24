@@ -8,6 +8,12 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+  use-fqn: true
+
 ---
 
 # LOCAL
