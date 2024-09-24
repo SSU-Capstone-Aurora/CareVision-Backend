@@ -14,7 +14,7 @@ springdoc:
   use-fqn: true
 
 ---
-
+#LOCAL
 spring:
   config:
     activate:
@@ -35,7 +35,7 @@ spring:
         format_sql: true
 
 ---
-
+#DEV
 spring:
   config:
     activate:
