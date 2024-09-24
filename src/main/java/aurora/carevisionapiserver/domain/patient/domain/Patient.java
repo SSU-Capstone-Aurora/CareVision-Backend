@@ -37,7 +37,7 @@ public class Patient extends BaseEntity {
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nurse_id", nullable = false)
+    @JoinColumn(name = "nurse_id")
     private Nurse nurse;
 
     @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
