@@ -9,5 +9,4 @@ public class CarevisionApiServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(CarevisionApiServerApplication.class, args);
     }
-
 }

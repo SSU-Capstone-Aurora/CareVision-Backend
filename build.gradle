@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.diffplug.spotless' version '6.23.3'
 }
 
 group = 'aurora'
@@ -38,4 +39,42 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.register('updateGitHooks', Copy) {
+    from new File(rootProject.rootDir, '.script/pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        Runtime.getRuntime().exec("cmd /c chmod -R +x .git/hooks/")
+    } else {
+        Runtime.getRuntime().exec("chmod -R +x .git/hooks/")
+    }
+}
+tasks.named('compileJava') {
+    dependsOn 'spotlessApply'
+    dependsOn 'updateGitHooks'
+}
+
+def generated = 'src/main/generated'
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+clean {
+    delete file(generated)
+}
+
+spotless {
+    java {
+        //사용하지 않는 import 제거
+        removeUnusedImports()
+        // 공백 제거
+        trimTrailingWhitespace()
+        // 끝부분 NewLine 처리
+        endWithNewline()
+        // Google Java 포맷 적용 -> 탭은 4개의 공백
+        googleJavaFormat().aosp()
+        // import 정렬
+        importOrder('java', 'javax', 'jakarta', 'org', 'com')
+    }
 }
