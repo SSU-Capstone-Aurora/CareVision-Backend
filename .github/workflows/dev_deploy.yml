@@ -27,15 +27,12 @@ jobs:
           distribution: 'adopt'
 
       - name: Set yml file
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ./src/main/resources/application.yml
-        env:
-          spring.datasource.url: ${{ secrets.DB_URL }}
-          spring.datasource.username: ${{ secrets.DB_USER }}
-          spring.datasource.password: ${{ secrets.DB_PASSWORD }}
-          cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          sed -i 's|DB_URL_PLACEHOLDER|${{ secrets.DB_URL }}|g' ./src/main/resources/application.yml
+          sed -i 's|DB_USER_PLACEHOLDER|${{ secrets.DB_USER }}|g' ./src/main/resources/application.yml
+          sed -i 's|DB_PASSWORD_PLACEHOLDER|${{ secrets.DB_PASSWORD }}|g' ./src/main/resources/application.yml
+          sed -i 's|AWS_ACCESS_KEY_ID_PLACEHOLDER|${{ secrets.AWS_ACCESS_KEY_ID }}|g' ./src/main/resources/application.yml
+          sed -i 's|AWS_SECRET_ACCESS_KEY_PLACEHOLDER|${{ secrets.AWS_SECRET_ACCESS_KEY }}|g' ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
