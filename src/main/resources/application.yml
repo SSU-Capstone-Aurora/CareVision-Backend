@@ -1,9 +1,8 @@
-#
 spring:
   application:
     name: CareVision
   profiles:
-    active: local
+    active: dev
   servlet:
     multipart:
       max-file-size: 100MB
@@ -16,7 +15,6 @@ springdoc:
 
 ---
 
-# LOCAL
 spring:
   config:
     activate:
@@ -37,7 +35,7 @@ spring:
         format_sql: true
 
 ---
-# DEV
+
 spring:
   config:
     activate:
