@@ -31,8 +31,6 @@ jobs:
           sed -i 's|DB_URL_PLACEHOLDER|${{ secrets.DB_URL }}|g' ./src/main/resources/application.yml
           sed -i 's|DB_USER_PLACEHOLDER|${{ secrets.DB_USER }}|g' ./src/main/resources/application.yml
           sed -i 's|DB_PASSWORD_PLACEHOLDER|${{ secrets.DB_PASSWORD }}|g' ./src/main/resources/application.yml
-          sed -i 's|AWS_ACCESS_KEY_ID_PLACEHOLDER|${{ secrets.AWS_ACCESS_KEY_ID }}|g' ./src/main/resources/application.yml
-          sed -i 's|AWS_SECRET_ACCESS_KEY_PLACEHOLDER|${{ secrets.AWS_SECRET_ACCESS_KEY }}|g' ./src/main/resources/application.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
