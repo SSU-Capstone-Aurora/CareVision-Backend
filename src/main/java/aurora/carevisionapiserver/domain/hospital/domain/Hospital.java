@@ -22,9 +22,10 @@ public class Hospital extends BaseEntity {
     @Column(name = "hospital_id")
     private Long id;
 
-    @Column private String name;
+    private String name;
 
-    @Column private Department department;
+    @Enumerated(EnumType.STRING)
+    private Department department;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Admin> admins;

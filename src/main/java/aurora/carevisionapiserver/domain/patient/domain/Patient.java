@@ -29,9 +29,9 @@ public class Patient extends BaseEntity {
     @Column(name = "patient_id")
     private Long id;
 
-    @Column private String name;
+    private String name;
 
-    @Column private String bed;
+    private String bed;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

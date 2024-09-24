@@ -26,9 +26,9 @@ public class Video extends BaseEntity {
     @Column(name = "video_id")
     private Long id;
 
-    @Column private String name;
+    private String name;
 
-    @Column private String link;
+    private String link;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

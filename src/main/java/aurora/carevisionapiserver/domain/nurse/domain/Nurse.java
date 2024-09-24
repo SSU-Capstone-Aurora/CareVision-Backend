@@ -28,11 +28,11 @@ public class Nurse extends BaseEntity {
     @Column(name = "nurse_id")
     private Long id;
 
-    @Column private String name;
+    private String name;
 
-    @Column private String password;
+    private String password;
 
-    @Column private LocalDateTime registeredAt;
+    private LocalDateTime registeredAt;
 
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Patient> patients;
