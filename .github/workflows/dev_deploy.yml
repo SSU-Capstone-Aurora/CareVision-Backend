@@ -34,8 +34,6 @@ jobs:
           spring.datasource.url: ${{ secrets.DB_URL }}
           spring.datasource.username: ${{ secrets.DB_USER }}
           spring.datasource.password: ${{ secrets.DB_PASSWORD }}
-          cloud.aws.credentials.access-key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          cloud.aws.credentials.secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -58,12 +56,6 @@ jobs:
 
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
-
-      - name: Generate deployment package
-        run: |
-          mkdir -p deploy
-          cp build/libs/*SNAPSHOT.jar deploy/application.jar
-          cd deploy && zip -r deploy.zip .
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
