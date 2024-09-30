@@ -29,6 +29,6 @@ sudo service nginx reload
 
 # 이전 컨테이너 종료
 echo "> Stopping current container: ${CURRENT_CONTAINER}"
-docker-compose -f ../../docker-compose.yml stop ${CURRENT_CONTAINER}
+docker-compose -f /home/ec2-user/docker-compose.yml stop ${CURRENT_CONTAINER}
 
 echo "> Deployment to ${TARGET_PORT} complete"
