@@ -20,16 +20,6 @@ else
   exit 1
 fi
 
-# Change proxying port into target port
-echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | tee /home/ec2-user/service_url.inc
-
-echo "> Now Nginx proxies to ${TARGET_PORT}."
-
-# Reload nginx
-sudo service nginx reload
-
-echo "> Nginx reloaded."
-
 # nginx를 통한 포트 전환
 echo "> Switching nginx to point to ${TARGET_CONTAINER}"
 echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | tee /home/ec2-user/service_url.inc
