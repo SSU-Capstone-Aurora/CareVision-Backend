@@ -7,19 +7,32 @@ echo "> Current port of running WAS is ${CURRENT_PORT}."
 
 if [ ${CURRENT_PORT} -eq 8081 ]; then
   TARGET_PORT=8082
+  TARGET_CONTAINER="carevision-green"
+  CURRENT_CONTAINER="carevision-blue"
 elif [ ${CURRENT_PORT} -eq 8082 ]; then
   TARGET_PORT=8081
+  TARGET_CONTAINER="carevision-blue"
+  CURRENT_CONTAINER="carevision-green"
 else
   echo "> No WAS is connected to nginx"
 fi
 
-TARGET_PID=$(lsof -Fp -i TCP:${TARGET_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
+# 도커 이미지 빌드
+echo "> Building Docker images..."
+docker-compose -f ../docker-compose.yml build
 
-if [ ! -z ${TARGET_PID} ]; then
-  echo "> Kill WAS running at ${TARGET_PORT}."
-  sudo kill ${TARGET_PID}
-fi
+echo "> Starting new container: ${TARGET_CONTAINER} on port ${TARGET_PORT}"
+docker-compose -f ../docker-compose.yml up -d ${TARGET_CONTAINER}
 
-nohup java -jar -Dserver.port=${TARGET_PORT} /home/ec2-user/carevision/build/libs/* > /home/ec2-user/nohup.out 2>&1 &
-echo "> Now new WAS runs at ${TARGET_PORT}."
-exit 0
+# nginx를 통한 포트 전환
+echo "> Switching nginx to point to ${TARGET_CONTAINER}"
+echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/conf.d/service_url.inc
+
+echo "> Reloading nginx"
+sudo service nginx reload
+
+# 이전 컨테이너 종료
+echo "> Stopping current container: ${CURRENT_CONTAINER}"
+docker-compose -f ../docker-compose.yml stop ${CURRENT_CONTAINER}
+
+echo "> Deployment to ${TARGET_PORT} complete"
