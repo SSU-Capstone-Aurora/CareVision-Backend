@@ -23,7 +23,7 @@ import aurora.carevisionapiserver.domain.camera.service.Impl.CameraServiceImpl;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 @ExtendWith(MockitoExtension.class)
-public class CameraServiceTest {
+class CameraServiceTest {
     @Mock CameraRepository cameraRepository;
     CameraService cameraService;
 
