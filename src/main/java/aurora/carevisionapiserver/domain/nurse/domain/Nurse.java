@@ -34,6 +34,8 @@ public class Nurse extends BaseEntity {
 
     private LocalDateTime registeredAt;
 
+    private boolean isActivated;
+
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Patient> patients;
 

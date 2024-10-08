@@ -19,8 +19,6 @@ public class Admin extends BaseEntity {
     @Column(name = "admin_id")
     private Long id;
 
-    private String name;
-
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
