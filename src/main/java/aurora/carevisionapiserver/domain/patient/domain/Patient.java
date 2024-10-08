@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -31,8 +32,6 @@ public class Patient extends BaseEntity {
 
     private String name;
 
-    private String bed;
-
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -42,6 +41,10 @@ public class Patient extends BaseEntity {
 
     @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private Camera camera;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bed_id")
+    private Bed bed;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Video> videos;
