@@ -15,6 +15,16 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final String[] allowedUrls = {
+        "/api/login",
+        "/health",
+        "/error",
+        "/swagger-ui/**",
+        "/swagger-resources/**",
+        "/v3/api-docs/**",
+        "/api/admin/cameras"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -27,6 +37,14 @@ public class SecurityConfig {
 
         http.headers(
                 headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
+        http.authorizeHttpRequests(
+                (authorize) ->
+                        authorize
+                                .requestMatchers(allowedUrls)
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated());
 
         return http.build();
     }
