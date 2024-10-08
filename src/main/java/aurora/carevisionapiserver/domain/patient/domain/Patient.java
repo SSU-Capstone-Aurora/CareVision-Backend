@@ -14,6 +14,7 @@ import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,10 +43,19 @@ public class Patient extends BaseEntity {
     @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private Camera camera;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bed_id")
+    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private Bed bed;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Video> videos;
+
+    @Builder
+    public Patient(Long id, String name, Nurse nurse, Camera camera, Bed bed, List<Video> videos) {
+        this.id = id;
+        this.name = name;
+        this.nurse = nurse;
+        this.camera = camera;
+        this.bed = bed;
+        this.videos = videos;
+    }
 }
