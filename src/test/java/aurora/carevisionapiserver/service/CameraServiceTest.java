@@ -68,7 +68,7 @@ class CameraServiceTest {
         Camera camera1 = createCamera();
         Camera camera2 = createAnotherCamera();
 
-        when(cameraRepository.SortByBedInfo()).thenReturn(Arrays.asList(camera2, camera1));
+        when(cameraRepository.sortByBedInfo()).thenReturn(Arrays.asList(camera2, camera1));
 
         List<Camera> cameras = cameraService.getCameras();
 

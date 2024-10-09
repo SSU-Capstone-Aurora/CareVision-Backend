@@ -15,6 +15,6 @@ public class CameraServiceImpl implements CameraService {
     private final CameraRepository cameraRepository;
 
     public List<Camera> getCameras() {
-        return cameraRepository.SortByBedInfo();
+        return cameraRepository.sortByBedInfo();
     }
 }
