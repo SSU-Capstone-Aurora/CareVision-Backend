@@ -12,3 +12,6 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
   use-fqn: true
+
+openapi:
+  secretkey: ${OPENAPI_SECRET_KEY}
