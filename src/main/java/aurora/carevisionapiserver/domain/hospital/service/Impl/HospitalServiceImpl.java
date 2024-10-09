@@ -35,7 +35,12 @@ public class HospitalServiceImpl implements HospitalService {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(hospitalInfo.toString());
 
-        if (rootNode.path("response").path("header").path("body").path("totalCount").asInt() == 0) {
+        if (rootNode.path("response")
+                .path("header")
+                .path("body")
+                .path("totalCount")
+                .toString()
+                .equals("0")) {
             throw new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND);
         }
 
