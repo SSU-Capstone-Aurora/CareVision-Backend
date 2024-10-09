@@ -17,7 +17,7 @@ public class CameraRepositoryCustomImpl implements CameraRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Camera> SortByBedInfo() {
+    public List<Camera> sortByBedInfo() {
         QBed bed = QBed.bed;
         QCamera camera = QCamera.camera;
         return queryFactory
