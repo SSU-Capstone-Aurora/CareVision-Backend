@@ -75,13 +75,13 @@ public class HospitalServiceImpl implements HospitalService {
         return departments;
     }
 
-    private void checkTotalCount(JsonNode rootNode) {
+    public void checkTotalCount(JsonNode rootNode) {
         if (rootNode.path("response").path("body").path("totalCount").asInt() == 0) {
             throw new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND);
         }
     }
 
-    private JsonNode getItemsNode(JsonNode rootNode) {
+    public JsonNode getItemsNode(JsonNode rootNode) {
         return rootNode.path("response").path("body").path("items").path("item");
     }
 }
