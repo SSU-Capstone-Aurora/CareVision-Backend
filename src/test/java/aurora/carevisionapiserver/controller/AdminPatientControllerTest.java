@@ -58,8 +58,8 @@ class AdminPatientControllerTest {
         given(patientService.searchPatient(patientName)).willReturn(patients);
 
         mockMvc.perform(
-                        get("/api/admin/patients")
-                                .param("patientName", patientName)
+                        get("/api/admin/patients/search")
+                                .param("search", patientName)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.patientList").exists())
