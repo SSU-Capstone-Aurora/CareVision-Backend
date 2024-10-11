@@ -7,8 +7,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,6 +30,10 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     public List<Nurse> getNurseList() {
-        return nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
+        List<Nurse> nurses = nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
+        if (nurses.isEmpty()) {
+            throw new NurseException(ErrorStatus.NURSE_NOT_FOUND);
+        }
+        return nurses;
     }
 }
