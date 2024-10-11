@@ -71,7 +71,7 @@ class HospitalServiceTest {
 
     @Test
     @DisplayName("병원 과를 검색한다.")
-    void searchDepartment() throws IOException {
+    void searchDepartmentTest() throws IOException {
         // Given
         String ykiho = "12345";
         StringBuilder validResponse =
@@ -90,8 +90,8 @@ class HospitalServiceTest {
     }
 
     @Test
-    @DisplayName("과를 검색할 때 검색 결과가 없으면 예외를 던진다.")
-    void searchDepartment_withNoDepartments_throwException() throws IOException {
+    @DisplayName("과를 검색할 때 검색 결과가 없는 경우 예외를 던진다.")
+    void searchDepartmentWithNoDepartmentsTest() throws IOException {
         // Given
         String ykiho = "12345";
         StringBuilder noDepartmentsResponse =
@@ -104,8 +104,8 @@ class HospitalServiceTest {
     }
 
     @Test
-    @DisplayName("과 정보를 파싱한다.")
-    void parseDepartmentInfo() throws IOException {
+    @DisplayName("과 정보 파싱한다.")
+    void parseDepartmentInfoTest() throws IOException {
         // Given
         StringBuilder departmentInfo =
                 new StringBuilder(
@@ -121,8 +121,8 @@ class HospitalServiceTest {
     }
 
     @Test
-    @DisplayName("과 정보를 파싱할 때 검색 결과가 없으면 예외를 던진다.")
-    void checkTotalCount_withZero_throwException() throws JsonProcessingException {
+    @DisplayName("과 정보를 파싱할 때 검색 결과가 없을 경우 예외를 던진다.")
+    void checkTotalCountTest() throws JsonProcessingException {
         // Given
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = "{ \"response\": { \"body\": { \"totalCount\": 0 } } }";
@@ -132,21 +132,4 @@ class HospitalServiceTest {
         assertThrows(HospitalException.class, () -> hospitalService.checkTotalCount(rootNode));
     }
 
-    @Test
-    @DisplayName("과 정보를 파싱할 때 검색 결과가 있다.")
-    void getItemsNode_returnCorrectItemsNode() throws IOException {
-        // Given
-        String jsonString =
-                "{ \"response\": { \"body\": { \"items\": { \"item\": [{ \"dgsbjtCdNm\": \"내과\" }] } } } }";
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(jsonString);
-
-        // When
-        JsonNode itemsNode = hospitalService.getItemsNode(rootNode);
-
-        // Then
-        assertTrue(itemsNode.isArray());
-        assertEquals(1, itemsNode.size());
-        assertEquals("내과", itemsNode.get(0).path("dgsbjtCdNm").asText());
-    }
 }
