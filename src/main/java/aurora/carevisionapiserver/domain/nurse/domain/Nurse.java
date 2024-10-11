@@ -36,6 +36,9 @@ public class Nurse extends BaseEntity {
 
     private boolean isActivated;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Patient> patients;
 
