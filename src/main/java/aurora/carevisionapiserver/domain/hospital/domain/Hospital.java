@@ -8,6 +8,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,11 @@ public class Hospital extends BaseEntity {
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Nurse> nurses;
+
+    @Builder
+    public Hospital(Long id, String name, Department department) {
+        this.id = id;
+        this.name = name;
+        this.department = department;
+    }
 }
