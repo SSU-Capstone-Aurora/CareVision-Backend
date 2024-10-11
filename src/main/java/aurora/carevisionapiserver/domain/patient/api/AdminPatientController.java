@@ -30,7 +30,7 @@ public class AdminPatientController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "PATIENT400", description = "NOT FOUND, 환자가 없습니다.")
     })
-    @GetMapping("")
+    @GetMapping("/search")
     public BaseResponse<SearchPatientDTOList> searchPatient(
             @RequestParam(name = "patientName") String patientName) {
         List<Patient> patients = patientService.searchPatient(patientName);
