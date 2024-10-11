@@ -33,6 +33,8 @@ public class Patient extends BaseEntity {
 
     private String name;
 
+    private String code;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
