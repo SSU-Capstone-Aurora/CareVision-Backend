@@ -2,8 +2,10 @@ package aurora.carevisionapiserver.domain.bed.domain;
 
 import jakarta.persistence.*;
 
+import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +23,22 @@ public class Bed extends BaseEntity {
     private Long inpatientWardNumber;
     private Long patientRoomNumber;
     private Long bedNumber;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+    @Builder
+    public Bed(
+            Long id,
+            Long inpatientWardNumber,
+            Long patientRoomNumber,
+            Long bedNumber,
+            Patient patient) {
+        this.id = id;
+        this.inpatientWardNumber = inpatientWardNumber;
+        this.patientRoomNumber = patientRoomNumber;
+        this.bedNumber = bedNumber;
+        this.patient = patient;
+    }
 }
