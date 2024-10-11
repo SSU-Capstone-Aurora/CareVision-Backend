@@ -65,8 +65,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                         .reduce((first, second) -> first + ", " + second)
                         .orElse("Validation error occurred");
 
-        return handleException(
-                e, ErrorStatus._BAD_REQUEST, errorMessage, HttpHeaders.EMPTY, request);
+        return handleExceptionInternalConstraint(
+                e, ErrorStatus.valueOf(errorMessage), HttpHeaders.EMPTY, request);
+    }
+
+    private ResponseEntity<Object> handleExceptionInternalConstraint(
+            Exception e, ErrorStatus errorCommonStatus, HttpHeaders headers, WebRequest request) {
+        BaseResponse<Object> body =
+                BaseResponse.onFailure(
+                        errorCommonStatus.getCode(), errorCommonStatus.getMessage(), null);
+        return super.handleExceptionInternal(
+                e, body, headers, errorCommonStatus.getHttpStatus(), request);
     }
 
     @ExceptionHandler(value = GeneralException.class)
