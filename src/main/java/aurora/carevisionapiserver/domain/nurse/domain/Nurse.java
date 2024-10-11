@@ -12,6 +12,7 @@ import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -45,4 +46,12 @@ public class Nurse extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
+
+    @Builder
+    public Nurse(Long id, String name, LocalDateTime registeredAt, Hospital hospital) {
+        this.id = id;
+        this.name = name;
+        this.registeredAt = registeredAt;
+        this.hospital = hospital;
+    }
 }
