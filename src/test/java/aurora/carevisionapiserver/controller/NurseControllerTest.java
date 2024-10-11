@@ -41,6 +41,7 @@ class NurseControllerTest {
         return Nurse.builder()
                 .id(1L)
                 .name("김간호사")
+                .username("nurse1")
                 .registeredAt(LocalDateTime.parse(dateTime, formatter))
                 .hospital(hospital)
                 .build();
