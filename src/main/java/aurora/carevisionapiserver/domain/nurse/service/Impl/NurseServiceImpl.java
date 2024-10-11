@@ -16,7 +16,6 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     public boolean existsByNurseId(Long nurseId) {
-        System.out.println("nurseId:  " + nurseId);
         return nurseRepository.existsById(nurseId);
     }
 
