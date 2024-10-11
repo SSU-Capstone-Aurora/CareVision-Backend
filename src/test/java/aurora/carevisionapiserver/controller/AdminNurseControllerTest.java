@@ -77,4 +77,24 @@ public class AdminNurseControllerTest {
                 .andExpect(jsonPath("$.result.nurseList[0].id").value("kim1"))
                 .andExpect(jsonPath("$.result.count").value(2));
     }
+
+    @Test
+    @WithMockUser
+    @DisplayName("간호사 검색에 성공한다.")
+    void searchNurseSuccess() throws Exception {
+        Nurse nurse = createNurse();
+        String nurseName = nurse.getName();
+
+        given(nurseService.searchNurse(nurseName)).willReturn(List.of(nurse));
+
+        mockMvc.perform(
+                        get("/api/admin/nurses/search")
+                                .param("search", nurseName)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
+                .andExpect(jsonPath("$.result.nurseList[0].name").value("김간호사"))
+                .andExpect(jsonPath("$.result.nurseList[0].id").value("kim1"))
+                .andExpect(jsonPath("$.result.count").value(1));
+    }
 }
