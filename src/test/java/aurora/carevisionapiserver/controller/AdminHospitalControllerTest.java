@@ -31,7 +31,7 @@ public class AdminHospitalControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("병원 검색 성공합니다.")
+    @DisplayName("병원 검색 성공한다.")
     public void testSearchHospital_Success() throws Exception {
         String hospitalName = "오로라";
         SearchHospitalDTO hospitalDTO =
@@ -58,7 +58,7 @@ public class AdminHospitalControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("병원 검색 실패합니다.")
+    @DisplayName("병원 검색 실패한다.")
     public void testSearchHospital_NotFound() throws Exception {
         String hospitalName = "Nonexistent Hospital";
 
