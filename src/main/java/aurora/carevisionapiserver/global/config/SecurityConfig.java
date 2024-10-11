@@ -22,7 +22,8 @@ public class SecurityConfig {
         "/swagger-ui/**",
         "/swagger-resources/**",
         "/v3/api-docs/**",
-        "/api/admin/cameras"
+        "/api/admin/cameras",
+        "/api/admin/hospitals",
     };
 
     @Bean
