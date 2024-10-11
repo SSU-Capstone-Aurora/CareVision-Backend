@@ -36,4 +36,13 @@ public class NurseServiceImpl implements NurseService {
         }
         return nurses;
     }
+
+    @Override
+    public List<Nurse> searchNurse(String nurseName) {
+        List<Nurse> nurses = nurseRepository.searchByName(nurseName);
+        if (nurses.isEmpty()) {
+            throw new NurseException(ErrorStatus.NURSE_NOT_FOUND);
+        }
+        return nurses;
+    }
 }
