@@ -12,4 +12,8 @@ public interface HospitalService {
 
     List<SearchHospitalDTO> parseHospitalInfo(StringBuilder hospitalInfo)
             throws JsonProcessingException;
+
+    List<String> searchDepartment(String ykiho) throws IOException;
+
+    List<String> parseDepartmentInfo(StringBuilder departmentInfo) throws IOException;
 }

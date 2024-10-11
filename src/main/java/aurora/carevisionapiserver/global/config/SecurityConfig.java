@@ -24,6 +24,7 @@ public class SecurityConfig {
         "/v3/api-docs/**",
         "/api/admin/cameras",
         "/api/admin/hospitals",
+        "/api/admin/departments",
     };
 
     @Bean

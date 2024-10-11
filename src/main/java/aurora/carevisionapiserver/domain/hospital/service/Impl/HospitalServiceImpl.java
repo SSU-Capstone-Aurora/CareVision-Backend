@@ -35,16 +35,9 @@ public class HospitalServiceImpl implements HospitalService {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(hospitalInfo.toString());
 
-        if (rootNode.path("response")
-                .path("header")
-                .path("body")
-                .path("totalCount")
-                .toString()
-                .equals("0")) {
-            throw new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND);
-        }
+        checkTotalCount(rootNode);
 
-        JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
+        JsonNode itemsNode = getItemsNode(rootNode);
 
         List<SearchHospitalDTO> hospitalDTOList = new ArrayList<>();
         for (JsonNode itemNode : itemsNode) {
@@ -56,5 +49,39 @@ public class HospitalServiceImpl implements HospitalService {
             hospitalDTOList.add(hospitalDTO);
         }
         return hospitalDTOList;
+    }
+
+    @Override
+    public List<String> searchDepartment(String ykiho) throws IOException {
+        StringBuilder departmentInfo = explorer.callDepartmentAPI(ykiho);
+        return parseDepartmentInfo(departmentInfo);
+    }
+
+    @Override
+    public List<String> parseDepartmentInfo(StringBuilder departmentInfo) throws IOException {
+        // JSON 파싱
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(departmentInfo.toString());
+
+        checkTotalCount(rootNode);
+
+        JsonNode itemsNode = getItemsNode(rootNode);
+
+        List<String> departments = new ArrayList<>();
+        for (JsonNode itemNode : itemsNode) {
+            String department = itemNode.path("dgsbjtCdNm").asText();
+            departments.add(department);
+        }
+        return departments;
+    }
+
+    private void checkTotalCount(JsonNode rootNode) {
+        if (rootNode.path("response").path("body").path("totalCount").asInt() == 0) {
+            throw new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND);
+        }
+    }
+
+    private JsonNode getItemsNode(JsonNode rootNode) {
+        return rootNode.path("response").path("body").path("items").path("item");
     }
 }
