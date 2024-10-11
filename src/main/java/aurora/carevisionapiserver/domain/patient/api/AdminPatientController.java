@@ -32,7 +32,7 @@ public class AdminPatientController {
     })
     @GetMapping("/search")
     public BaseResponse<SearchPatientDTOList> searchPatient(
-            @RequestParam(name = "patientName") String patientName) {
+            @RequestParam(name = "search") String patientName) {
         List<Patient> patients = patientService.searchPatient(patientName);
         return BaseResponse.onSuccess(PatientConverter.toSearchPatientDTOList(patients));
     }
