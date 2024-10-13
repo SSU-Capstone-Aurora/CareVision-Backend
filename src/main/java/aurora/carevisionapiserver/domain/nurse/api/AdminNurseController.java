@@ -28,7 +28,6 @@ public class AdminNurseController {
     @Operation(summary = "간호사 리스트 조회 API", description = "전체 간호사 리스트를 조회합니다 (등록 최신순)_숙희")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-        @ApiResponse(responseCode = "NURSE400", description = "NOT FOUND, 간호사를 찾을 수 없음")
     })
     @GetMapping("")
     public BaseResponse<NursePreviewDTOList> getNurseList() {

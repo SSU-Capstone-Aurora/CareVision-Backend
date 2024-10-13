@@ -30,11 +30,7 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     public List<Nurse> getNurseList() {
-        List<Nurse> nurses = nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
-        if (nurses.isEmpty()) {
-            throw new NurseException(ErrorStatus.NURSE_NOT_FOUND);
-        }
-        return nurses;
+        return nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
     }
 
     @Override

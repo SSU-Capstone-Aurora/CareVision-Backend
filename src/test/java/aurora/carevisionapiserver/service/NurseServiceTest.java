@@ -79,16 +79,6 @@ public class NurseServiceTest {
     }
 
     @Test
-    @DisplayName("간호사가 없는 경우 예외 처리한다.")
-    void getNurseListFail() {
-        // given
-        given(nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt")))
-                .willReturn(Collections.emptyList());
-        // when & then
-        assertThrows(NurseException.class, () -> nurseService.getNurseList());
-    }
-
-    @Test
     @DisplayName("간호사가 존재하는지 조회한다.")
     void existsNurseTest() {
         // given
