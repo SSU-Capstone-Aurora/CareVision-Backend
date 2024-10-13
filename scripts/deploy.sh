@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # 변수 설정
-COMPOSE_PATH="home/ec2-user/docker-compose.yml"
-NGINX_CONF_DIR="home/ec2-user/nginx"
+COMPOSE_PATH="/home/ec2-user/docker-compose.yml"
+NGINX_CONF_DIR="/home/ec2-user/nginx"
 DELAY=5
 NGINX_CONTAINER="nginx"
 
