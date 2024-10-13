@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class AdminHospitalControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("병원 검색 성공합니다.")
+    @DisplayName("병원 검색 성공한다.")
     public void testSearchHospital_Success() throws Exception {
         String hospitalName = "오로라";
         SearchHospitalDTO hospitalDTO =
@@ -57,7 +58,7 @@ public class AdminHospitalControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("병원 검색 실패합니다.")
+    @DisplayName("병원 검색 실패한다.")
     public void testSearchHospital_NotFound() throws Exception {
         String hospitalName = "Nonexistent Hospital";
 
@@ -67,6 +68,45 @@ public class AdminHospitalControllerTest {
         mockMvc.perform(
                         get("/api/admin/hospitals")
                                 .param("search", hospitalName)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("HOSPITAL400"));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("병원 과 검색에 성공한다.")
+    public void testSearchDepartment_Success() throws Exception {
+        String ykiho = "test-department";
+        List<String> departments = List.of("내과", "외과");
+
+        when(hospitalService.searchDepartment(ykiho)).thenReturn(departments);
+
+        mockMvc.perform(
+                        get("/api/admin/departments")
+                                .param("hospital", ykiho)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.result.departments[0]").value("내과"))
+                .andExpect(jsonPath("$.result.departments[1]").value("외과"))
+                .andExpect(jsonPath("$.result.totalCount").value(2));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("병원 과 검색에 실패한다.")
+    public void testSearchDepartment_NotFound() throws Exception {
+        String ykiho = "Nonexistent Hospital";
+
+        when(hospitalService.searchHospital(ykiho))
+                .thenThrow(new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND));
+
+        mockMvc.perform(
+                        get("/api/admin/departments")
+                                .param("hospital", ykiho)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.isSuccess").value(false))

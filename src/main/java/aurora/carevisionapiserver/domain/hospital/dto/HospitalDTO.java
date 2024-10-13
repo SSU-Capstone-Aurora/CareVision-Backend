@@ -20,4 +20,11 @@ public class HospitalDTO {
         private List<SearchHospitalDTO> hospitals;
         private Long totalCount;
     }
+
+    @Getter
+    @Builder
+    public static class SearchDepartmentDTO {
+        private List<String> departments;
+        private Long totalCount;
+    }
 }

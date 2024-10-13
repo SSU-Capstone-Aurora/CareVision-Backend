@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchDepartmentDTO;
 import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
 import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTOList;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
@@ -38,5 +39,18 @@ public class AdminHospitalController {
         List<SearchHospitalDTO> hospitalDTOList = hospitalService.searchHospital(hospitalName);
         return BaseResponse.of(
                 SuccessStatus._OK, HospitalConverter.toSearchHospitalDTOList(hospitalDTOList));
+    }
+
+    @Operation(summary = "병원 과 조회 API", description = "입력받은 병원의 요양번호 값을 기준으로 병원 과를 조회합니다_숙희")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
+    })
+    @GetMapping("/departments")
+    public BaseResponse<SearchDepartmentDTO> searchDepartment(
+            @RequestParam(name = "hospital") String ykiho) throws IOException {
+        List<String> departments = hospitalService.searchDepartment(ykiho);
+        return BaseResponse.of(
+                SuccessStatus._OK, HospitalConverter.toSearchDepartmentDTO(departments));
     }
 }
