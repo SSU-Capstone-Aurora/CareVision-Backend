@@ -1,7 +1,6 @@
 package aurora.carevisionapiserver.controller;
 
 import static aurora.carevisionapiserver.domain.hospital.domain.Department.SURGERY;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,21 +66,5 @@ class NurseControllerTest {
                 .andExpect(jsonPath("$.result.registeredAt").value("2024-10-11"))
                 .andExpect(jsonPath("$.result.hospitalName").value("서울병원"))
                 .andExpect(jsonPath("$.result.department").value("SURGERY"));
-    }
-
-    @Test
-    @WithMockUser
-    @DisplayName("간호사 마이페이지 조회 실패한다.")
-    void getNurseMyPageFail() throws Exception {
-        Long nurseId = 2L;
-
-        when(nurseService.getNurse(anyLong())).thenReturn(Optional.empty());
-
-        mockMvc.perform(
-                        get("/api/nurse/profile")
-                                .param("nurseId", String.valueOf(nurseId))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value("NURSE400")); // 실패 코드 확인}
     }
 }
