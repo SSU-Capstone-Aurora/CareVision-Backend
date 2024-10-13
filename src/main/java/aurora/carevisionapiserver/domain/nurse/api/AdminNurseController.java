@@ -38,7 +38,6 @@ public class AdminNurseController {
     @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-        @ApiResponse(responseCode = "NURSE400", description = "NOT FOUND, 간호사를 찾을 수 없음")
     })
     @GetMapping("/search")
     public BaseResponse<NursePreviewDTOList> searchNurse(
