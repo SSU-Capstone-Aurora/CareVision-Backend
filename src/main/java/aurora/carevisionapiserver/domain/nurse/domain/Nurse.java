@@ -31,6 +31,8 @@ public class Nurse extends BaseEntity {
 
     private String name;
 
+    private String username;
+
     private String password;
 
     private LocalDateTime registeredAt;
@@ -48,9 +50,11 @@ public class Nurse extends BaseEntity {
     private Hospital hospital;
 
     @Builder
-    public Nurse(Long id, String name, LocalDateTime registeredAt, Hospital hospital) {
+    public Nurse(
+            Long id, String name, String username, LocalDateTime registeredAt, Hospital hospital) {
         this.id = id;
         this.name = name;
+        this.username = username;
         this.registeredAt = registeredAt;
         this.hospital = hospital;
     }

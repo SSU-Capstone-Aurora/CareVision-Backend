@@ -1,7 +1,9 @@
 package aurora.carevisionapiserver.domain.nurse.service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -16,12 +18,16 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     public boolean existsByNurseId(Long nurseId) {
-        System.out.println("nurseId:  " + nurseId);
         return nurseRepository.existsById(nurseId);
     }
 
     @Override
     public Optional<Nurse> getNurse(Long nurseId) {
         return nurseRepository.findById(nurseId);
+    }
+
+    @Override
+    public List<Nurse> getNurseList() {
+        return nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
     }
 }
