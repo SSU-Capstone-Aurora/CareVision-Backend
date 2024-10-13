@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
@@ -31,6 +32,18 @@ public class AdminNurseController {
     @GetMapping("")
     public BaseResponse<NursePreviewDTOList> getNurseList() {
         List<Nurse> nurses = nurseService.getNurseList();
+        return BaseResponse.onSuccess(NurseConverter.toNursePreviewDTOList(nurses));
+    }
+
+    @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "NURSE400", description = "NOT FOUND, 간호사를 찾을 수 없음")
+    })
+    @GetMapping("/search")
+    public BaseResponse<NursePreviewDTOList> searchNurse(
+            @RequestParam(name = "search") String nurseName) {
+        List<Nurse> nurses = nurseService.searchNurse(nurseName);
         return BaseResponse.onSuccess(NurseConverter.toNursePreviewDTOList(nurses));
     }
 }

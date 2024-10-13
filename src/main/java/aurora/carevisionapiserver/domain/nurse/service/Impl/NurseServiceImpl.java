@@ -30,4 +30,13 @@ public class NurseServiceImpl implements NurseService {
     public List<Nurse> getNurseList() {
         return nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
     }
+
+    @Override
+    public List<Nurse> searchNurse(String nurseName) {
+        List<Nurse> nurses = nurseRepository.searchByName(nurseName);
+        if (nurses.isEmpty()) {
+            throw new NurseException(ErrorStatus.NURSE_NOT_FOUND);
+        }
+        return nurses;
+    }
 }

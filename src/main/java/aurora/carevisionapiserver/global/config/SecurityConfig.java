@@ -27,7 +27,8 @@ public class SecurityConfig {
         "/api/admin/departments",
         "/api/nurse/profile",
         "/api/admin/nurses",
-        "/api/admin/patients",
+        "/api/admin/patients/search",
+        "/api/admin/nurses/search",
     };
 
     @Bean

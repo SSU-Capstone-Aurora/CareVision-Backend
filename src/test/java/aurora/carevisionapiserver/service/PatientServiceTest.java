@@ -53,7 +53,7 @@ public class PatientServiceTest {
         // given
         String patientName = "test";
         List<Patient> patients = List.of(createPatient(), createOtherPatient());
-        given(patientRepository.searchPatient(patientName)).willReturn(patients);
+        given(patientRepository.searchByName(patientName)).willReturn(patients);
         // when
         List<Patient> result = patientService.searchPatient(patientName);
         // then
@@ -72,10 +72,9 @@ public class PatientServiceTest {
     @DisplayName("환자가 없는 경우 예외 처리한다.")
     void searchPatientFail() {
         // given
-        given(patientRepository.searchPatient("test")).willReturn(Collections.emptyList());
+        given(patientRepository.searchByName("test")).willReturn(Collections.emptyList());
+
         // when & then
-        assertThrows(
-                PatientException.class,
-                () -> patientRepository.searchPatient("Nonexistent Patient"));
+        assertThrows(PatientException.class, () -> patientService.searchPatient("test"));
     }
 }

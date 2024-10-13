@@ -103,4 +103,33 @@ public class NurseServiceTest {
         assertEquals(nurse.getId(), result.get().getId());
         assertEquals(nurse.getName(), result.get().getName());
     }
+
+    @Test
+    @DisplayName("간호사 검색에 성공한다.")
+    void searchNurseSuccess() {
+        // given
+        String nurseName = "test";
+        List<Nurse> nurses = List.of(createNurse(), createOtherNurse());
+        given(nurseRepository.searchByName(nurseName)).willReturn(nurses);
+
+        // when
+        List<Nurse> result = nurseService.searchNurse(nurseName);
+
+        // then
+        assertEquals(nurses.size(), result.size());
+        assertEquals(nurses.get(0).getName(), result.get(0).getName());
+        assertEquals(nurses.get(0).getId(), result.get(0).getId());
+        assertEquals(nurses.get(1).getName(), result.get(1).getName());
+        assertEquals(nurses.get(1).getId(), result.get(1).getId());
+    }
+
+    @Test
+    @DisplayName("간호사가 없는 경우 예외 처리한다.")
+    void searchNurseFail() {
+        // given
+        given(nurseRepository.searchByName("test")).willReturn(Collections.emptyList());
+
+        // when & then
+        assertThrows(NurseException.class, () -> nurseService.searchNurse("test"));
+    }
 }

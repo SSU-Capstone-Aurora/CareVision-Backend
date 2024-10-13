@@ -18,7 +18,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<Patient> searchPatient(String patientName) {
-        List<Patient> patients = patientRepository.searchPatient(patientName);
+        List<Patient> patients = patientRepository.searchByName(patientName);
         if (patients.size() == 0) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
         return patients;
     }
