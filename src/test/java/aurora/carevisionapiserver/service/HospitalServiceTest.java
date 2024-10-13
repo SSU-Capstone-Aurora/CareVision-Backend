@@ -131,5 +131,4 @@ class HospitalServiceTest {
         // When & Then
         assertThrows(HospitalException.class, () -> hospitalService.checkTotalCount(rootNode));
     }
-
 }

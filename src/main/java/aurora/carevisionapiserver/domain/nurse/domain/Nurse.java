@@ -12,6 +12,7 @@ import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,10 +37,21 @@ public class Nurse extends BaseEntity {
 
     private boolean isActivated;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Patient> patients;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
+
+    @Builder
+    public Nurse(Long id, String name, LocalDateTime registeredAt, Hospital hospital) {
+        this.id = id;
+        this.name = name;
+        this.registeredAt = registeredAt;
+        this.hospital = hospital;
+    }
 }
