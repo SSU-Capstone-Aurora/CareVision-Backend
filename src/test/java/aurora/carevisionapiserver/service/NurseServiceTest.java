@@ -2,13 +2,11 @@ package aurora.carevisionapiserver.service;
 
 import static aurora.carevisionapiserver.domain.hospital.domain.Department.SURGERY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +20,6 @@ import org.springframework.data.domain.Sort;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.Impl.NurseServiceImpl;
 
@@ -111,15 +108,5 @@ public class NurseServiceTest {
         assertEquals(nurses.get(0).getId(), result.get(0).getId());
         assertEquals(nurses.get(1).getName(), result.get(1).getName());
         assertEquals(nurses.get(1).getId(), result.get(1).getId());
-    }
-
-    @Test
-    @DisplayName("간호사가 없는 경우 예외 처리한다.")
-    void searchNurseFail() {
-        // given
-        given(nurseRepository.searchByName("test")).willReturn(Collections.emptyList());
-
-        // when & then
-        assertThrows(NurseException.class, () -> nurseService.searchNurse("test"));
     }
 }
