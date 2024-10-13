@@ -21,6 +21,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Nurse
     NURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "NURSE400", "간호사를 찾을 수 없습니다."),
+
+    // Patient
+    PATIENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PATIENT400", "환자를 찾을 수 없습니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;
