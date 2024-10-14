@@ -36,7 +36,7 @@ fi
 echo
 echo "-----------------------------"
 echo i"새로운 환경 이미지 빌드 중: $NEW_API_ENV (캐시 무시)"
-docker-compose -f "$COMPOSE_PATH" build --no-cache $NEW_API_ENV
+sudo docker-compose -f "$COMPOSE_PATH" build --no-cache $NEW_API_ENV
 echo "-----------------------------"
 echo
 
@@ -44,7 +44,7 @@ echo
 echo
 echo "-----------------------------"
 echo "새로운 환경 시작 중: $NEW_API_ENV"
-docker-compose -f "$COMPOSE_PATH" up  -d --no-deps $NEW_API_ENV
+sudo docker-compose -f "$COMPOSE_PATH" up  -d --no-deps $NEW_API_ENV
 echo "-----------------------------"
 echo
 
@@ -66,7 +66,7 @@ echo
 echo
 echo "-----------------------------"
 echo "Nginx 리로드 중..."
-docker-compose -f "$COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload
+sudo docker-compose -f "$COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload
 echo "-----------------------------"
 echo
 
@@ -74,8 +74,8 @@ echo
 echo
 echo "-----------------------------"
 echo "이전 환경 중지 및 제거 중: $CURRENT_API_ENV"
-docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_API_ENV"
-docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_API_ENV"
+sudo docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_API_ENV"
+sudo docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_API_ENV"
 echo "-----------------------------"
 echo
 
