@@ -1,11 +1,11 @@
 name: CareVision CI/CD
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
-    # types:
-      # - closed
+    types:
+      - closed
   workflow_dispatch:
 
 env:
