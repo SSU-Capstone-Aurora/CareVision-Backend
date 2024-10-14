@@ -8,18 +8,15 @@ NGINX_CONTAINER="nginx"
 
 # 현재 실행 중인 블루 컨테이너 확인
 BLUE_API_CONTAINER="$(docker ps --filter "name=carevision-blue" --filter "status=running" | grep -v "CONTAINER ID")"
-BLUE_AI_CONTAINER="$(docker ps --filter "name=carevision-ai-blue" --filter "status=running" | grep -v "CONTAINER ID")"
 
 # 컨테이너 환경 스위칭
-if [[ -n "$BLUE_API_CONTAINER" && -n "$BLUE_AI_CONTAINER" ]]; then
+if [[ -n "$BLUE_API_CONTAINER" ]]; then
     echo "-----------------------------"
     echo "전환: BLUE => GREEN"
     echo "-----------------------------"
 
     CURRENT_API_ENV='carevision-blue'
-    CURRENT_AI_ENV='carevision-ai-blue'
     NEW_API_ENV='carevision-green'
-    NEW_AI_ENV='carevision-ai-green'
 
     CURRENT_NGINX_CONF='carevision.blue.conf'
     NEW_NGINX_CONF='carevision.green.conf'
@@ -29,9 +26,7 @@ else
     echo "-----------------------------"
 
     CURRENT_API_ENV='carevision-green'
-    CURRENT_AI_ENV='carevision-ai-green'
     NEW_API_ENV='carevision-blue'
-    NEW_AI_ENV='carevision-ai-blue'
 
     CURRENT_NGINX_CONF='carevision.green.conf'
     NEW_NGINX_CONF='carevision.blue.conf'
@@ -40,17 +35,16 @@ fi
 # 새로운 이미지 빌드 (캐시 무시)
 echo
 echo "-----------------------------"
-echo "새로운 환경 이미지 빌드 중: $NEW_API_ENV & $NEW_AI_ENV (캐시 무시)"
-sudo docker-compose -f "$COMPOSE_PATH" build --no-cache $NEW_API_ENV $NEW_AI_ENV
+echo i"새로운 환경 이미지 빌드 중: $NEW_API_ENV (캐시 무시)"
+docker-compose -f "$COMPOSE_PATH" build --no-cache $NEW_API_ENV
 echo "-----------------------------"
 echo
 
 # 새로운 컨테이너 시작
 echo
 echo "-----------------------------"
-echo "새로운 환경 시작 중: $NEW_API_ENV & $NEW_AI_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" up -d --no-deps $NEW_API_ENV
-sudo docker-compose -f "$COMPOSE_PATH" up -d --no-deps $NEW_AI_ENV
+echo "새로운 환경 시작 중: $NEW_API_ENV"
+docker-compose -f "$COMPOSE_PATH" up  -d --no-deps $NEW_API_ENV
 echo "-----------------------------"
 echo
 
@@ -72,18 +66,16 @@ echo
 echo
 echo "-----------------------------"
 echo "Nginx 리로드 중..."
-sudo docker-compose -f "$COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload
+docker-compose -f "$COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload
 echo "-----------------------------"
 echo
 
 # 이전 환경 중지 및 제거
 echo
 echo "-----------------------------"
-echo "이전 환경 중지 및 제거 중: $CURRENT_API_ENV & $CURRENT_AI_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_API_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_AI_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_API_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_AI_ENV"
+echo "이전 환경 중지 및 제거 중: $CURRENT_API_ENV"
+docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_API_ENV"
+docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_API_ENV"
 echo "-----------------------------"
 echo
 
