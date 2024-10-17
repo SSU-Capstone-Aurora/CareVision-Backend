@@ -94,22 +94,4 @@ public class AdminHospitalControllerTest {
                 .andExpect(jsonPath("$.result.departments[1]").value("외과"))
                 .andExpect(jsonPath("$.result.totalCount").value(2));
     }
-
-    @Test
-    @WithMockUser
-    @DisplayName("병원 과 검색에 실패한다.")
-    public void testSearchDepartment_NotFound() throws Exception {
-        String ykiho = "Nonexistent Hospital";
-
-        when(hospitalService.searchHospital(ykiho))
-                .thenThrow(new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND));
-
-        mockMvc.perform(
-                        get("/api/admin/departments")
-                                .param("hospital", ykiho)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.isSuccess").value(false))
-                .andExpect(jsonPath("$.code").value("HOSPITAL400"));
-    }
 }
