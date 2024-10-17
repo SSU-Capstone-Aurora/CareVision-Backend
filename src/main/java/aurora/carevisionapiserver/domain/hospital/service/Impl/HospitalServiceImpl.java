@@ -10,8 +10,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO;
+import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
+import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
+import aurora.carevisionapiserver.domain.hospital.repository.HospitalRepository;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.ApiExplorer;
@@ -21,6 +25,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HospitalServiceImpl implements HospitalService {
     private final ApiExplorer explorer;
+    private final HospitalRepository hospitalRepository;
+
+    @Override
+    public Hospital createHospital(AdminDTO.AdminJoinDTO adminJoinDTO) {
+        Hospital hosptial =
+                HospitalConverter.toHospital(
+                        adminJoinDTO.getHospital(), adminJoinDTO.getDepartment());
+        return hospitalRepository.save(hosptial);
+    }
 
     @Override
     public List<SearchHospitalDTO> searchHospital(String hospitalName) throws IOException {
