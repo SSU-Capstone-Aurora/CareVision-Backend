@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -24,7 +24,6 @@ import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 
 @WebMvcTest(AdminController.class)
-@AutoConfigureMockMvc(addFilters = false)
 public class AdminControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private AdminService adminService;
@@ -61,7 +60,8 @@ public class AdminControllerTest {
         mockMvc.perform(
                         post("/api/admin/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(ADMIN_JOIN_DTO_JSON))
+                                .content(ADMIN_JOIN_DTO_JSON)
+                                .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.id").value(1))
