@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.RequiredArgsConstructor;
@@ -29,13 +30,21 @@ public class SecurityConfig {
         "/api/admin/nurses",
         "/api/admin/patients/search",
         "/api/admin/nurses/search",
+        "/api/admin/sign-up"
     };
 
     @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        http.httpBasic(AbstractHttpConfigurer::disable);
+
+        http.formLogin(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(
                 sessionManagement ->
@@ -45,7 +54,7 @@ public class SecurityConfig {
                 headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         http.authorizeHttpRequests(
-                (authorize) ->
+                authorize ->
                         authorize
                                 .requestMatchers(allowedUrls)
                                 .permitAll()
