@@ -1,6 +1,5 @@
 package aurora.carevisionapiserver.service;
 
-import static aurora.carevisionapiserver.domain.hospital.domain.Department.SURGERY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -29,7 +28,7 @@ public class NurseServiceTest {
     @Mock private NurseRepository nurseRepository;
 
     private Nurse createNurse() {
-        Hospital hospital = Hospital.builder().id(1L).name("서울병원").department(SURGERY).build();
+        Hospital hospital = Hospital.builder().id(1L).name("서울병원").department("성형외과").build();
 
         String dateTime = "2024-10-11 17:57:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -44,7 +43,7 @@ public class NurseServiceTest {
     }
 
     private Nurse createOtherNurse() {
-        Hospital hospital = Hospital.builder().id(2L).name("대구병원").department(SURGERY).build();
+        Hospital hospital = Hospital.builder().id(2L).name("대구병원").department("성형외과").build();
 
         String dateTime = "2024-09-10 17:57:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
