@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminInfoDTO;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminJoinDTO;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
@@ -28,7 +29,7 @@ public class AdminController {
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
     @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
     @PostMapping("/sign-up")
-    public BaseResponse<AdminDTO.AdminInfoDTO> createAdmin(AdminDTO.AdminJoinDTO adminJoinDTO) {
+    public BaseResponse<AdminInfoDTO> createAdmin(AdminJoinDTO adminJoinDTO) {
         Hospital hospital = hospitalService.createHospital(adminJoinDTO);
         Admin admin = adminService.createAdmin(adminJoinDTO, hospital);
 
