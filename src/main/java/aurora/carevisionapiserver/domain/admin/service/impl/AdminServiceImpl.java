@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.domain.admin.service.impl;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
