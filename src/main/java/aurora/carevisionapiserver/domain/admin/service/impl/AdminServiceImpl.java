@@ -1,6 +1,6 @@
 package aurora.carevisionapiserver.domain.admin.service.impl;
 
-import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.*;
+import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminJoinDTO;
 
 import jakarta.transaction.Transactional;
 

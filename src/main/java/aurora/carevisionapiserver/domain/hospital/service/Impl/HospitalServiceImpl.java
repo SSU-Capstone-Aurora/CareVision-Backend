@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.domain.hospital.service.Impl;
 
+import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminJoinDTO;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO;
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
@@ -28,7 +29,7 @@ public class HospitalServiceImpl implements HospitalService {
     private final HospitalRepository hospitalRepository;
 
     @Override
-    public Hospital createHospital(AdminDTO.AdminJoinDTO adminJoinDTO) {
+    public Hospital createHospital(AdminJoinDTO adminJoinDTO) {
         Hospital hosptial =
                 HospitalConverter.toHospital(
                         adminJoinDTO.getHospital(), adminJoinDTO.getDepartment());

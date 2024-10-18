@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.admin.converter;
 
-import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.*;
+import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminJoinDTO;
+import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminInfoDTO;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
