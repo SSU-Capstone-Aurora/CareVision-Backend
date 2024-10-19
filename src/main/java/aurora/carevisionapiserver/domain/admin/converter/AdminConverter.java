@@ -20,7 +20,7 @@ public class AdminConverter {
     public static AdminInfoResponse toAdminInfoResponse(Admin admin) {
         return AdminInfoResponse.builder()
                 .id(admin.getId())
-                .hospital(admin.getHospital().getName())
+                .name(admin.getHospital().getName())
                 .department(admin.getHospital().getDepartment())
                 .build();
     }

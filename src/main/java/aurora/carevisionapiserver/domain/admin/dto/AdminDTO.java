@@ -27,7 +27,7 @@ public class AdminDTO {
     public static class AdminInfoResponse {
         private Long id;
 
-        private String hospital;
+        private String name;
 
         private String department;
     }
