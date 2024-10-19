@@ -6,8 +6,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 
 public interface HospitalService {
 

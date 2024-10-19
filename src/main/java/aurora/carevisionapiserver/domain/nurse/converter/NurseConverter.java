@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewListResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NurseProfileResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseProfileResponse;
 
 public class NurseConverter {
     public static NurseProfileResponse toNurseProfileResponse(Optional<Nurse> nurse) {

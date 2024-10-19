@@ -3,8 +3,8 @@ package aurora.carevisionapiserver.domain.camera.converter;
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
-import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoListResponse;
-import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoResponse;
 
 public class CameraConverter {
     public static CameraInfoListResponse toCameraInfoListResponse(List<Camera> cameras) {

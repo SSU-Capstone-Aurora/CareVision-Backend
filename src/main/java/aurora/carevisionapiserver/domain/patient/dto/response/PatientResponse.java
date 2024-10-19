@@ -1,11 +1,11 @@
-package aurora.carevisionapiserver.domain.patient.dto;
+package aurora.carevisionapiserver.domain.patient.dto.response;
 
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
 
-public class PatientDTO {
+public class PatientResponse {
     @Builder
     @Getter
     public static class PatientSearchResponse {

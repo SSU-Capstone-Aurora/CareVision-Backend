@@ -1,11 +1,11 @@
 package aurora.carevisionapiserver.domain.patient.converter;
 
-import static aurora.carevisionapiserver.domain.patient.dto.PatientDTO.PatientSearchResponse;
+import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchResponse;
 
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.dto.PatientDTO.PatientSearchListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 
 public class PatientConverter {
     public static PatientSearchResponse toPatientSearchResponse(Patient patient) {

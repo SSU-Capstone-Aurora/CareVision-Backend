@@ -1,10 +1,10 @@
-package aurora.carevisionapiserver.domain.admin.dto;
+package aurora.carevisionapiserver.domain.admin.dto.request;
 
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import lombok.Builder;
 import lombok.Getter;
 
-public class AdminDTO {
+public class AdminRequest {
 
     @Getter
     @Builder
@@ -20,15 +20,5 @@ public class AdminDTO {
         private String username;
 
         private String password;
-    }
-
-    @Getter
-    @Builder
-    public static class AdminInfoResponse {
-        private Long id;
-
-        private String name;
-
-        private String department;
     }
 }

@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import aurora.carevisionapiserver.domain.admin.api.AdminController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRequest;
+import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 

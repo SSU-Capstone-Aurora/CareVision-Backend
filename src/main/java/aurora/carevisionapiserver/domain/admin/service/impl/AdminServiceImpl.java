@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRequest;
+import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;

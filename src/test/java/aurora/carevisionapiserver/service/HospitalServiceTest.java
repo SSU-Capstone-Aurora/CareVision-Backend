@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
 import aurora.carevisionapiserver.domain.hospital.service.Impl.HospitalServiceImpl;
 import aurora.carevisionapiserver.global.util.ApiExplorer;
