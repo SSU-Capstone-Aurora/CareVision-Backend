@@ -2,10 +2,10 @@ package aurora.carevisionapiserver.domain.admin.converter;
 
 import static aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import static aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminInfoResponse;
-import static aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter.toHospitalInfoResponse;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
+import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalInfoResponse;
 
@@ -22,7 +22,7 @@ public class AdminConverter {
 
     public static AdminSignUpResponse toAdminSignUpResponse(Admin admin) {
         AdminInfoResponse adminInfoResponse = toAdminInfoResponse(admin);
-        HospitalInfoResponse hospitalInfoResponse = toHospitalInfoResponse(admin);
+        HospitalInfoResponse hospitalInfoResponse = HospitalConverter.toHospitalInfoResponse(admin);
 
         return AdminSignUpResponse.builder()
                 .admin(adminInfoResponse)
