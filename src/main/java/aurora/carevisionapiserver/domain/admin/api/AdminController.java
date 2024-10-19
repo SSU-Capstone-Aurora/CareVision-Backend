@@ -35,8 +35,8 @@ public class AdminController {
     public BaseResponse<AdminInfoResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {
 
-        AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdminCreateRequest();
-        HospitalCreateRequest hospitalCreateRequest = adminSignUpRequest.getHospitalCreateRequest();
+        AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdmin();
+        HospitalCreateRequest hospitalCreateRequest = adminSignUpRequest.getHospital();
 
         Hospital hospital = hospitalService.createHospital(hospitalCreateRequest);
         Admin admin = adminService.createAdmin(adminCreateRequest, hospital);

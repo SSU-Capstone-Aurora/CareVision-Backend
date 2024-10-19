@@ -9,8 +9,8 @@ public class AdminDTO {
     @Getter
     @Builder
     public static class AdminSignUpRequest {
-        private AdminCreateRequest adminCreateRequest;
-        private HospitalCreateRequest hospitalCreateRequest;
+        private AdminCreateRequest admin;
+        private HospitalCreateRequest hospital;
     }
 
     @Getter
@@ -27,7 +27,7 @@ public class AdminDTO {
     public static class AdminInfoResponse {
         private Long id;
 
-        private String hospital;
+        private String name;
 
         private String department;
     }
