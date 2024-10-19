@@ -1,6 +1,5 @@
 package aurora.carevisionapiserver.controller;
 
-import static aurora.carevisionapiserver.domain.hospital.domain.Department.SURGERY;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,7 +30,7 @@ public class AdminNurseControllerTest {
     @MockBean private NurseService nurseService;
 
     private Nurse createNurse() {
-        Hospital hospital = Hospital.builder().id(1L).name("서울병원").department(SURGERY).build();
+        Hospital hospital = Hospital.builder().id(1L).name("서울병원").department("성형외과").build();
 
         String dateTime = "2024-10-11 17:57:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -46,7 +45,7 @@ public class AdminNurseControllerTest {
     }
 
     private Nurse createOtherNurse() {
-        Hospital hospital = Hospital.builder().id(2L).name("대구병원").department(SURGERY).build();
+        Hospital hospital = Hospital.builder().id(2L).name("대구병원").department("성형외과").build();
 
         String dateTime = "2024-09-10 17:57:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

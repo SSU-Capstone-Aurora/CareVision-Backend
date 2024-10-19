@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchDepartmentDTO;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTOList;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchListResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
@@ -34,11 +34,13 @@ public class AdminHospitalController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
     })
     @GetMapping("/hospitals")
-    public BaseResponse<SearchHospitalDTOList> searchHospital(
+    public BaseResponse<HospitalSearchListResponse> searchHospital(
             @RequestParam(name = "search") String hospitalName) throws IOException {
-        List<SearchHospitalDTO> hospitalDTOList = hospitalService.searchHospital(hospitalName);
+        List<HospitalSearchResponse> hospitalSearchListResponse =
+                hospitalService.searchHospital(hospitalName);
         return BaseResponse.of(
-                SuccessStatus._OK, HospitalConverter.toSearchHospitalDTOList(hospitalDTOList));
+                SuccessStatus._OK,
+                HospitalConverter.toHospitalSearchListResponse(hospitalSearchListResponse));
     }
 
     @Operation(summary = "병원 과 조회 API", description = "입력받은 병원의 요양번호 값을 기준으로 병원 과를 조회합니다_숙희")
@@ -47,10 +49,10 @@ public class AdminHospitalController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
     })
     @GetMapping("/departments")
-    public BaseResponse<SearchDepartmentDTO> searchDepartment(
+    public BaseResponse<DepartmentSearchResponse> searchDepartment(
             @RequestParam(name = "hospital") String ykiho) throws IOException {
         List<String> departments = hospitalService.searchDepartment(ykiho);
         return BaseResponse.of(
-                SuccessStatus._OK, HospitalConverter.toSearchDepartmentDTO(departments));
+                SuccessStatus._OK, HospitalConverter.toDepartmentSearchResponsse(departments));
     }
 }

@@ -1,14 +1,15 @@
 package aurora.carevisionapiserver.domain.patient.converter;
 
+import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchResponse;
+
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.dto.PatientDTO.SearchPatientDTO;
-import aurora.carevisionapiserver.domain.patient.dto.PatientDTO.SearchPatientDTOList;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 
 public class PatientConverter {
-    public static SearchPatientDTO toSearchPatientDTO(Patient patient) {
-        return SearchPatientDTO.builder()
+    public static PatientSearchResponse toPatientSearchResponse(Patient patient) {
+        return PatientSearchResponse.builder()
                 .patientName(patient.getName())
                 .inpatientWardNumber(
                         patient.getBed() != null ? patient.getBed().getInpatientWardNumber() : null)
@@ -19,9 +20,10 @@ public class PatientConverter {
                 .build();
     }
 
-    public static SearchPatientDTOList toSearchPatientDTOList(List<Patient> patients) {
-        return SearchPatientDTOList.builder()
-                .patientList(patients.stream().map(PatientConverter::toSearchPatientDTO).toList())
+    public static PatientSearchListResponse toPatientSearchListResponse(List<Patient> patients) {
+        return PatientSearchListResponse.builder()
+                .patientList(
+                        patients.stream().map(PatientConverter::toPatientSearchResponse).toList())
                 .count(patients.size())
                 .build();
     }

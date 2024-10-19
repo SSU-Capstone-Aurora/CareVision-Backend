@@ -10,8 +10,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
+import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
+import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
+import aurora.carevisionapiserver.domain.hospital.repository.HospitalRepository;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.ApiExplorer;
@@ -21,15 +25,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HospitalServiceImpl implements HospitalService {
     private final ApiExplorer explorer;
+    private final HospitalRepository hospitalRepository;
 
     @Override
-    public List<SearchHospitalDTO> searchHospital(String hospitalName) throws IOException {
+    public Hospital createHospital(HospitalCreateRequest hospitalCreateRequest) {
+        Hospital hosptial =
+                HospitalConverter.toHospital(
+                        hospitalCreateRequest.getHospital(), hospitalCreateRequest.getDepartment());
+        return hospitalRepository.save(hosptial);
+    }
+
+    @Override
+    public List<HospitalSearchResponse> searchHospital(String hospitalName) throws IOException {
         StringBuilder hospitalInfo = explorer.callHospitalAPI(hospitalName);
         return parseHospitalInfo(hospitalInfo);
     }
 
     @Override
-    public List<SearchHospitalDTO> parseHospitalInfo(StringBuilder hospitalInfo)
+    public List<HospitalSearchResponse> parseHospitalInfo(StringBuilder hospitalInfo)
             throws JsonProcessingException {
         // JSON 파싱
         ObjectMapper mapper = new ObjectMapper();
@@ -39,16 +52,20 @@ public class HospitalServiceImpl implements HospitalService {
 
         JsonNode itemsNode = getItemsNode(rootNode);
 
-        List<SearchHospitalDTO> hospitalDTOList = new ArrayList<>();
+        List<HospitalSearchResponse> hospitalSearchListResponse = new ArrayList<>();
         for (JsonNode itemNode : itemsNode) {
             String name = itemNode.path("yadmNm").asText();
             String address = itemNode.path("addr").asText();
             String ykiho = itemNode.path("ykiho").asText();
-            SearchHospitalDTO hospitalDTO =
-                    SearchHospitalDTO.builder().name(name).address(address).ykiho(ykiho).build();
-            hospitalDTOList.add(hospitalDTO);
+            HospitalSearchResponse hospitalResponse =
+                    HospitalSearchResponse.builder()
+                            .name(name)
+                            .address(address)
+                            .ykiho(ykiho)
+                            .build();
+            hospitalSearchListResponse.add(hospitalResponse);
         }
-        return hospitalDTOList;
+        return hospitalSearchListResponse;
     }
 
     @Override

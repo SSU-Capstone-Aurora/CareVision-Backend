@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewDTOList;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,9 +30,9 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @GetMapping("")
-    public BaseResponse<NursePreviewDTOList> getNurseList() {
+    public BaseResponse<NursePreviewListResponse> getNurseList() {
         List<Nurse> nurses = nurseService.getNurseList();
-        return BaseResponse.onSuccess(NurseConverter.toNursePreviewDTOList(nurses));
+        return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
     }
 
     @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")
@@ -40,9 +40,9 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @GetMapping("/search")
-    public BaseResponse<NursePreviewDTOList> searchNurse(
+    public BaseResponse<NursePreviewListResponse> searchNurse(
             @RequestParam(name = "search") String nurseName) {
         List<Nurse> nurses = nurseService.searchNurse(nurseName);
-        return BaseResponse.onSuccess(NurseConverter.toNursePreviewDTOList(nurses));
+        return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
     }
 }

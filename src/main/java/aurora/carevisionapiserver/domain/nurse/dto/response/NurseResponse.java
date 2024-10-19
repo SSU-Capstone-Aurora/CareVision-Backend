@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.domain.nurse.dto;
+package aurora.carevisionapiserver.domain.nurse.dto.response;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-public class NurseDTO {
+public class NurseResponse {
     @Getter
     @Builder
-    public static class NurseProfileDTO {
+    public static class NurseProfileResponse {
         private String name;
         private LocalDate registeredAt;
         private String hospitalName;
@@ -18,15 +18,15 @@ public class NurseDTO {
 
     @Getter
     @Builder
-    public static class NursePreviewDTO {
+    public static class NursePreviewResponse {
         private String name;
         private String id;
     }
 
     @Builder
     @Getter
-    public static class NursePreviewDTOList {
-        private List<NursePreviewDTO> nurseList;
+    public static class NursePreviewListResponse {
+        private List<NursePreviewResponse> nurseList;
         private int count;
     }
 }

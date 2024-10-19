@@ -25,8 +25,7 @@ public class Hospital extends BaseEntity {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private Department department;
+    private String department;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Admin> admins;
@@ -35,7 +34,7 @@ public class Hospital extends BaseEntity {
     private List<Nurse> nurses;
 
     @Builder
-    public Hospital(Long id, String name, Department department) {
+    public Hospital(Long id, String name, String department) {
         this.id = id;
         this.name = name;
         this.department = department;
