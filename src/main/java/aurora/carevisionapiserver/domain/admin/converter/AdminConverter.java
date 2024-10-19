@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.admin.converter;
 
 import static aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import static aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminInfoResponse;
+import static aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter.toHospitalInfoResponse;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
@@ -31,12 +32,5 @@ public class AdminConverter {
 
     private static AdminInfoResponse toAdminInfoResponse(Admin admin) {
         return AdminInfoResponse.builder().id(admin.getId()).build();
-    }
-
-    private static HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
-        return HospitalInfoResponse.builder()
-                .name(admin.getHospital().getName())
-                .department(admin.getHospital().getDepartment())
-                .build();
     }
 }

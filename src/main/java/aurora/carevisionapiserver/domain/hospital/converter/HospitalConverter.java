@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.hospital.converter;
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
@@ -20,6 +21,13 @@ public class HospitalConverter {
         return DepartmentSearchResponse.builder()
                 .departments(departments)
                 .totalCount((long) departments.size())
+                .build();
+    }
+
+    public static HospitalResponse.HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
+        return HospitalResponse.HospitalInfoResponse.builder()
+                .name(admin.getHospital().getName())
+                .department(admin.getHospital().getDepartment())
                 .build();
     }
 
