@@ -17,7 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import aurora.carevisionapiserver.domain.hospital.api.AdminHospitalController;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
@@ -34,15 +34,15 @@ public class AdminHospitalControllerTest {
     @DisplayName("병원 검색 성공한다.")
     public void testSearchHospital_Success() throws Exception {
         String hospitalName = "오로라";
-        SearchHospitalDTO hospitalDTO =
-                SearchHospitalDTO.builder()
+        HospitalSearchResponse hospitalSearchResponse =
+                HospitalSearchResponse.builder()
                         .name("오로라 병원")
                         .address("우주 정거장")
                         .ykiho("aurora")
                         .build();
 
         when(hospitalService.searchHospital(hospitalName))
-                .thenReturn(Collections.singletonList(hospitalDTO));
+                .thenReturn(Collections.singletonList(hospitalSearchResponse));
 
         mockMvc.perform(
                         get("/api/admin/hospitals")

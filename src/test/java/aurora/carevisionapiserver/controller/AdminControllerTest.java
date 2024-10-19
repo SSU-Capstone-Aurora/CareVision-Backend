@@ -18,8 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import aurora.carevisionapiserver.domain.admin.api.AdminController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 
@@ -29,15 +31,20 @@ public class AdminControllerTest {
     @MockBean private AdminService adminService;
     @MockBean private HospitalService hospitalService;
 
-    private static final String ADMIN_JOIN_DTO_JSON =
+    private static final String ADMIN_SIGN_UP_REQUEST_JSON =
             """
-        {
-            "username": "admin1",
-            "password": "password123",
-            "hospital": "오로라 병원",
-            "department": "성형외과"
-        }
-    """;
+            {
+                "adminCreateRequest": {
+                    "username": "admin1",
+                    "password": "password123",
+                    "department": "성형외과"
+                },
+                "hospitalCreateRequest": {
+                    "name": "오로라 병원",
+                    "department": "성형외과"
+                }
+            }
+        """;
 
     private Hospital createHospital() {
         return Hospital.builder().id(1L).name("오로라 병원").department("성형외과").build();
@@ -51,16 +58,21 @@ public class AdminControllerTest {
     @WithMockUser
     @DisplayName("회원가입에 성공한다.")
     public void testCreateAdminSuceess() throws Exception {
+        // Given
         Hospital hospital = createHospital();
         Admin admin = createAdmin(hospital);
 
-        given(hospitalService.createHospital(any())).willReturn(hospital);
-        given(adminService.createAdmin(any(), any())).willReturn(admin);
+        // When
+        given(hospitalService.createHospital(any(HospitalCreateRequest.class)))
+                .willReturn(hospital);
+        given(adminService.createAdmin(any(AdminCreateRequest.class), any(Hospital.class)))
+                .willReturn(admin);
 
+        // Then
         mockMvc.perform(
                         post("/api/admin/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(ADMIN_JOIN_DTO_JSON)
+                                .content(ADMIN_SIGN_UP_REQUEST_JSON)
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))

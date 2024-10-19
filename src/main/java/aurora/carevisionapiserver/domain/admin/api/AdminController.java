@@ -1,15 +1,18 @@
 package aurora.carevisionapiserver.domain.admin.api;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminInfoDTO;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminJoinDTO;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRequest;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminInfoResponse;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminSignUpRequest;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,10 +32,15 @@ public class AdminController {
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
     @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
     @PostMapping("/sign-up")
-    public BaseResponse<AdminInfoDTO> createAdmin(AdminJoinDTO adminJoinDTO) {
-        Hospital hospital = hospitalService.createHospital(adminJoinDTO);
-        Admin admin = adminService.createAdmin(adminJoinDTO, hospital);
+    public BaseResponse<AdminInfoResponse> createAdmin(
+            @RequestBody AdminSignUpRequest adminSignUpRequest) {
 
-        return BaseResponse.onSuccess(AdminConverter.toAdminInfoDTO(admin, hospital));
+        AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdminCreateRequest();
+        HospitalCreateRequest hospitalCreateRequest = adminSignUpRequest.getHospitalCreateRequest();
+
+        Hospital hospital = hospitalService.createHospital(hospitalCreateRequest);
+        Admin admin = adminService.createAdmin(adminCreateRequest, hospital);
+
+        return BaseResponse.onSuccess(AdminConverter.toAdminInfoResponse(admin));
     }
 }
