@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
-import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoListDTO;
+import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
@@ -30,8 +30,9 @@ public class AdminCameraController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @GetMapping("")
-    public BaseResponse<CameraInfoListDTO> getCameras() {
+    public BaseResponse<CameraInfoListResponse> getCameras() {
         List<Camera> cameras = cameraService.getCameras();
-        return BaseResponse.of(SuccessStatus._OK, CameraConverter.toCameraInfoDTOList(cameras));
+        return BaseResponse.of(
+                SuccessStatus._OK, CameraConverter.toCameraInfoListResponse(cameras));
     }
 }

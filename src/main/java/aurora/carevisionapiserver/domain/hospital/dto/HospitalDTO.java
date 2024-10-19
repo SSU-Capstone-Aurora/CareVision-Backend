@@ -8,7 +8,7 @@ import lombok.Getter;
 public class HospitalDTO {
     @Getter
     @Builder
-    public static class SearchHospitalDTO {
+    public static class HospitalSearchResponse {
         private String name;
         private String address;
         private String ykiho;
@@ -16,15 +16,22 @@ public class HospitalDTO {
 
     @Getter
     @Builder
-    public static class SearchHospitalDTOList {
-        private List<SearchHospitalDTO> hospitals;
+    public static class HospitalSearchListResponse {
+        private List<HospitalSearchResponse> hospitals;
         private Long totalCount;
     }
 
     @Getter
     @Builder
-    public static class SearchDepartmentDTO {
+    public static class DepartmentSearchResponse {
         private List<String> departments;
         private Long totalCount;
+    }
+
+    @Getter
+    @Builder
+    public static class HospitalCreateRequest {
+        private String hospital;
+        private String department;
     }
 }

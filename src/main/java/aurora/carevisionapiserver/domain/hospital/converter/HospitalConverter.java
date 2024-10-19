@@ -3,20 +3,21 @@ package aurora.carevisionapiserver.domain.hospital.converter;
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchDepartmentDTO;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTOList;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.DepartmentSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalSearchListResponse;
 
 public class HospitalConverter {
-    public static SearchHospitalDTOList toSearchHospitalDTOList(List<SearchHospitalDTO> hospitals) {
-        return SearchHospitalDTOList.builder()
+    public static HospitalSearchListResponse toHospitalSearchListResponse(
+            List<HospitalDTO.HospitalSearchResponse> hospitals) {
+        return HospitalSearchListResponse.builder()
                 .hospitals(hospitals)
                 .totalCount((long) hospitals.size())
                 .build();
     }
 
-    public static SearchDepartmentDTO toSearchDepartmentDTO(List<String> departments) {
-        return SearchDepartmentDTO.builder()
+    public static DepartmentSearchResponse toDepartmentSearchResponsse(List<String> departments) {
+        return DepartmentSearchResponse.builder()
                 .departments(departments)
                 .totalCount((long) departments.size())
                 .build();

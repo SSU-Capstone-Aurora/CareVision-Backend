@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewDTO;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewDTOList;
-import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NurseProfileDTO;
+import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewListResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NursePreviewResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.NurseDTO.NurseProfileResponse;
 
 public class NurseConverter {
-    public static NurseProfileDTO toNurseProfileDTO(Optional<Nurse> nurse) {
+    public static NurseProfileResponse toNurseProfileResponse(Optional<Nurse> nurse) {
         Nurse tmpNurse = nurse.get();
-        return NurseProfileDTO.builder()
+        return NurseProfileResponse.builder()
                 .name(tmpNurse.getName())
                 .hospitalName(tmpNurse.getHospital().getName())
                 .department(tmpNurse.getHospital().getDepartment().toString())
@@ -19,13 +19,13 @@ public class NurseConverter {
                 .build();
     }
 
-    public static NursePreviewDTO toNursePreviewDTO(Nurse nurse) {
-        return NursePreviewDTO.builder().name(nurse.getName()).id(nurse.getUsername()).build();
+    public static NursePreviewResponse toNursePreviewResponse(Nurse nurse) {
+        return NursePreviewResponse.builder().name(nurse.getName()).id(nurse.getUsername()).build();
     }
 
-    public static NursePreviewDTOList toNursePreviewDTOList(List<Nurse> nurses) {
-        return NursePreviewDTOList.builder()
-                .nurseList(nurses.stream().map(NurseConverter::toNursePreviewDTO).toList())
+    public static NursePreviewListResponse toNursePreviewListResponse(List<Nurse> nurses) {
+        return NursePreviewListResponse.builder()
+                .nurseList(nurses.stream().map(NurseConverter::toNursePreviewResponse).toList())
                 .count(nurses.size())
                 .build();
     }

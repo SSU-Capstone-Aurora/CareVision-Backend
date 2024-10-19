@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.dto.PatientDTO.SearchPatientDTOList;
+import aurora.carevisionapiserver.domain.patient.dto.PatientDTO.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,9 +31,9 @@ public class AdminPatientController {
         @ApiResponse(responseCode = "PATIENT400", description = "NOT FOUND, 환자가 없습니다.")
     })
     @GetMapping("/search")
-    public BaseResponse<SearchPatientDTOList> searchPatient(
+    public BaseResponse<PatientSearchListResponse> searchPatient(
             @RequestParam(name = "search") String patientName) {
         List<Patient> patients = patientService.searchPatient(patientName);
-        return BaseResponse.onSuccess(PatientConverter.toSearchPatientDTOList(patients));
+        return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
     }
 }

@@ -8,7 +8,7 @@ import lombok.Getter;
 public class PatientDTO {
     @Builder
     @Getter
-    public static class SearchPatientDTO {
+    public static class PatientSearchResponse {
         private String patientName;
         private Long inpatientWardNumber;
         private Long patientRoomNumber;
@@ -18,8 +18,8 @@ public class PatientDTO {
 
     @Builder
     @Getter
-    public static class SearchPatientDTOList {
-        private List<SearchPatientDTO> patientList;
+    public static class PatientSearchListResponse {
+        private List<PatientSearchResponse> patientList;
         private int count;
     }
 }

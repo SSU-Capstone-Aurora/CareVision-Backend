@@ -8,7 +8,7 @@ import lombok.Getter;
 public class CameraDTO {
     @Getter
     @Builder
-    public static class CameraInfoDTO {
+    public static class CameraInfoResponse {
         private String cameraId;
         private Long inpatientWardNumber;
         private Long patientRoomNumber;
@@ -17,8 +17,8 @@ public class CameraDTO {
 
     @Getter
     @Builder
-    public static class CameraInfoListDTO {
-        private List<CameraInfoDTO> cameraInfoList;
+    public static class CameraInfoListResponse {
+        private List<CameraInfoResponse> cameraInfoList;
         private Long totalCount;
     }
 }

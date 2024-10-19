@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.SearchHospitalDTO;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
 import aurora.carevisionapiserver.domain.hospital.service.Impl.HospitalServiceImpl;
 import aurora.carevisionapiserver.global.util.ApiExplorer;
@@ -56,17 +56,17 @@ class HospitalServiceTest {
                                 + "}");
 
         // when
-        List<SearchHospitalDTO> hospitalDTOList =
+        List<HospitalSearchResponse> hospitalSearchListResponse =
                 hospitalService.parseHospitalInfo(mockApiResponse);
 
         // then
-        assertThat(hospitalDTOList).isNotNull();
-        assertThat(hospitalDTOList.size()).isEqualTo(1);
+        assertThat(hospitalSearchListResponse).isNotNull();
+        assertThat(hospitalSearchListResponse.size()).isEqualTo(1);
 
-        SearchHospitalDTO hospitalDTO = hospitalDTOList.get(0);
-        assertThat(hospitalDTO.getName()).isEqualTo("오로라 병원");
-        assertThat(hospitalDTO.getAddress()).isEqualTo("우주 정거장");
-        assertThat(hospitalDTO.getYkiho()).isEqualTo("aurora");
+        HospitalSearchResponse hospitalSearchResponse = hospitalSearchListResponse.get(0);
+        assertThat(hospitalSearchResponse.getName()).isEqualTo("오로라 병원");
+        assertThat(hospitalSearchResponse.getAddress()).isEqualTo("우주 정거장");
+        assertThat(hospitalSearchResponse.getYkiho()).isEqualTo("aurora");
     }
 
     @Test

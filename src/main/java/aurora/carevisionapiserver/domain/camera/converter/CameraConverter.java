@@ -3,21 +3,21 @@ package aurora.carevisionapiserver.domain.camera.converter;
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
-import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoDTO;
-import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoListDTO;
+import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.CameraDTO.CameraInfoResponse;
 
 public class CameraConverter {
-    public static CameraInfoListDTO toCameraInfoDTOList(List<Camera> cameras) {
-        List<CameraInfoDTO> cameraInfoDTOList =
-                cameras.stream().map(CameraConverter::toCameraInfo).toList();
-        return CameraInfoListDTO.builder()
-                .cameraInfoList(cameraInfoDTOList)
-                .totalCount((long) cameraInfoDTOList.size())
+    public static CameraInfoListResponse toCameraInfoListResponse(List<Camera> cameras) {
+        List<CameraInfoResponse> cameraInfoListResponse =
+                cameras.stream().map(CameraConverter::toCameraInfoResponse).toList();
+        return CameraInfoListResponse.builder()
+                .cameraInfoList(cameraInfoListResponse)
+                .totalCount((long) cameraInfoListResponse.size())
                 .build();
     }
 
-    public static CameraInfoDTO toCameraInfo(Camera camera) {
-        return CameraInfoDTO.builder()
+    public static CameraInfoResponse toCameraInfoResponse(Camera camera) {
+        return CameraInfoResponse.builder()
                 .cameraId(camera.getId())
                 .inpatientWardNumber(camera.getPatient().getBed().getInpatientWardNumber())
                 .patientRoomNumber(camera.getPatient().getBed().getPatientRoomNumber())
