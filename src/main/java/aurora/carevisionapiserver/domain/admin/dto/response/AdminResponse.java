@@ -8,9 +8,9 @@ public class AdminResponse {
     @Getter
     @Builder
     public static class AdminSignUpResponse {
-        private AdminInfoResponse adminInfoResponse;
+        private AdminInfoResponse admin;
 
-        private HospitalInfoResponse hospitalInfoResponse;
+        private HospitalInfoResponse hospital;
     }
 
     @Getter
