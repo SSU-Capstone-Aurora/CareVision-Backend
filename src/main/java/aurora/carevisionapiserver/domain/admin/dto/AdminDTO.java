@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.admin.dto;
 
 import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,11 +25,15 @@ public class AdminDTO {
 
     @Getter
     @Builder
+    public static class AdminSignUpResponse {
+        private AdminInfoResponse adminInfoResponse;
+
+        private HospitalInfoResponse hospitalInfoResponse;
+    }
+
+    @Getter
+    @Builder
     public static class AdminInfoResponse {
         private Long id;
-
-        private String name;
-
-        private String department;
     }
 }

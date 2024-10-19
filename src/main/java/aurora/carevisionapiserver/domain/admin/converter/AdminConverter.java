@@ -4,7 +4,9 @@ import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRe
 import static aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminInfoResponse;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalInfoResponse;
 
 public class AdminConverter {
 
@@ -17,11 +19,17 @@ public class AdminConverter {
                 .build();
     }
 
-    public static AdminInfoResponse toAdminInfoResponse(Admin admin) {
-        return AdminInfoResponse.builder()
-                .id(admin.getId())
-                .name(admin.getHospital().getName())
-                .department(admin.getHospital().getDepartment())
+    public static AdminSignUpResponse toAdminSignUpResponse(Admin admin) {
+        AdminInfoResponse adminInfoResponse = AdminInfoResponse.builder().id(admin.getId()).build();
+
+        HospitalInfoResponse hospitalInfoResponse =
+                HospitalInfoResponse.builder()
+                        .name(admin.getHospital().getName())
+                        .department(admin.getHospital().getDepartment())
+                        .build();
+        return AdminSignUpResponse.builder()
+                .adminInfoResponse(adminInfoResponse)
+                .hospitalInfoResponse(hospitalInfoResponse)
                 .build();
     }
 }

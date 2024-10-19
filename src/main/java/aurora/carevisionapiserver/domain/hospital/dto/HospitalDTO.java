@@ -34,4 +34,11 @@ public class HospitalDTO {
         private String hospital;
         private String department;
     }
+
+    @Getter
+    @Builder
+    public static class HospitalInfoResponse {
+        private String name;
+        private String department;
+    }
 }

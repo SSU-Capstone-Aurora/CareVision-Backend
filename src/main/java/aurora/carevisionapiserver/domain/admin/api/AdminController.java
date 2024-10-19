@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRequest;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminInfoResponse;
 import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminSignUpRequest;
+import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
@@ -32,7 +32,7 @@ public class AdminController {
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
     @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
     @PostMapping("/sign-up")
-    public BaseResponse<AdminInfoResponse> createAdmin(
+    public BaseResponse<AdminSignUpResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {
 
         AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdmin();
@@ -41,6 +41,6 @@ public class AdminController {
         Hospital hospital = hospitalService.createHospital(hospitalCreateRequest);
         Admin admin = adminService.createAdmin(adminCreateRequest, hospital);
 
-        return BaseResponse.onSuccess(AdminConverter.toAdminInfoResponse(admin));
+        return BaseResponse.onSuccess(AdminConverter.toAdminSignUpResponse(admin));
     }
 }
