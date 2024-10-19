@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.domain.nurse.dto;
+package aurora.carevisionapiserver.domain.nurse.dto.response;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-public class NurseDTO {
+public class NurseResponse {
     @Getter
     @Builder
     public static class NurseProfileResponse {

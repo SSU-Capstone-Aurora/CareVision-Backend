@@ -3,13 +3,13 @@ package aurora.carevisionapiserver.domain.hospital.converter;
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.DepartmentSearchResponse;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalSearchListResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchListResponse;
 
 public class HospitalConverter {
     public static HospitalSearchListResponse toHospitalSearchListResponse(
-            List<HospitalDTO.HospitalSearchResponse> hospitals) {
+            List<HospitalResponse.HospitalSearchResponse> hospitals) {
         return HospitalSearchListResponse.builder()
                 .hospitals(hospitals)
                 .totalCount((long) hospitals.size())

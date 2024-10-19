@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminCreateRequest;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminSignUpRequest;
-import aurora.carevisionapiserver.domain.admin.dto.AdminDTO.AdminSignUpResponse;
+import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
+import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminSignUpRequest;
+import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.HospitalDTO.HospitalCreateRequest;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;

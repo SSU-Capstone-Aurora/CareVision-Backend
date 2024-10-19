@@ -1,11 +1,11 @@
-package aurora.carevisionapiserver.domain.camera.dto;
+package aurora.carevisionapiserver.domain.camera.dto.response;
 
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
 
-public class CameraDTO {
+public class CameraResponse {
     @Getter
     @Builder
     public static class CameraInfoResponse {

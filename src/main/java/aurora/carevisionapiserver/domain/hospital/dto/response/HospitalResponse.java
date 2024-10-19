@@ -1,11 +1,11 @@
-package aurora.carevisionapiserver.domain.hospital.dto;
+package aurora.carevisionapiserver.domain.hospital.dto.response;
 
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
 
-public class HospitalDTO {
+public class HospitalResponse {
     @Getter
     @Builder
     public static class HospitalSearchResponse {
@@ -26,13 +26,6 @@ public class HospitalDTO {
     public static class DepartmentSearchResponse {
         private List<String> departments;
         private Long totalCount;
-    }
-
-    @Getter
-    @Builder
-    public static class HospitalCreateRequest {
-        private String hospital;
-        private String department;
     }
 
     @Getter
