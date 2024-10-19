@@ -6,6 +6,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalInfoResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchListResponse;
 
 public class HospitalConverter {
@@ -24,8 +25,8 @@ public class HospitalConverter {
                 .build();
     }
 
-    public static HospitalResponse.HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
-        return HospitalResponse.HospitalInfoResponse.builder()
+    public static HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
+        return HospitalInfoResponse.builder()
                 .name(admin.getHospital().getName())
                 .department(admin.getHospital().getDepartment())
                 .build();
