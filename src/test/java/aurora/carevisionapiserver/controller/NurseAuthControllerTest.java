@@ -87,9 +87,8 @@ public class NurseAuthControllerTest {
                 .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("성공입니다."))
-                .andExpect(jsonPath("$.result.nurse.id").value(1))
-                .andExpect(jsonPath("$.result.hospital.name").value("오로라 병원"))
-                .andExpect(jsonPath("$.result.hospital.department").value("정형외과"));
+                .andExpect(jsonPath("$.result.id").value(1))
+                .andExpect(jsonPath("$.result.name").value("오로라"));
     }
 
     @Test
