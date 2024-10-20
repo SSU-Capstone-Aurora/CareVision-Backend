@@ -117,7 +117,7 @@ public class AdminAuthControllerTest {
 
         // Then
         mockMvc.perform(
-                        post("/api/admin/check-username")
+                        get("/api/admin/check-username")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .param("username", username)
                                 .with(csrf()))
