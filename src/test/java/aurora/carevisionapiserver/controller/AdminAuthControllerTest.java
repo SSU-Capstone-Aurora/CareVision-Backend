@@ -34,12 +34,12 @@ public class AdminAuthControllerTest {
     private static final String ADMIN_SIGN_UP_REQUEST_JSON =
             """
             {
-                "adminCreateRequest": {
+                "admin": {
                     "username": "admin1",
                     "password": "password123",
                     "department": "성형외과"
                 },
-                "hospitalCreateRequest": {
+                "hospital": {
                     "name": "오로라 병원",
                     "department": "성형외과"
                 }
@@ -76,8 +76,8 @@ public class AdminAuthControllerTest {
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
-                .andExpect(jsonPath("$.result.id").value(1))
-                .andExpect(jsonPath("$.result.hospital").value("오로라 병원"))
-                .andExpect(jsonPath("$.result.department").value("성형외과"));
+                .andExpect(jsonPath("$.result.admin.id").value(1))
+                .andExpect(jsonPath("$.result.hospital.name").value("오로라 병원"))
+                .andExpect(jsonPath("$.result.hospital.department").value("성형외과"));
     }
 }
