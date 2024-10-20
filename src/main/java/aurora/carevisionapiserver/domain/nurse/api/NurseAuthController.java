@@ -1,11 +1,12 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalSelectRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
@@ -56,10 +57,9 @@ public class NurseAuthController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "AUTH400", description = "아이디가 이미 존재합니다.")
     })
-    @PostMapping("/check-username")
-    public BaseResponse<Boolean> checkUsername(
-            @RequestBody AdminRequest.AdminIdCheckRequest adminIdCheckRequest) {
-        boolean isDuplicated = nurseService.isUsernameDuplicated(adminIdCheckRequest.getUsername());
+    @GetMapping("/check-username")
+    public BaseResponse<Boolean> checkUsername(@RequestParam String username) {
+        boolean isDuplicated = nurseService.isUsernameDuplicated(username);
 
         if (isDuplicated) {
             return BaseResponse.onFailure(

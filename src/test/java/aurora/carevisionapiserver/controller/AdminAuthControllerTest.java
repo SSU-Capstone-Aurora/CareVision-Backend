@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,13 +46,6 @@ public class AdminAuthControllerTest {
                     "name": "오로라 병원",
                     "department": "성형외과"
                 }
-            }
-        """;
-
-    private static final String ADMIN_CHECK_USERNAME_JSON =
-            """
-            {
-                "username": "admin1"
             }
         """;
 
@@ -102,9 +96,9 @@ public class AdminAuthControllerTest {
 
         // Then
         mockMvc.perform(
-                        post("/api/admin/check-username")
+                        get("/api/admin/check-username")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(ADMIN_CHECK_USERNAME_JSON)
+                                .param("username", username)
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._USERNAME_AVAILABLE.getCode()))
@@ -125,7 +119,7 @@ public class AdminAuthControllerTest {
         mockMvc.perform(
                         post("/api/admin/check-username")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(ADMIN_CHECK_USERNAME_JSON)
+                                .param("username", username)
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ErrorStatus.USERNAME_DUPLICATED.getCode()))

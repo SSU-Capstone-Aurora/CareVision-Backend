@@ -1,14 +1,15 @@
 package aurora.carevisionapiserver.domain.admin.api;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
-import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminIdCheckRequest;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminSignUpRequest;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
@@ -52,10 +53,9 @@ public class AdminAuthController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "AUTH400", description = "아이디가 이미 존재합니다.")
     })
-    @PostMapping("/check-username")
-    public BaseResponse<Boolean> checkUsername(
-            @RequestBody AdminIdCheckRequest adminIdCheckRequest) {
-        boolean isDuplicated = adminService.isUsernameDuplicated(adminIdCheckRequest.getUsername());
+    @GetMapping("/check-username")
+    public BaseResponse<Boolean> checkUsername(@RequestParam String username) {
+        boolean isDuplicated = adminService.isUsernameDuplicated(username);
 
         if (isDuplicated) {
             return BaseResponse.onFailure(

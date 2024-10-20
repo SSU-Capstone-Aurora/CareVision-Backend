@@ -21,9 +21,4 @@ public class AdminRequest {
 
         private String password;
     }
-
-    @Getter
-    public static class AdminIdCheckRequest {
-        private String username;
-    }
 }

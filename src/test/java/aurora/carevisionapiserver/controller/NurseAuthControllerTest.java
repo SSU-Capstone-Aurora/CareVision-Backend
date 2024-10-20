@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,12 +48,6 @@ public class NurseAuthControllerTest {
                 "hospital": {
                     "id": 1
                 }
-            }
-            """;
-    private static final String NURSE_CHECK_USERNAME_JSON =
-            """
-            {
-                "username": "nurse1"
             }
             """;
 
@@ -123,9 +118,9 @@ public class NurseAuthControllerTest {
 
         // Then
         mockMvc.perform(
-                        post("/api/check-username")
+                        get("/api/check-username")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(NURSE_CHECK_USERNAME_JSON)
+                                .param("username", username)
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._USERNAME_AVAILABLE.getCode()))
@@ -144,9 +139,9 @@ public class NurseAuthControllerTest {
 
         // Then
         mockMvc.perform(
-                        post("/api/check-username")
+                        get("/api/check-username")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(NURSE_CHECK_USERNAME_JSON)
+                                .param("username", username)
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(ErrorStatus.USERNAME_DUPLICATED.getCode()))
