@@ -2,7 +2,9 @@ package aurora.carevisionapiserver.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +25,7 @@ import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
+import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 
 @WebMvcTest(AdminAuthController.class)
@@ -79,5 +82,49 @@ public class AdminAuthControllerTest {
                 .andExpect(jsonPath("$.result.admin.id").value(1))
                 .andExpect(jsonPath("$.result.hospital.name").value("오로라 병원"))
                 .andExpect(jsonPath("$.result.hospital.department").value("성형외과"));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("관리자 회원가입 중복 체크에 성공한다.")
+    public void testCheckUsernameSuccess() throws Exception {
+        // Given
+        String username = "admin1";
+
+        // When
+        when(adminService.isUsernameDuplicated(username)).thenReturn(false);
+
+        // Then
+        mockMvc.perform(
+                        get("/api/admin/check-username")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("username", username)
+                                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SuccessStatus._USERNAME_AVAILABLE.getCode()))
+                .andExpect(jsonPath("$.result").value(true));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("관리자 회원가입 중복 체크에 실패한다.")
+    public void testCheckUsernameFailure() throws Exception {
+        // Given
+        String username = "admin1";
+
+        // When
+        when(adminService.isUsernameDuplicated(username)).thenReturn(true);
+
+        // Then
+        mockMvc.perform(
+                        get("/api/admin/check-username")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("username", username)
+                                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorStatus.USERNAME_DUPLICATED.getCode()))
+                .andExpect(
+                        jsonPath("$.message").value(ErrorStatus.USERNAME_DUPLICATED.getMessage()))
+                .andExpect(jsonPath("$.result").value(false));
     }
 }

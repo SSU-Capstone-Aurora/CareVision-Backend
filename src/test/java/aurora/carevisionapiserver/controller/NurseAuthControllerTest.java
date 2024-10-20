@@ -3,7 +3,9 @@ package aurora.carevisionapiserver.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +27,7 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 
 @WebMvcTest(NurseAuthController.class)
 public class NurseAuthControllerTest {
@@ -79,9 +82,8 @@ public class NurseAuthControllerTest {
                 .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("성공입니다."))
-                .andExpect(jsonPath("$.result.nurse.id").value(1))
-                .andExpect(jsonPath("$.result.hospital.name").value("오로라 병원"))
-                .andExpect(jsonPath("$.result.hospital.department").value("정형외과"));
+                .andExpect(jsonPath("$.result.id").value(1))
+                .andExpect(jsonPath("$.result.name").value("오로라"));
     }
 
     @Test
@@ -102,5 +104,49 @@ public class NurseAuthControllerTest {
                 .andExpect(jsonPath("$.isSuccess").value(false))
                 .andExpect(jsonPath("$.code").value("HOSPITAL400"))
                 .andExpect(jsonPath("$.message").value("병원을 찾을 수 없습니다."));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("간호사 회원가입 중복 체크에 성공한다.")
+    public void testCheckUsernameSuccess() throws Exception {
+        // Given
+        String username = "nurse1";
+
+        // When
+        when(nurseService.isUsernameDuplicated(username)).thenReturn(false);
+
+        // Then
+        mockMvc.perform(
+                        get("/api/check-username")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("username", username)
+                                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SuccessStatus._USERNAME_AVAILABLE.getCode()))
+                .andExpect(jsonPath("$.result").value(true));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("간호사 회원가입 중복 체크에 실패한다.")
+    public void testCheckUsernameFailure() throws Exception {
+        // Given
+        String username = "nurse1";
+
+        // When
+        when(nurseService.isUsernameDuplicated(username)).thenReturn(true);
+
+        // Then
+        mockMvc.perform(
+                        get("/api/check-username")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("username", username)
+                                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(ErrorStatus.USERNAME_DUPLICATED.getCode()))
+                .andExpect(
+                        jsonPath("$.message").value(ErrorStatus.USERNAME_DUPLICATED.getMessage()))
+                .andExpect(jsonPath("$.result").value(false));
     }
 }

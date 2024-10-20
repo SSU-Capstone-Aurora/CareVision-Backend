@@ -1,9 +1,11 @@
 package aurora.carevisionapiserver.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -92,6 +94,36 @@ public class NurseServiceTest {
         assertEquals(expectedNurse.getUsername(), resultNurse.getUsername());
         assertEquals(encryptedPassword, resultNurse.getPassword());
         assertEquals(expectedNurse.getHospital(), resultNurse.getHospital());
+    }
+
+    @Test
+    @DisplayName("아이디 중복 체크가 성공한다.")
+    void isUsernameDuplicatedSuccess() {
+        // Given
+        String username = "nurse1";
+        given(nurseRepository.existsByUsername(username)).willReturn(true);
+
+        // When
+        boolean result = nurseService.isUsernameDuplicated(username);
+
+        // Then
+        assertTrue(result);
+        verify(nurseRepository).existsByUsername(username);
+    }
+
+    @Test
+    @DisplayName("아이디 중복 체크가 실패한다.")
+    void isUsernameDuplicatedFailure() {
+        // Given
+        String username = "nurse2";
+        given(nurseRepository.existsByUsername(username)).willReturn(false);
+
+        // When
+        boolean result = nurseService.isUsernameDuplicated(username);
+
+        // Then
+        assertFalse(result);
+        verify(nurseRepository).existsByUsername(username);
     }
 
     @Test
