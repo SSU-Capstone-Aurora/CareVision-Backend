@@ -1,16 +1,18 @@
 package aurora.carevisionapiserver.domain.hospital.converter;
 
+import static aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.*;
+
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchListResponse;
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 
 public class HospitalConverter {
     public static HospitalSearchListResponse toHospitalSearchListResponse(
-            List<HospitalResponse.HospitalSearchResponse> hospitals) {
+            List<HospitalSearchResponse> hospitals) {
         return HospitalSearchListResponse.builder()
                 .hospitals(hospitals)
                 .totalCount((long) hospitals.size())
@@ -24,10 +26,17 @@ public class HospitalConverter {
                 .build();
     }
 
-    public static HospitalResponse.HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
-        return HospitalResponse.HospitalInfoResponse.builder()
+    public static HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
+        return HospitalInfoResponse.builder()
                 .name(admin.getHospital().getName())
                 .department(admin.getHospital().getDepartment())
+                .build();
+    }
+
+    public static HospitalInfoResponse toHospitalInfoResponse(Nurse nurse) {
+        return HospitalInfoResponse.builder()
+                .name(nurse.getHospital().getName())
+                .department(nurse.getHospital().getDepartment())
                 .build();
     }
 

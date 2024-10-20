@@ -26,11 +26,12 @@ public class SecurityConfig {
         "/api/admin/cameras",
         "/api/admin/hospitals",
         "/api/admin/departments",
-        "/api/nurse/profile",
+        "/api/profile",
         "/api/admin/nurses",
         "/api/admin/patients/search",
         "/api/admin/nurses/search",
-        "/api/admin/sign-up"
+        "/api/admin/sign-up",
+        "/api/sign-up"
     };
 
     @Bean

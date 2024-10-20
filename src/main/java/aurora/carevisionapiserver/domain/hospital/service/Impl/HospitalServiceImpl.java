@@ -101,4 +101,10 @@ public class HospitalServiceImpl implements HospitalService {
     public JsonNode getItemsNode(JsonNode rootNode) {
         return rootNode.path("response").path("body").path("items").path("item");
     }
+
+    public Hospital getHospital(Long id) {
+        return hospitalRepository
+                .findById(id)
+                .orElseThrow(() -> new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND));
+    }
 }

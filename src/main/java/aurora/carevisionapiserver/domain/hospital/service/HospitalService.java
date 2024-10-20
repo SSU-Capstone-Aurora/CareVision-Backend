@@ -21,4 +21,6 @@ public interface HospitalService {
     List<String> searchDepartment(String ykiho) throws IOException;
 
     List<String> parseDepartmentInfo(StringBuilder departmentInfo) throws IOException;
+
+    Hospital getHospital(Long id);
 }
