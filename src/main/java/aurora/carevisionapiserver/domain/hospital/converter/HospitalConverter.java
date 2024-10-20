@@ -7,6 +7,7 @@ import java.util.List;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalInfoResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchListResponse;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 
