@@ -4,6 +4,7 @@ import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResp
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
@@ -31,13 +32,12 @@ public class PatientConverter {
     }
 
     public static PatientProfileResponse toPatientProfileResponse(Patient patient) {
+        Bed bed = patient.getBed();
         return PatientProfileResponse.builder()
                 .name(patient.getName())
-                .inpatientWardNumber(
-                        patient.getBed() != null ? patient.getBed().getInpatientWardNumber() : null)
-                .patientRoomNumber(
-                        patient.getBed() != null ? patient.getBed().getPatientRoomNumber() : null)
-                .bedNumber(patient.getBed() != null ? patient.getBed().getBedNumber() : null)
+                .inpatientWardNumber(bed != null ? bed.getInpatientWardNumber() : null)
+                .patientRoomNumber(bed != null ? bed.getPatientRoomNumber() : null)
+                .bedNumber(bed != null ? bed.getBedNumber() : null)
                 .code(patient.getCode())
                 .createdAt(patient.getCreatedAt().toLocalDate())
                 .build();
