@@ -5,8 +5,8 @@ import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResp
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 
 public class PatientConverter {
@@ -45,7 +45,8 @@ public class PatientConverter {
 
     public static PatientProfileListResponse toPatientProfileListResponse(List<Patient> patients) {
         return PatientProfileListResponse.builder()
-                .patients(patients.stream().map(PatientConverter::toPatientProfileResponse).toList())
+                .patients(
+                        patients.stream().map(PatientConverter::toPatientProfileResponse).toList())
                 .count(patients.size())
                 .build();
     }
