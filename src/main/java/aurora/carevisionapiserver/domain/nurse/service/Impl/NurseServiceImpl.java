@@ -3,6 +3,8 @@ package aurora.carevisionapiserver.domain.nurse.service.Impl;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,7 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    @Transactional
     public Nurse createNurse(NurseCreateRequest nurseCreateRequest, Hospital hospital) {
         String encryptedPassword = bCryptPasswordEncoder.encode(nurseCreateRequest.getPassword());
         Nurse nurse = NurseConverter.toNurse(nurseCreateRequest, encryptedPassword, hospital);

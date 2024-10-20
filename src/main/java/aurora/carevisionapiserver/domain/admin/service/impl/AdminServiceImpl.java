@@ -15,13 +15,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    @Transactional
     public Admin createAdmin(AdminCreateRequest adminCreateRequest, Hospital hospital) {
         String encryptedPassword = bCryptPasswordEncoder.encode(adminCreateRequest.getPassword());
         Admin admin = AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital);
