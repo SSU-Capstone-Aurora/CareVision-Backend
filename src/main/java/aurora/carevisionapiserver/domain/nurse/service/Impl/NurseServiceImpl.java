@@ -47,4 +47,9 @@ public class NurseServiceImpl implements NurseService {
         Nurse nurse = NurseConverter.toNurse(nurseCreateRequest, encryptedPassword, hospital);
         return nurseRepository.save(nurse);
     }
+
+    @Override
+    public boolean isUsernameDuplicated(String username) {
+        return nurseRepository.existsByUsername(username);
+    }
 }

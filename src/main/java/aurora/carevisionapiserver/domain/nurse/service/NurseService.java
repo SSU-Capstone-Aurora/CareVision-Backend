@@ -17,4 +17,6 @@ public interface NurseService {
     List<Nurse> searchNurse(String nurseName);
 
     Nurse createNurse(NurseCreateRequest nurseCreateRequest, Hospital hospital);
+
+    boolean isUsernameDuplicated(String username);
 }
