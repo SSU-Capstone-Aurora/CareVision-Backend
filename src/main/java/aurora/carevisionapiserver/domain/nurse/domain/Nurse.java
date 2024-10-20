@@ -57,7 +57,8 @@ public class Nurse extends BaseEntity {
             String password,
             LocalDateTime registeredAt,
             boolean isActivated,
-            Hospital hospital) {
+            Hospital hospital,
+            List<Patient> patients) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -65,5 +66,6 @@ public class Nurse extends BaseEntity {
         this.registeredAt = registeredAt;
         this.isActivated = isActivated;
         this.hospital = hospital;
+        this.patients = patients;
     }
 }
