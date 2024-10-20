@@ -15,7 +15,7 @@ import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseP
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileDTOList;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
@@ -52,11 +52,11 @@ public class NurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @GetMapping("/patients")
-    public BaseResponse<PatientProfileDTOList> getPatientList(
+    public BaseResponse<PatientProfileListResponse> getPatientList(
             @ExistNurse @RequestParam(name = "nurseId") Long nurseId) {
         Nurse nurse = nurseService.getNurse(nurseId).get();
         List<Patient> patients = patientService.getPatients(nurse);
         return BaseResponse.of(
-                SuccessStatus._OK, PatientConverter.toPatientProfileDTOList(patients));
+                SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
     }
 }

@@ -26,7 +26,7 @@ public class PatientResponse {
 
     @Builder
     @Getter
-    public static class PatientProfileDTO {
+    public static class PatientProfileResponse {
         private String name;
         private String code;
         private LocalDate createdAt;
@@ -37,8 +37,8 @@ public class PatientResponse {
 
     @Builder
     @Getter
-    public static class PatientProfileDTOList {
-        private List<PatientProfileDTO> patients;
+    public static class PatientProfileListResponse {
+        private List<PatientProfileResponse> patients;
         private int count;
     }
 }
