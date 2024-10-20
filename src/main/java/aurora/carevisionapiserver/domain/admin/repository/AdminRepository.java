@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 
 @Repository
-public interface AdminRepository extends JpaRepository<Admin, Long> {}
+public interface AdminRepository extends JpaRepository<Admin, Long> {
+    boolean existsByUsername(String username);
+}

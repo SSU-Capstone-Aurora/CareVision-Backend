@@ -27,4 +27,9 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital);
         return adminRepository.save(admin);
     }
+
+    @Override
+    public boolean isUsernameDuplicated(String username) {
+        return adminRepository.existsByUsername(username);
+    }
 }

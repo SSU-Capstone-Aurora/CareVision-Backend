@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
+import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminIdCheckRequest;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminSignUpRequest;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
@@ -15,6 +16,8 @@ import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
+import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -31,7 +34,7 @@ public class AdminAuthController {
 
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
     @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
-    @PostMapping("sign-up")
+    @PostMapping("/sign-up")
     public BaseResponse<AdminSignUpResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {
 
@@ -42,5 +45,25 @@ public class AdminAuthController {
         Admin admin = adminService.createAdmin(adminCreateRequest, hospital);
 
         return BaseResponse.onSuccess(AdminConverter.toAdminSignUpResponse(admin));
+    }
+
+    @Operation(summary = "관리자 회원가입 중복 체크", description = "주어진 아이디가 이미 존재하는지 확인합니다._예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "AUTH400", description = "아이디가 이미 존재합니다.")
+    })
+    @PostMapping("/check-username")
+    public BaseResponse<Boolean> checkUsername(
+            @RequestBody AdminIdCheckRequest adminIdCheckRequest) {
+        boolean isDuplicated = adminService.isUsernameDuplicated(adminIdCheckRequest.getUsername());
+
+        if (isDuplicated) {
+            return BaseResponse.onFailure(
+                    ErrorStatus.USERNAME_DUPLICATED.getCode(),
+                    ErrorStatus.USERNAME_DUPLICATED.getMessage(),
+                    false);
+        } else {
+            return BaseResponse.of(SuccessStatus._USERNAME_AVAILABLE, true);
+        }
     }
 }

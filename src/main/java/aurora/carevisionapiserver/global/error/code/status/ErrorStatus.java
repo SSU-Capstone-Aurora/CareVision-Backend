@@ -24,6 +24,9 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Patient
     PATIENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PATIENT400", "환자를 찾을 수 없습니다."),
+
+    // Auth
+    USERNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "AUTH400", "이미 사용 중인 아이디입니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;

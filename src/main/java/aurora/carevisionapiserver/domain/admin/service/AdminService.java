@@ -6,4 +6,6 @@ import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 
 public interface AdminService {
     Admin createAdmin(AdminCreateRequest adminCreateRequest, Hospital hospital);
+
+    boolean isUsernameDuplicated(String username);
 }
