@@ -12,6 +12,8 @@ import lombok.Getter;
 public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
     _CREATED(HttpStatus.CREATED, "COMMON201", "요청 성공 및 리소스 생성됨"),
+
+    // Auth
     _USERNAME_AVAILABLE(HttpStatus.OK, "AUTH200", "사용 가능한 아이디입니다."),
     ;
 
