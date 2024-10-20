@@ -34,7 +34,7 @@ public class AdminAuthController {
     private final HospitalService hospitalService;
 
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
-    @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
+    @ApiResponses({@ApiResponse(responseCode = "AUTH200", description = "OK, 성공")})
     @PostMapping("/sign-up")
     public BaseResponse<AdminSignUpResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {

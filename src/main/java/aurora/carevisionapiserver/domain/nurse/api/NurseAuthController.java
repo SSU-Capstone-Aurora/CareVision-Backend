@@ -54,7 +54,7 @@ public class NurseAuthController {
 
     @Operation(summary = "간호사 회원가입 중복 체크", description = "주어진 아이디가 이미 존재하는지 확인합니다._예림")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "AUTH200", description = "OK, 성공"),
         @ApiResponse(responseCode = "AUTH400", description = "아이디가 이미 존재합니다.")
     })
     @GetMapping("/check-username")
