@@ -1,7 +1,11 @@
 package aurora.carevisionapiserver.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
@@ -47,5 +51,35 @@ public class AdminServiceTest {
         assertEquals(admin.getUsername(), resultAdmin.getUsername());
         assertEquals(encryptedPassword, resultAdmin.getPassword());
         assertEquals(hospital, resultAdmin.getHospital());
+    }
+
+    @Test
+    @DisplayName("아이디 중복 체크가 성공한다.")
+    void isUsernameDuplicatedSuccess() {
+        // Given
+        String username = "admin1";
+        given(adminRepository.existsByUsername(username)).willReturn(true);
+
+        // When
+        boolean result = adminService.isUsernameDuplicated(username);
+
+        // Then
+        assertTrue(result);
+        verify(adminRepository).existsByUsername(username);
+    }
+
+    @Test
+    @DisplayName("아이디 중복 체크가 실패한다.")
+    void isUsernameDuplicatedFailure() {
+        // Given
+        String username = "admin2";
+        given(adminRepository.existsByUsername(username)).willReturn(false);
+
+        // When
+        boolean result = adminService.isUsernameDuplicated(username);
+
+        // Then
+        assertFalse(result);
+        verify(adminRepository).existsByUsername(username);
     }
 }
