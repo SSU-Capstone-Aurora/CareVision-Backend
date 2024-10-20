@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import aurora.carevisionapiserver.domain.admin.api.AdminController;
+import aurora.carevisionapiserver.domain.admin.api.AdminAuthController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
@@ -25,8 +25,8 @@ import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.Ho
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 
-@WebMvcTest(AdminController.class)
-public class AdminControllerTest {
+@WebMvcTest(AdminAuthController.class)
+public class AdminAuthControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private AdminService adminService;
     @MockBean private HospitalService hospitalService;
@@ -34,12 +34,12 @@ public class AdminControllerTest {
     private static final String ADMIN_SIGN_UP_REQUEST_JSON =
             """
             {
-                "adminCreateRequest": {
+                "admin": {
                     "username": "admin1",
                     "password": "password123",
                     "department": "성형외과"
                 },
-                "hospitalCreateRequest": {
+                "hospital": {
                     "name": "오로라 병원",
                     "department": "성형외과"
                 }
@@ -76,8 +76,8 @@ public class AdminControllerTest {
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
-                .andExpect(jsonPath("$.result.id").value(1))
-                .andExpect(jsonPath("$.result.hospital").value("오로라 병원"))
-                .andExpect(jsonPath("$.result.department").value("성형외과"));
+                .andExpect(jsonPath("$.result.admin.id").value(1))
+                .andExpect(jsonPath("$.result.hospital.name").value("오로라 병원"))
+                .andExpect(jsonPath("$.result.hospital.department").value("성형외과"));
     }
 }

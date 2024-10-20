@@ -10,4 +10,9 @@ public class HospitalRequest {
         private String hospital;
         private String department;
     }
+
+    @Getter
+    public static class HospitalSelectRequest {
+        private Long id;
+    }
 }

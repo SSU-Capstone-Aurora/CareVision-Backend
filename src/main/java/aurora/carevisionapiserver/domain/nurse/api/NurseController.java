@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/api/nurse")
+@RequestMapping("/api")
 public class NurseController {
     private final NurseService nurseService;
 

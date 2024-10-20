@@ -23,10 +23,17 @@ public class NurseResponse {
         private String id;
     }
 
-    @Builder
     @Getter
+    @Builder
     public static class NursePreviewListResponse {
         private List<NursePreviewResponse> nurseList;
         private int count;
+    }
+
+    @Getter
+    @Builder
+    public static class NurseInfoResponse {
+        private Long id;
+        private String name;
     }
 }

@@ -25,13 +25,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
-public class AdminController {
+public class AdminAuthController {
     private final AdminService adminService;
     private final HospitalService hospitalService;
 
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
     @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
-    @PostMapping("/sign-up")
+    @PostMapping("sign-up")
     public BaseResponse<AdminSignUpResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {
 
