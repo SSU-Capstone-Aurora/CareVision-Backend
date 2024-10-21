@@ -14,45 +14,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import aurora.carevisionapiserver.domain.bed.domain.Bed;
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.Impl.PatientServiceImpl;
+import aurora.carevisionapiserver.util.NurseUtils;
+import aurora.carevisionapiserver.util.PatientUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
     @InjectMocks private PatientServiceImpl patientService;
     @Mock private PatientRepository patientRepository;
 
-    private Patient createPatient() {
-        Bed bed =
-                Bed.builder()
-                        .id(1L)
-                        .inpatientWardNumber(1L)
-                        .patientRoomNumber(2L)
-                        .bedNumber(3L)
-                        .build();
-        return Patient.builder().id(1L).name("test").code("kk-123").bed(bed).build();
-    }
-
-    private Patient createOtherPatient() {
-        Bed bed =
-                Bed.builder()
-                        .id(2L)
-                        .inpatientWardNumber(2L)
-                        .patientRoomNumber(3L)
-                        .bedNumber(3L)
-                        .build();
-        return Patient.builder().id(2L).name("kangrok").code("rr-123").bed(bed).build();
-    }
-
     @Test
     @DisplayName("환자명 검색에 성공한다.")
     void searchPatientSuccess() {
         // given
         String patientName = "test";
-        List<Patient> patients = List.of(createPatient(), createOtherPatient());
+        List<Patient> patients =
+                List.of(PatientUtil.createPatient(), PatientUtil.createOtherPatient());
         given(patientRepository.searchByName(patientName)).willReturn(patients);
         // when
         List<Patient> result = patientService.searchPatient(patientName);
@@ -76,5 +57,23 @@ public class PatientServiceTest {
 
         // when & then
         assertThrows(PatientException.class, () -> patientService.searchPatient("test"));
+    }
+
+    @Test
+    @DisplayName("간호사로 환자를 검색한다.")
+    void searchPatientByNurse() {
+        // given
+        Nurse nurse = NurseUtils.createNurse();
+        List<Patient> patients = nurse.getPatients();
+        given(patientRepository.findPatientByNurse(nurse)).willReturn(nurse.getPatients());
+
+        // when
+        List<Patient> result = patientService.getPatients(nurse);
+
+        // then
+        assertEquals(result.size(), patients.size());
+        assertEquals(result.get(0).getName(), patients.get(0).getName());
+        assertEquals(result.get(0).getId(), patients.get(0).getId());
+        assertEquals(result.get(0).getCode(), patients.get(0).getCode());
     }
 }

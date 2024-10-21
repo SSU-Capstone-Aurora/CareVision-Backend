@@ -56,7 +56,7 @@ class NurseControllerTest {
         when(nurseService.existsByNurseId(nurseId)).thenReturn(true);
 
         mockMvc.perform(
-                        get("/api/nurse/profile")
+                        get("/api/profile")
                                 .param("nurseId", String.valueOf(nurseId))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -66,4 +66,26 @@ class NurseControllerTest {
                 .andExpect(jsonPath("$.result.hospitalName").value("서울병원"))
                 .andExpect(jsonPath("$.result.department").value("성형외과"));
     }
+    /*
+    @Test
+    @WithMockUser
+    @DisplayName("간호사가 자신의 환자들을 조회한다.")
+    void getNursePatients() throws Exception {
+        Nurse nurse = createNurse();
+        Long nurseId = nurse.getId();
+
+        given(nurseService.getNurse(nurseId)).willReturn(Optional.of(nurse));
+        given(nurseService.existsByNurseId(nurseId)).willReturn(true);
+        given(patientService.getPatients(nurse)).willReturn(nurse.getPatients());
+
+        mockMvc.perform(
+                        get("/api/patients")
+                                .param("nurseId", String.valueOf(nurseId))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
+                .andExpect(jsonPath("$.result.patients[0].name").value("강록"))
+                .andExpect(jsonPath("$.result.patients[0].code").value("kk-123"));
+    }
+    */
 }

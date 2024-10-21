@@ -4,7 +4,10 @@ import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResp
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 
 public class PatientConverter {
@@ -24,6 +27,26 @@ public class PatientConverter {
         return PatientSearchListResponse.builder()
                 .patientList(
                         patients.stream().map(PatientConverter::toPatientSearchResponse).toList())
+                .count(patients.size())
+                .build();
+    }
+
+    public static PatientProfileResponse toPatientProfileResponse(Patient patient) {
+        Bed bed = patient.getBed();
+        return PatientProfileResponse.builder()
+                .name(patient.getName())
+                .inpatientWardNumber(bed != null ? bed.getInpatientWardNumber() : null)
+                .patientRoomNumber(bed != null ? bed.getPatientRoomNumber() : null)
+                .bedNumber(bed != null ? bed.getBedNumber() : null)
+                .code(patient.getCode())
+                .createdAt(patient.getCreatedAt().toLocalDate())
+                .build();
+    }
+
+    public static PatientProfileListResponse toPatientProfileListResponse(List<Patient> patients) {
+        return PatientProfileListResponse.builder()
+                .patients(
+                        patients.stream().map(PatientConverter::toPatientProfileResponse).toList())
                 .count(patients.size())
                 .build();
     }

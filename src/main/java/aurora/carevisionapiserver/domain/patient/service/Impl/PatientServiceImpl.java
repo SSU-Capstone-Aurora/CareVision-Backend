@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
@@ -21,5 +22,10 @@ public class PatientServiceImpl implements PatientService {
         List<Patient> patients = patientRepository.searchByName(patientName);
         if (patients.size() == 0) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
         return patients;
+    }
+
+    @Override
+    public List<Patient> getPatients(Nurse nurse) {
+        return patientRepository.findPatientByNurse(nurse);
     }
 }

@@ -8,8 +8,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,43 +26,13 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.Impl.NurseServiceImpl;
+import aurora.carevisionapiserver.util.NurseUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class NurseServiceTest {
     @InjectMocks private NurseServiceImpl nurseService;
     @Mock private NurseRepository nurseRepository;
-
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private Nurse createNurse() {
-        Hospital hospital = Hospital.builder().id(1L).name("서울병원").department("성형외과").build();
-
-        String dateTime = "2024-10-11 17:57:00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return Nurse.builder()
-                .id(1L)
-                .name("김간호사")
-                .username("kim1")
-                .registeredAt(LocalDateTime.parse(dateTime, formatter))
-                .hospital(hospital)
-                .build();
-    }
-
-    private Nurse createOtherNurse() {
-        Hospital hospital = Hospital.builder().id(2L).name("대구병원").department("성형외과").build();
-
-        String dateTime = "2024-09-10 17:57:00";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        return Nurse.builder()
-                .id(2L)
-                .name("최간호사")
-                .username("choi2")
-                .registeredAt(LocalDateTime.parse(dateTime, formatter))
-                .hospital(hospital)
-                .build();
-    }
 
     @Test
     @DisplayName("간호사 회원가입에 성공한다.")
@@ -130,7 +98,7 @@ public class NurseServiceTest {
     @DisplayName("간호사 찾기 성공한다.")
     void getNurseListSuccess() {
         // given
-        List<Nurse> nurses = List.of(createOtherNurse(), createNurse());
+        List<Nurse> nurses = List.of(NurseUtils.createOtherNurse(), NurseUtils.createNurse());
         given(nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt")))
                 .willReturn(nurses);
         // when
@@ -147,7 +115,7 @@ public class NurseServiceTest {
     @DisplayName("간호사가 존재하는지 조회한다.")
     void existsNurseTest() {
         // given
-        Nurse nurse = createNurse();
+        Nurse nurse = NurseUtils.createNurse();
         given(nurseRepository.findById(nurse.getId())).willReturn(Optional.of(nurse));
 
         // when
@@ -164,7 +132,7 @@ public class NurseServiceTest {
     void searchNurseSuccess() {
         // given
         String nurseName = "test";
-        List<Nurse> nurses = List.of(createNurse(), createOtherNurse());
+        List<Nurse> nurses = List.of(NurseUtils.createNurse(), NurseUtils.createOtherNurse());
         given(nurseRepository.searchByName(nurseName)).willReturn(nurses);
 
         // when
