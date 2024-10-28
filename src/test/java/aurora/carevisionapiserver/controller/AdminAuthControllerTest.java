@@ -101,7 +101,7 @@ public class AdminAuthControllerTest {
                                 .param("username", username)
                                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value(SuccessStatus._USERNAME_AVAILABLE.getCode()))
+                .andExpect(jsonPath("$.code").value(SuccessStatus.USERNAME_AVAILABLE.getCode()))
                 .andExpect(jsonPath("$.result").value(true));
     }
 

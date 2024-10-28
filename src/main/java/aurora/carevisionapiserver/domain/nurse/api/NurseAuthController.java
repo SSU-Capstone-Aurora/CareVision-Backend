@@ -67,7 +67,7 @@ public class NurseAuthController {
                     ErrorStatus.USERNAME_DUPLICATED.getMessage(),
                     false);
         } else {
-            return BaseResponse.of(SuccessStatus._USERNAME_AVAILABLE, true);
+            return BaseResponse.of(SuccessStatus.USERNAME_AVAILABLE, true);
         }
     }
 }
