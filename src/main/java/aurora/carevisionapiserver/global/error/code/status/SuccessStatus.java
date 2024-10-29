@@ -15,6 +15,8 @@ public enum SuccessStatus implements BaseCode {
 
     // Auth
     USERNAME_AVAILABLE(HttpStatus.OK, "AUTH200", "사용 가능한 아이디입니다."),
+    LOGIN_SUCCESS(HttpStatus.OK, "AUTH201", "성공적으로 로그인 되었습니다."),
+    REFRESH_TOKEN_ISSUED(HttpStatus.OK, "AUTH202", "refresh token이 발급되었습니다."),
     ;
 
     private final HttpStatus httpStatus;

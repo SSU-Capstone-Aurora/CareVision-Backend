@@ -18,4 +18,14 @@ public class AdminResponse {
     public static class AdminInfoResponse {
         private Long id;
     }
+
+    @Getter
+    public static class AdminLoginResponse {
+        private String accessToken;
+
+        @Builder
+        public AdminLoginResponse(String accessToken) {
+            this.accessToken = accessToken;
+        }
+    }
 }
