@@ -19,3 +19,8 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
+
+  data:
+    redis:
+      host: ${DEV_REDIS_URL}
+      port: 6379
