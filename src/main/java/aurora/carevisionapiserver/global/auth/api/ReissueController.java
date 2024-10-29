@@ -111,9 +111,8 @@ public class ReissueController {
 
         try {
             refreshTokenRepository
-                            .findByUsername(username)
-                            .orElseThrow(
-                                    () -> new AuthException(ErrorStatus.INVALID_REFRESH_TOKEN));
+                    .findByUsername(username)
+                    .orElseThrow(() -> new AuthException(ErrorStatus.INVALID_REFRESH_TOKEN));
         } catch (AuthException e) {
             return BaseResponse.onFailure(
                     ErrorStatus.INVALID_REFRESH_TOKEN.getCode(),
