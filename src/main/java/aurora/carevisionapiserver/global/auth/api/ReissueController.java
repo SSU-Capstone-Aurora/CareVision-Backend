@@ -110,8 +110,7 @@ public class ReissueController {
         String username = jwtUtil.getUsername(refreshToken);
 
         try {
-            RefreshToken existingRefreshToken =
-                    refreshTokenRepository
+            refreshTokenRepository
                             .findByUsername(username)
                             .orElseThrow(
                                     () -> new AuthException(ErrorStatus.INVALID_REFRESH_TOKEN));
@@ -125,9 +124,6 @@ public class ReissueController {
         // 이전 refresh token 삭제
         refreshTokenRepository.deleteByUsername(username);
 
-        // 새로운 JWT 생성
-        String newAccessToken =
-                jwtUtil.createJwt("accessToken", username, role, refreshExpirationTime);
         String newRefreshToken = jwtUtil.createJwt("refreshToken", username, role, 86400000L);
 
         // refresh token 업데이트
