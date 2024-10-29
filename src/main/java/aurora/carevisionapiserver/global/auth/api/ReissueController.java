@@ -131,7 +131,6 @@ public class ReissueController {
         String newRefreshToken = jwtUtil.createJwt("refreshToken", username, role, 86400000L);
 
         // refresh token 업데이트
-        refreshTokenRepository.existsByUsername(username);
         addRefreshToken(username, newRefreshToken, refreshExpirationTime);
 
         // response 헤더 설정

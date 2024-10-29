@@ -10,8 +10,6 @@ import aurora.carevisionapiserver.global.auth.domain.RefreshToken;
 
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
 
-    Boolean existsByUsername(String username);
-
     @Transactional
     void deleteByUsername(String refreshToken);
 
