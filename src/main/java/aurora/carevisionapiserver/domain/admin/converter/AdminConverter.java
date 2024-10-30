@@ -8,6 +8,7 @@ import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminS
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalInfoResponse;
+import aurora.carevisionapiserver.global.auth.domain.Role;
 
 public class AdminConverter {
 
@@ -16,6 +17,7 @@ public class AdminConverter {
         return Admin.builder()
                 .username(adminCreateRequest.getUsername())
                 .password(password)
+                .role(Role.ADMIN)
                 .hospital(hospital)
                 .build();
     }

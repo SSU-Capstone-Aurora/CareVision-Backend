@@ -20,4 +20,11 @@ public class NurseRequest {
         private String password;
         private String name;
     }
+
+    @Getter
+    @Builder
+    public static class NurseLoginRequest {
+        private String username;
+        private String password;
+    }
 }

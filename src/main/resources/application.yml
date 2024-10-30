@@ -15,3 +15,8 @@ springdoc:
 
 openapi:
   secretkey: ${OPENAPI_SECRET_KEY}
+
+jwt:
+  refresh_expiration_time: 86400000
+  access_expiration_time: 600000
+  secret: ${JWT_SECRET_KEY}
