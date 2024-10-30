@@ -49,11 +49,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public String createAccessToken(String username, String role) {
         return jwtUtil.createJwt("access", username, role, accessExpirationTime);
     }
 
     @Override
+    @Transactional
     public String createRefreshToken(String username, String role) {
         String refreshToken =
                 jwtUtil.createJwt("refreshToken", username, role, refreshExpirationTime);
