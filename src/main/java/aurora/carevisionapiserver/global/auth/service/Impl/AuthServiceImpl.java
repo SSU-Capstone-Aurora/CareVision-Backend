@@ -40,10 +40,10 @@ public class AuthServiceImpl implements AuthService {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.refresh_expiration_time}")
+    @Value("${jwt.refresh-expiration-time}")
     private long refreshExpirationTime;
 
-    @Value("${jwt.access_expiration_time}")
+    @Value("${jwt.access-expiration-time}")
     private long accessExpirationTime;
 
     @PostConstruct
@@ -63,12 +63,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String generateAccessToken(String username, String role) {
+    public String createAccessToken(String username, String role) {
         return jwtUtil.createJwt("access", username, role, accessExpirationTime);
     }
 
     @Override
-    public String generateRefreshToken(String username, String role) {
+    public String createRefreshToken(String username, String role) {
         String refreshToken =
                 jwtUtil.createJwt("refreshToken", username, role, refreshExpirationTime);
         saveRefreshToken(username, refreshToken, refreshExpirationTime);
