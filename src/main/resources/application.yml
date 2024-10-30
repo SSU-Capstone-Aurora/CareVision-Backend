@@ -17,6 +17,6 @@ openapi:
   secretkey: ${OPENAPI_SECRET_KEY}
 
 jwt:
-  refresh-expiration-time: 86400000
-  access-expiration-time: 600000
+  refresh-expiration-time: ${REFRESH_EXPIRATION_TIME}
+  access-expiration-time: ${ACCESS_EXPIRATION_TIME}
   secret: ${JWT_SECRET_KEY}
