@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.nurse.api;
 
 import static aurora.carevisionapiserver.domain.nurse.converter.NurseConverter.toNurseLoginResponse;
 
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
@@ -87,7 +88,7 @@ public class NurseAuthController {
         @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
     })
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<NurseResponse.NurseLoginResponse>> login(
+    public ResponseEntity<BaseResponse<NurseLoginResponse>> login(
             @RequestBody NurseRequest.NurseLoginRequest nurseLoginRequest,
             HttpServletResponse response) {
 
