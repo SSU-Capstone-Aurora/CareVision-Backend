@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class CustomUserDetails implements UserDetails {
 
     private final String username;
-    private final String password;
     private final Role role;
     private final boolean isActivated;
 
@@ -23,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override

@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 public interface AuthService {
     Optional<Authentication> authenticate(String username, String password);
 
-    String generateAccessToken(String username, String role);
+    String createAccessToken(String username, String role);
 
-    String generateRefreshToken(String username, String role);
+    String createRefreshToken(String username, String role);
 
     void saveRefreshToken(String username, String refreshToken, long expiredMs);
 

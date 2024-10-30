@@ -36,7 +36,7 @@ public class ReissueController {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AuthService authService;
 
-    @Value("${jwt.refresh_expiration_time}")
+    @Value("${jwt.refresh-expiration-time}")
     private long refreshExpirationTime;
 
     @Operation(
@@ -123,7 +123,8 @@ public class ReissueController {
         // 이전 refresh token 삭제
         refreshTokenRepository.deleteByUsername(username);
 
-        String newRefreshToken = jwtUtil.createJwt("refreshToken", username, role, 86400000L);
+        String newRefreshToken =
+                jwtUtil.createJwt("refreshToken", username, role, refreshExpirationTime);
 
         // refresh token 업데이트
         addRefreshToken(username, newRefreshToken, refreshExpirationTime);

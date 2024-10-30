@@ -32,6 +32,9 @@ jobs:
           files: ./src/main/resources/application.yml
         env:
           openapi.secretkey: ${{ secrets.OPENAPI_SECRET_KEY }}
+          jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
+          jwt.refresh-expiration-time: ${{ secrets.REFRESH_EXPIRATION_TIME }}
+          jwt.access-expiration-time: ${{ secrets.ACCESS_EXPIRATION_TIME }}
 
       - name: Set environment variables in application-dev.yml
         uses: microsoft/variable-substitution@v1
@@ -41,6 +44,7 @@ jobs:
           spring.datasource.url: ${{ secrets.DB_URL }}
           spring.datasource.username: ${{ secrets.DB_USER }}
           spring.datasource.password: ${{ secrets.DB_PASSWORD }}
+          spring.data.redis.host: ${{ secrets.DEV_REDIS_URL }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew

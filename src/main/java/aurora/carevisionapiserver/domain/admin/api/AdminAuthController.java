@@ -93,9 +93,8 @@ public class AdminAuthController {
                 .authenticate(username, password)
                 .map(
                         authentication -> {
-                            String accessToken = authService.generateAccessToken(username, "ADMIN");
-                            String refreshToken =
-                                    authService.generateRefreshToken(username, "ADMIN");
+                            String accessToken = authService.createAccessToken(username, "ADMIN");
+                            String refreshToken = authService.createRefreshToken(username, "ADMIN");
 
                             response.addCookie(authService.createRefreshTokenCookie(refreshToken));
 

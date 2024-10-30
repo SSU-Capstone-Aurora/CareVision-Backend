@@ -13,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetails;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,13 +22,14 @@ import lombok.RequiredArgsConstructor;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         // 토큰이 없다면 다음 필터로 넘긴다
         if (authHeader == null) {
@@ -69,28 +68,9 @@ public class JWTFilter extends OncePerRequestFilter {
         CustomUserDetails customUserDetails;
 
         if (Role.NURSE.getRole().equals(role)) {
-            Nurse nurse =
-                    Nurse.builder()
-                            .username(username)
-                            .password("temppassword")
-                            .role(Role.NURSE)
-                            .build();
-            customUserDetails =
-                    new CustomUserDetails(
-                            username,
-                            "temppassword",
-                            Role.NURSE,
-                            nurse.isActivated()); // Admin은 null
+            customUserDetails = new CustomUserDetails(username, Role.NURSE, true);
         } else if (Role.ADMIN.getRole().equals(role)) {
-            Admin admin =
-                    Admin.builder()
-                            .username(username)
-                            .password("temppassword")
-                            .role(Role.ADMIN)
-                            .build();
-            customUserDetails =
-                    new CustomUserDetails(
-                            username, "temppassword", Role.ADMIN, true); // Nurse는 null
+            customUserDetails = new CustomUserDetails(username, Role.ADMIN, true);
         } else {
             // 유효하지 않은 역할일 경우 처리
             PrintWriter writer = response.getWriter();
