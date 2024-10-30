@@ -9,4 +9,6 @@ public interface PatientService {
     List<Patient> searchPatient(String patientName);
 
     List<Patient> getPatients(Nurse nurse);
+
+    List<Patient> getPatients(Long adminId);
 }
