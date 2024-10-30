@@ -14,11 +14,9 @@ public class PatientConverter {
     public static PatientSearchResponse toPatientSearchResponse(Patient patient) {
         return PatientSearchResponse.builder()
                 .patientName(patient.getName())
-                .inpatientWardNumber(
-                        patient.getBed() != null ? patient.getBed().getInpatientWardNumber() : null)
-                .patientRoomNumber(
-                        patient.getBed() != null ? patient.getBed().getPatientRoomNumber() : null)
-                .bedNumber(patient.getBed() != null ? patient.getBed().getBedNumber() : null)
+                .inpatientWardNumber(patient.getBed().getInpatientWardNumber())
+                .patientRoomNumber(patient.getBed().getPatientRoomNumber())
+                .bedNumber(patient.getBed().getBedNumber())
                 .code(patient.getCode())
                 .build();
     }

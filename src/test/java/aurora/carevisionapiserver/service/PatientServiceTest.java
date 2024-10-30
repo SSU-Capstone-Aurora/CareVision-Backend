@@ -1,9 +1,16 @@
 package aurora.carevisionapiserver.service;
 
+import static aurora.carevisionapiserver.util.NurseUtils.createNurse;
+import static aurora.carevisionapiserver.util.PatientUtil.createOtherPatient;
+import static aurora.carevisionapiserver.util.PatientUtil.createPatient;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,26 +21,27 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.admin.service.impl.AdminServiceImpl;
+import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.Impl.PatientServiceImpl;
-import aurora.carevisionapiserver.util.NurseUtils;
-import aurora.carevisionapiserver.util.PatientUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
     @InjectMocks private PatientServiceImpl patientService;
     @Mock private PatientRepository patientRepository;
+    @Mock private AdminServiceImpl adminService;
 
     @Test
     @DisplayName("환자명 검색에 성공한다.")
     void searchPatientSuccess() {
         // given
         String patientName = "test";
-        List<Patient> patients =
-                List.of(PatientUtil.createPatient(), PatientUtil.createOtherPatient());
+        List<Patient> patients = List.of(createPatient(), createOtherPatient());
         given(patientRepository.searchByName(patientName)).willReturn(patients);
         // when
         List<Patient> result = patientService.searchPatient(patientName);
@@ -63,7 +71,7 @@ public class PatientServiceTest {
     @DisplayName("간호사로 환자를 검색한다.")
     void searchPatientByNurse() {
         // given
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = createNurse();
         List<Patient> patients = nurse.getPatients();
         given(patientRepository.findPatientByNurse(nurse)).willReturn(nurse.getPatients());
 
@@ -75,5 +83,31 @@ public class PatientServiceTest {
         assertEquals(result.get(0).getName(), patients.get(0).getName());
         assertEquals(result.get(0).getId(), patients.get(0).getId());
         assertEquals(result.get(0).getCode(), patients.get(0).getCode());
+    }
+
+    @Test
+    @DisplayName("관리자의 환자를 조회합니다.")
+    void getPatientByAdmin() {
+        Nurse nurse = createNurse();
+
+        Hospital hospital = Hospital.builder().id(1L).name(nurse.getHospital().getName()).build();
+        Admin admin = Admin.builder().id(1L).username("admin1").hospital(hospital).build();
+
+        Patient patient = createPatient();
+        Patient otherPatient = createOtherPatient();
+
+        // Given
+        List<Patient> patients = Arrays.asList(patient, otherPatient);
+
+        // When
+        when(adminService.getAdmin(admin.getId())).thenReturn(admin);
+        when(patientRepository.findPatientByAdmin(admin)).thenReturn(patients);
+
+        List<Patient> actualPatients = patientService.getPatients(admin.getId());
+
+        // Then
+        assertEquals(patients, actualPatients);
+        verify(adminService, times(1)).getAdmin(admin.getId());
+        verify(patientRepository, times(1)).findPatientByAdmin(admin);
     }
 }

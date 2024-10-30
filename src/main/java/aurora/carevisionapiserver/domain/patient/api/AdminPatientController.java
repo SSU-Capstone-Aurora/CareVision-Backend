@@ -36,4 +36,15 @@ public class AdminPatientController {
         List<Patient> patients = patientService.searchPatient(patientName);
         return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
     }
+
+    @Operation(summary = "환자 조회 API", description = "환자 리스트를 조회합니다.(최신등록순)_숙희")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+    })
+    @GetMapping("")
+    public BaseResponse<PatientSearchListResponse> getPatients(
+            @RequestParam(name = "adminId") Long adminId) {
+        List<Patient> patients = patientService.getPatients(adminId);
+        return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
+    }
 }

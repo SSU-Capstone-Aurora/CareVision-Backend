@@ -13,6 +13,7 @@ public class NurseUtils {
     public static Nurse createNurse() {
         Hospital hospital = Hospital.builder().id(1L).name("서울병원").department("성형외과").build();
         Patient patient = PatientUtil.createPatient();
+        Patient otherPatient = PatientUtil.createOtherPatient();
         String dateTime = "2024-10-11 17:57:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -22,7 +23,7 @@ public class NurseUtils {
                 .username("kim1")
                 .registeredAt(LocalDateTime.parse(dateTime, formatter))
                 .hospital(hospital)
-                .patients(List.of(patient))
+                .patients(List.of(patient, otherPatient))
                 .build();
     }
 

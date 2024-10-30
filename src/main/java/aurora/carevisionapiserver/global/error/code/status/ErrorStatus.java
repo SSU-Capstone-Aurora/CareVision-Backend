@@ -32,6 +32,9 @@ public enum ErrorStatus implements BaseErrorCode {
     REFRESH_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "AUTH403", "refresh token이 만료되었습니다."),
     INVALID_CREDENTIALS(HttpStatus.BAD_REQUEST, "AUTH404", "인증에 실패하였습니다."),
     USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "AUTH405", "해당하는 유저 이름을 찾을 수 없습니다."),
+
+    // Admin
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "관리자를 찾을 수 없습니다."),
     ;
 
     private final HttpStatus httpStatus;
