@@ -99,8 +99,7 @@ public class NurseAuthController {
                 .map(
                         authentication -> {
                             String accessToken = authService.createAccessToken(username, "NURSE");
-                            String refreshToken =
-                                    authService.createRefreshToken(username, "NURSE");
+                            String refreshToken = authService.createRefreshToken(username, "NURSE");
 
                             response.addCookie(authService.createRefreshTokenCookie(refreshToken));
 
