@@ -2,7 +2,6 @@ package aurora.carevisionapiserver.domain.nurse.api;
 
 import static aurora.carevisionapiserver.domain.nurse.converter.NurseConverter.toNurseLoginResponse;
 
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,8 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseSignUpRequest;
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
@@ -99,9 +98,9 @@ public class NurseAuthController {
                 .authenticate(username, password)
                 .map(
                         authentication -> {
-                            String accessToken = authService.generateAccessToken(username, "NURSE");
+                            String accessToken = authService.createAccessToken(username, "NURSE");
                             String refreshToken =
-                                    authService.generateRefreshToken(username, "NURSE");
+                                    authService.createRefreshToken(username, "NURSE");
 
                             response.addCookie(authService.createRefreshTokenCookie(refreshToken));
 
