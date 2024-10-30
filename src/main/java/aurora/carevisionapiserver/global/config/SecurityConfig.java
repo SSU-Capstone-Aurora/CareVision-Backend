@@ -35,6 +35,7 @@ public class SecurityConfig {
         "/api/admin/check-username",
         "/api/check-username",
         "/api/patients",
+        "/api/admin/patients",
     };
 
     @Bean
