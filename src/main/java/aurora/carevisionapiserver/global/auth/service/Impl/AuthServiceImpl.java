@@ -1,14 +1,10 @@
 package aurora.carevisionapiserver.global.auth.service.Impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Optional;
 
-import javax.crypto.SecretKey;
-
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 
@@ -25,7 +21,6 @@ import aurora.carevisionapiserver.global.auth.domain.RefreshToken;
 import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.auth.util.JWTUtil;
-import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,21 +30,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
-    private SecretKey secretKey;
-
-    @Value("${jwt.secret}")
-    private String secret;
 
     @Value("${jwt.refresh-expiration-time}")
     private long refreshExpirationTime;
 
     @Value("${jwt.access-expiration-time}")
     private long accessExpirationTime;
-
-    @PostConstruct
-    public void init() {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    }
 
     @Override
     public Optional<Authentication> authenticate(String username, String password) {
