@@ -27,6 +27,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Auth
     USERNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "AUTH400", "이미 사용 중인 아이디입니다."),
+    // Admin
+    ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "관리자를 찾을 수 없습니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;
