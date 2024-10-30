@@ -27,9 +27,16 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Auth
     USERNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "AUTH400", "이미 사용 중인 아이디입니다."),
+    REFRESH_TOKEN_NULL(HttpStatus.BAD_REQUEST, "AUTH401", "refresh token이 null입니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "AUTH402", "refresh token이 인식되지 않았습니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "AUTH403", "refresh token이 만료되었습니다."),
+    INVALID_CREDENTIALS(HttpStatus.BAD_REQUEST, "AUTH404", "인증에 실패하였습니다."),
+    USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "AUTH405", "해당하는 유저 이름을 찾을 수 없습니다."),
+
     // Admin
     ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "관리자를 찾을 수 없습니다."),
     ;
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

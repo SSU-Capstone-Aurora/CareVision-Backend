@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,6 +46,9 @@ public class Nurse extends BaseEntity {
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Patient> patients;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
@@ -57,6 +61,7 @@ public class Nurse extends BaseEntity {
             String password,
             LocalDateTime registeredAt,
             boolean isActivated,
+            Role role,
             Hospital hospital,
             List<Patient> patients) {
         this.id = id;
@@ -65,6 +70,7 @@ public class Nurse extends BaseEntity {
         this.password = password;
         this.registeredAt = registeredAt;
         this.isActivated = isActivated;
+        this.role = role;
         this.hospital = hospital;
         this.patients = patients;
     }

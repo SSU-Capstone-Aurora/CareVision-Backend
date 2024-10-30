@@ -21,4 +21,11 @@ public class AdminRequest {
 
         private String password;
     }
+
+    @Getter
+    @Builder
+    public static class AdminLoginRequest {
+        private String username;
+        private String password;
+    }
 }
