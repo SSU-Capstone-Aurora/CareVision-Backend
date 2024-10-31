@@ -39,6 +39,13 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    public Nurse getNurse(String username) {
+        return nurseRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
     public List<Nurse> getActiveNurses(Long adminId) {
         Admin admin = adminService.getAdmin(adminId);
         return nurseRepository.findActiveNursesByAdmin(admin);

@@ -3,6 +3,8 @@ package aurora.carevisionapiserver.domain.nurse.converter;
 import static aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import static aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
@@ -18,11 +20,16 @@ import aurora.carevisionapiserver.global.util.TimeAgoUtil;
 
 public class NurseConverter {
     public static NurseProfileResponse toNurseProfileResponse(Nurse nurse) {
+        LocalDate registeredAt =
+                Optional.ofNullable(nurse.getRegisteredAt())
+                        .map(LocalDateTime::toLocalDate)
+                        .orElse(null);
+
         return NurseProfileResponse.builder()
                 .name(nurse.getName())
                 .hospitalName(nurse.getHospital().getName())
                 .department(nurse.getHospital().getDepartment())
-                .registeredAt(nurse.getRegisteredAt().toLocalDate())
+                .registeredAt(registeredAt)
                 .build();
     }
 

@@ -33,9 +33,9 @@ public class PatientConverter {
         Bed bed = patient.getBed();
         return PatientProfileResponse.builder()
                 .name(patient.getName())
-                .inpatientWardNumber(bed != null ? bed.getInpatientWardNumber() : null)
-                .patientRoomNumber(bed != null ? bed.getPatientRoomNumber() : null)
-                .bedNumber(bed != null ? bed.getBedNumber() : null)
+                .inpatientWardNumber(bed.getInpatientWardNumber())
+                .patientRoomNumber(bed.getPatientRoomNumber())
+                .bedNumber(bed.getBedNumber())
                 .code(patient.getCode())
                 .createdAt(patient.getCreatedAt().toLocalDate())
                 .build();
