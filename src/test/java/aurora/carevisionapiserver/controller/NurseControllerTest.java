@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,7 @@ class NurseControllerTest {
         Nurse nurse = createNurse();
         Long nurseId = nurse.getId();
 
-        given(nurseService.getNurse(nurseId)).willReturn(Optional.of(nurse));
+        given(nurseService.getNurse(nurseId)).willReturn(nurse);
         when(nurseService.existsByNurseId(nurseId)).thenReturn(true);
 
         mockMvc.perform(

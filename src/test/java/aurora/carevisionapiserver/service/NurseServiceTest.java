@@ -131,12 +131,11 @@ public class NurseServiceTest {
         given(nurseRepository.findById(nurse.getId())).willReturn(Optional.of(nurse));
 
         // when
-        Optional<Nurse> result = nurseService.getNurse(nurse.getId());
+        Nurse result = nurseService.getNurse(nurse.getId());
 
         // then
-        assertTrue(result.isPresent());
-        assertEquals(nurse.getId(), result.get().getId());
-        assertEquals(nurse.getName(), result.get().getName());
+        assertEquals(nurse.getId(), result.getId());
+        assertEquals(nurse.getName(), result.getName());
     }
 
     @Test

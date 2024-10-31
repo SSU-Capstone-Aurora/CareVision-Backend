@@ -74,4 +74,8 @@ public class Nurse extends BaseEntity {
         this.hospital = hospital;
         this.patients = patients;
     }
+
+    public void activateNurse() {
+        this.isActivated = true;
+    }
 }
