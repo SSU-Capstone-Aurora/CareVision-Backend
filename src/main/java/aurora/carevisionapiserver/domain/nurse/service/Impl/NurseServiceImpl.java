@@ -5,10 +5,11 @@ import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NurseServiceImpl implements NurseService {
     private final NurseRepository nurseRepository;
+    private final AdminService adminService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -34,8 +36,15 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> getNurseList() {
-        return nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
+    public List<Nurse> getActiveNurses(Long adminId) {
+        Admin admin = adminService.getAdmin(adminId);
+        return nurseRepository.findActiveNursesByAdmin(admin);
+    }
+
+    @Override
+    public List<Nurse> getInActiveNurses(Long adminId) {
+        Admin admin = adminService.getAdmin(adminId);
+        return nurseRepository.findInActiveNursesByAdmin(admin);
     }
 
     @Override

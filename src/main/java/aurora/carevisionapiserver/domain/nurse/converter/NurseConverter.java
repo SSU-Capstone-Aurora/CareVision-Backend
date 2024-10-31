@@ -8,11 +8,14 @@ import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRequestInfoResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseProfileResponse;
 import aurora.carevisionapiserver.global.auth.domain.Role;
+import aurora.carevisionapiserver.global.util.TimeAgoUtil;
 
 public class NurseConverter {
     public static NurseProfileResponse toNurseProfileResponse(Optional<Nurse> nurse) {
@@ -42,6 +45,22 @@ public class NurseConverter {
 
     public static NurseLoginResponse toNurseLoginResponse(String accessToken) {
         return NurseLoginResponse.builder().accessToken(accessToken).build();
+    }
+
+    public static NurseRequestListResponse toNurseRequestListResponse(List<Nurse> nurseList) {
+        List<NurseRequestInfoResponse> nurseRequestInfoList =
+                nurseList.stream().map(NurseConverter::toNurseRequestInfoResponse).toList();
+
+        return new NurseRequestListResponse(nurseRequestInfoList.size(), nurseRequestInfoList);
+    }
+
+    public static NurseRequestInfoResponse toNurseRequestInfoResponse(Nurse nurse) {
+        String timeAgoMessage = TimeAgoUtil.getTimeAgoMessage(nurse.getCreatedAt());
+        return NurseRequestInfoResponse.builder()
+                .name(nurse.getName())
+                .username(nurse.getUsername())
+                .requestTime(timeAgoMessage)
+                .build();
     }
 
     public static Nurse toNurse(
