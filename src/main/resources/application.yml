@@ -2,7 +2,7 @@ spring:
   application:
     name: CareVision
   profiles:
-    active: local
+    active: dev
   servlet:
     multipart:
       max-file-size: 100MB
