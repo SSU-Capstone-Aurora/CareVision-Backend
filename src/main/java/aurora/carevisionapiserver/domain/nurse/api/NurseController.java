@@ -1,7 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +53,7 @@ public class NurseController {
     @GetMapping("/patients")
     public BaseResponse<PatientProfileListResponse> getPatientList(
             @ExistNurse @RequestParam(name = "nurseId") Long nurseId) {
-        Nurse nurse = nurseService.getNurse(nurseId).get();
+        Nurse nurse = nurseService.getNurse(nurseId);
         List<Patient> patients = patientService.getPatients(nurse);
         return BaseResponse.of(
                 SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));

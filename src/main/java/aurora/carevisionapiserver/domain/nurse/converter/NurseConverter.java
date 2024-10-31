@@ -4,7 +4,6 @@ import static aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.N
 import static aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
 
 import java.util.List;
-import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -15,13 +14,12 @@ import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseP
 import aurora.carevisionapiserver.global.auth.domain.Role;
 
 public class NurseConverter {
-    public static NurseProfileResponse toNurseProfileResponse(Optional<Nurse> nurse) {
-        Nurse tmpNurse = nurse.get();
+    public static NurseProfileResponse toNurseProfileResponse(Nurse nurse) {
         return NurseProfileResponse.builder()
-                .name(tmpNurse.getName())
-                .hospitalName(tmpNurse.getHospital().getName())
-                .department(tmpNurse.getHospital().getDepartment().toString())
-                .registeredAt(tmpNurse.getRegisteredAt().toLocalDate())
+                .name(nurse.getName())
+                .hospitalName(nurse.getHospital().getName())
+                .department(nurse.getHospital().getDepartment())
+                .registeredAt(nurse.getRegisteredAt().toLocalDate())
                 .build();
     }
 
