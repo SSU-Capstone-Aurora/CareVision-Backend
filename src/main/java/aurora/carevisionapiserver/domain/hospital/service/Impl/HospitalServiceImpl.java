@@ -102,6 +102,7 @@ public class HospitalServiceImpl implements HospitalService {
         return rootNode.path("response").path("body").path("items").path("item");
     }
 
+    @Override
     public Hospital getHospital(Long id) {
         return hospitalRepository
                 .findById(id)

@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.domain.nurse.dto.request;
 
+import java.util.List;
+
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalSelectRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +36,24 @@ public class NurseRequest {
     public static class NurseLoginRequest {
         private String username;
         private String password;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NurseRegisterRequestListResponse {
+        private int requestCount;
+        private List<NurseRegisterRequestInfoResponse> requests;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NurseRegisterRequestInfoResponse {
+        private String name;
+        private String username;
+        private String requestTime;
     }
 }

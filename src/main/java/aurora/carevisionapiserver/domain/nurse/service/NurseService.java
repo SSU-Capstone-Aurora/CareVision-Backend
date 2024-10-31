@@ -12,7 +12,9 @@ public interface NurseService {
 
     Optional<Nurse> getNurse(Long nurseId);
 
-    List<Nurse> getNurseList();
+    List<Nurse> getActiveNurses(Long adminId);
+
+    List<Nurse> getInActiveNurses(Long adminId);
 
     List<Nurse> searchNurse(String nurseName);
 

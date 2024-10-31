@@ -27,6 +27,8 @@ import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.Ho
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.util.AdminUtils;
+import aurora.carevisionapiserver.util.HospitalUtils;
 
 @WebMvcTest(AdminAuthController.class)
 public class AdminAuthControllerTest {
@@ -49,21 +51,13 @@ public class AdminAuthControllerTest {
             }
         """;
 
-    private Hospital createHospital() {
-        return Hospital.builder().id(1L).name("오로라 병원").department("성형외과").build();
-    }
-
-    private Admin createAdmin(Hospital hospital) {
-        return Admin.builder().id(1L).username("admin1").hospital(hospital).build();
-    }
-
     @Test
     @WithMockUser
     @DisplayName("회원가입에 성공한다.")
     public void testCreateAdminSuceess() throws Exception {
         // Given
-        Hospital hospital = createHospital();
-        Admin admin = createAdmin(hospital);
+        Hospital hospital = HospitalUtils.createHospital();
+        Admin admin = AdminUtils.createAdmin(hospital);
 
         // When
         given(hospitalService.createHospital(any(HospitalCreateRequest.class)))
