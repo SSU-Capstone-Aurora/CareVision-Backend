@@ -11,6 +11,8 @@ public interface NurseService {
 
     Nurse getNurse(Long nurseId);
 
+    Nurse getNurse(String username);
+
     List<Nurse> getNurseList();
 
     List<Nurse> searchNurse(String nurseName);

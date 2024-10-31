@@ -37,6 +37,13 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    public Nurse getNurse(String username) {
+        return nurseRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
     public List<Nurse> getNurseList() {
         return nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt"));
     }
