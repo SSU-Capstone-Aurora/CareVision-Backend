@@ -42,16 +42,16 @@ public class NurseRequest {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class NurseRequestListResponse {
+    public static class NurseRegisterRequestListResponse {
         private int requestCount;
-        private List<NurseRequestInfoResponse> requests;
+        private List<NurseRegisterRequestInfoResponse> requests;
     }
 
     @Getter
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class NurseRequestInfoResponse {
+    public static class NurseRegisterRequestInfoResponse {
         private String name;
         private String username;
         private String requestTime;

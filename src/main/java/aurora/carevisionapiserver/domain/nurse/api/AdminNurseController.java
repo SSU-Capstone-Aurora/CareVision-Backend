@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRequestListResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
@@ -54,9 +54,9 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
     @GetMapping("/requests")
-    public BaseResponse<NurseRequestListResponse> getNurseRequestList(
+    public BaseResponse<NurseRegisterRequestListResponse> getNurseRequestList(
             @RequestParam(name = "adminId") Long adminId) {
         List<Nurse> nurses = nurseService.getInActiveNurses(adminId);
-        return BaseResponse.onSuccess(NurseConverter.toNurseRequestListResponse(nurses));
+        return BaseResponse.onSuccess(NurseConverter.toNurseRegisterRequestListResponse(nurses));
     }
 }

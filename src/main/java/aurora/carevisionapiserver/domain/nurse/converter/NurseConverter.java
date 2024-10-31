@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRequestInfoResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRequestListResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestInfoResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewResponse;
@@ -47,16 +47,18 @@ public class NurseConverter {
         return NurseLoginResponse.builder().accessToken(accessToken).build();
     }
 
-    public static NurseRequestListResponse toNurseRequestListResponse(List<Nurse> nurseList) {
-        List<NurseRequestInfoResponse> nurseRequestInfoList =
+    public static NurseRegisterRequestListResponse toNurseRegisterRequestListResponse(
+            List<Nurse> nurseList) {
+        List<NurseRegisterRequestInfoResponse> nurseRequestInfoList =
                 nurseList.stream().map(NurseConverter::toNurseRequestInfoResponse).toList();
 
-        return new NurseRequestListResponse(nurseRequestInfoList.size(), nurseRequestInfoList);
+        return new NurseRegisterRequestListResponse(
+                nurseRequestInfoList.size(), nurseRequestInfoList);
     }
 
-    public static NurseRequestInfoResponse toNurseRequestInfoResponse(Nurse nurse) {
+    public static NurseRegisterRequestInfoResponse toNurseRequestInfoResponse(Nurse nurse) {
         String timeAgoMessage = TimeAgoUtil.getTimeAgoMessage(nurse.getCreatedAt());
-        return NurseRequestInfoResponse.builder()
+        return NurseRegisterRequestInfoResponse.builder()
                 .name(nurse.getName())
                 .username(nurse.getUsername())
                 .requestTime(timeAgoMessage)
