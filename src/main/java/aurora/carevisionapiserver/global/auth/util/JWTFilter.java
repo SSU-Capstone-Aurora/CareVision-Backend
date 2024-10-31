@@ -68,9 +68,9 @@ public class JWTFilter extends OncePerRequestFilter {
         CustomUserDetails customUserDetails;
 
         if (Role.NURSE.getRole().equals(role)) {
-            customUserDetails = new CustomUserDetails(username, Role.NURSE, true);
+            customUserDetails = new CustomUserDetails(username, null, Role.NURSE, true);
         } else if (Role.ADMIN.getRole().equals(role)) {
-            customUserDetails = new CustomUserDetails(username, Role.ADMIN, true);
+            customUserDetails = new CustomUserDetails(username, null, Role.ADMIN, true);
         } else {
             // 유효하지 않은 역할일 경우 처리
             PrintWriter writer = response.getWriter();
