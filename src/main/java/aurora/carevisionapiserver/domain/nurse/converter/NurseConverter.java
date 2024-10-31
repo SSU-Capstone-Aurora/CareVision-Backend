@@ -65,6 +65,7 @@ public class NurseConverter {
     public static NurseRegisterRequestInfoResponse toNurseRequestInfoResponse(Nurse nurse) {
         String timeAgoMessage = TimeAgoUtil.getTimeAgoMessage(nurse.getCreatedAt());
         return NurseRegisterRequestInfoResponse.builder()
+                .nurseId(nurse.getId())
                 .name(nurse.getName())
                 .username(nurse.getUsername())
                 .requestTime(timeAgoMessage)
