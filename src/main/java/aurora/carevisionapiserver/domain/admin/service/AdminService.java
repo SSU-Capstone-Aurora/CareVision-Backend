@@ -10,4 +10,6 @@ public interface AdminService {
     boolean isUsernameDuplicated(String username);
 
     Admin getAdmin(Long adminId);
+
+    Admin getAdmin(String username);
 }

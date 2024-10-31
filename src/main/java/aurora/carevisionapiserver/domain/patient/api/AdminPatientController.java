@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
+import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,8 +46,8 @@ public class AdminPatientController {
     })
     @GetMapping("")
     public BaseResponse<PatientSearchListResponse> getPatients(
-            @RequestParam(name = "adminId") Long adminId) {
-        List<Patient> patients = patientService.getPatients(adminId);
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
+        List<Patient> patients = patientService.getPatients(admin.getId());
         return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
     }
 }

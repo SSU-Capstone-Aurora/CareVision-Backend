@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.util.validation;
+package aurora.carevisionapiserver.global.util.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.util.validation.annotation.ExistNurse;
 import lombok.RequiredArgsConstructor;
 
 @Component

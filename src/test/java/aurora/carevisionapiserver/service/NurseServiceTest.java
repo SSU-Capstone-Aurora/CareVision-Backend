@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -131,12 +132,12 @@ public class NurseServiceTest {
         given(nurseRepository.findById(nurse.getId())).willReturn(Optional.of(nurse));
 
         // when
-        Optional<Nurse> result = nurseService.getNurse(nurse.getId());
+        Nurse result = nurseService.getNurse(nurse.getId());
 
         // then
-        assertTrue(result.isPresent());
-        assertEquals(nurse.getId(), result.get().getId());
-        assertEquals(nurse.getName(), result.get().getName());
+        assertNotNull(result);
+        assertEquals(nurse.getId(), result.getId());
+        assertEquals(nurse.getName(), result.getName());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.service.Impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
@@ -14,8 +13,10 @@ import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
+import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,8 +32,17 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public Optional<Nurse> getNurse(Long nurseId) {
-        return nurseRepository.findById(nurseId);
+    public Nurse getNurse(Long nurseId) {
+        return nurseRepository
+                .findById(nurseId)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
+    public Nurse getNurse(String username) {
+        return nurseRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
     }
 
     @Override

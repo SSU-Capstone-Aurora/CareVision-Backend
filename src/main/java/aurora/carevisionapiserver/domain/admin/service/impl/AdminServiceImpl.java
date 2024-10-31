@@ -41,4 +41,11 @@ public class AdminServiceImpl implements AdminService {
                 .findById(adminId)
                 .orElseThrow(() -> new AdminException(ErrorStatus.ADMIN_NOT_FOUND));
     }
+
+    @Override
+    public Admin getAdmin(String username) {
+        return adminRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AdminException(ErrorStatus.ADMIN_NOT_FOUND));
+    }
 }
