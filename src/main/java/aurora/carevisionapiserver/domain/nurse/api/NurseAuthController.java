@@ -60,7 +60,7 @@ public class NurseAuthController {
         return BaseResponse.onSuccess(NurseConverter.toNurseInfoResponse(nurse));
     }
 
-    @Operation(summary = "간호사 회원가입 중복 체크", description = "주어진 아이디가 이미 존재하는지 확인합니다._예림")
+    @Operation(summary = "간호사 회원가입 중복 체크 API", description = "주어진 아이디가 이미 존재하는지 확인합니다._예림")
     @ApiResponses({
         @ApiResponse(responseCode = "AUTH200", description = "OK, 성공"),
         @ApiResponse(responseCode = "AUTH400", description = "아이디가 이미 존재합니다.")
@@ -81,7 +81,8 @@ public class NurseAuthController {
 
     @Operation(
             summary = "간호사 로그인 API",
-            description = "간호사가 서비스에 로그인합니다. body에 accessToken을, header에 refreshToken을 발급합니다.")
+            description =
+                    "간호사가 서비스에 로그인합니다_예림 Response Body에 accessToken을, Cookie에 refreshToken을 발급합니다.")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
