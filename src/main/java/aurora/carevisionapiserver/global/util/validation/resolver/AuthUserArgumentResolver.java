@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
     private final AdminService adminService;
     private final NurseService nurseService;
-    private static final String ADMIN_ROLE = "ADMIN";
+    private static final String ADMIN_ROLE = "ROLE_ADMIN";
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -54,9 +54,14 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
                 (UsernamePasswordAuthenticationToken) authentication;
         String username = authenticationToken.getName();
 
-        if (authenticationToken.getPrincipal() == ADMIN_ROLE)
+        boolean isAdmin =
+                authentication.getAuthorities().stream()
+                        .anyMatch(
+                                grantedAuthority ->
+                                        grantedAuthority.getAuthority().equals(ADMIN_ROLE));
+        if (isAdmin) {
             return adminService.getAdmin(username);
-
+        }
         return nurseService.getNurse(username);
     }
 }
