@@ -106,15 +106,13 @@ public class NurseServiceTest {
         // given
         Hospital hospital = HospitalUtils.createHospital();
         Admin admin = AdminUtils.createAdmin(hospital);
-        Long adminId = admin.getId();
 
         List<Nurse> nurses =
                 List.of(NurseUtils.createOtherActiveNurse(), NurseUtils.createActiveNurse());
         given(nurseRepository.findActiveNursesByAdmin(admin)).willReturn(nurses);
-        given(adminService.getAdmin(adminId)).willReturn(admin);
 
         // when
-        List<Nurse> result = nurseService.getActiveNurses(adminId);
+        List<Nurse> result = nurseService.getActiveNurses(admin);
 
         // then
         assertEquals(nurses.size(), result.size());
@@ -128,11 +126,12 @@ public class NurseServiceTest {
     @DisplayName("간호사가 존재하는지 조회한다.")
     void existsNurseTest() {
         // given
-        Nurse nurse = NurseUtils.createNurse();
-        given(nurseRepository.findById(nurse.getId())).willReturn(Optional.of(nurse));
+        Nurse nurse = NurseUtils.createActiveNurse();
+        given(nurseRepository.findByIdAndIsActivatedTrue(nurse.getId()))
+                .willReturn(Optional.of(nurse));
 
         // when
-        Nurse result = nurseService.getNurse(nurse.getId());
+        Nurse result = nurseService.getActiveNurse(nurse.getId());
 
         // then
         assertNotNull(result);

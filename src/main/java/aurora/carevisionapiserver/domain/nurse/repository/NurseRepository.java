@@ -12,4 +12,8 @@ public interface NurseRepository
     boolean existsByUsername(String username);
 
     Optional<Nurse> findByUsername(String username);
+
+    Optional<Nurse> findByIdAndIsActivatedFalse(Long nurseId);
+
+    Optional<Nurse> findByIdAndIsActivatedTrue(Long nurseId);
 }

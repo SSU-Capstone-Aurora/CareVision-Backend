@@ -32,13 +32,6 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public Nurse getNurse(Long nurseId) {
-        return nurseRepository
-                .findById(nurseId)
-                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
-    }
-
-    @Override
     public Nurse getNurse(String username) {
         return nurseRepository
                 .findByUsername(username)
@@ -46,14 +39,26 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> getActiveNurses(Long adminId) {
-        Admin admin = adminService.getAdmin(adminId);
+    public Nurse getActiveNurse(Long nurseId) {
+        return nurseRepository
+                .findByIdAndIsActivatedTrue(nurseId)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
+    public Nurse getInActiveNurse(Long nurseId) {
+        return nurseRepository
+                .findByIdAndIsActivatedFalse(nurseId)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
+    public List<Nurse> getActiveNurses(Admin admin) {
         return nurseRepository.findActiveNursesByAdmin(admin);
     }
 
     @Override
-    public List<Nurse> getInActiveNurses(Long adminId) {
-        Admin admin = adminService.getAdmin(adminId);
+    public List<Nurse> getInActiveNurses(Admin admin) {
         return nurseRepository.findInActiveNursesByAdmin(admin);
     }
 
@@ -76,17 +81,15 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public void activateNurse(Long adminId, Long nurseId) {
-        Nurse nurse = getNurse(nurseId);
+    public void activateNurse(Admin admin, Long nurseId) {
+        Nurse nurse = getInActiveNurse(nurseId);
         nurse.activateNurse();
         nurseRepository.save(nurse);
     }
 
     @Override
-    public void deleteNurse(Long adminId, Long nurseId) {
-        if (!nurseRepository.existsById(nurseId)) {
-            throw new NurseException(ErrorStatus.NURSE_NOT_FOUND);
-        }
-        nurseRepository.deleteById(nurseId);
+    public void deleteNurse(Admin admin, Long nurseId) {
+        Nurse nurse = getInActiveNurse(nurseId);
+        nurseRepository.delete(nurse);
     }
 }
