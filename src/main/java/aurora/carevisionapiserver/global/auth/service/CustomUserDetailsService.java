@@ -25,7 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Admin admin = adminRepository.findByUsername(username).orElse(null);
         if (admin != null) {
-            return new CustomUserDetails(admin.getUsername(), admin.getRole(), true);
+            return new CustomUserDetails(
+                    admin.getUsername(), admin.getPassword(), admin.getRole(), true);
         }
 
         Nurse nurse =
@@ -33,6 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .findByUsername(username)
                         .orElseThrow(() -> new AuthException(ErrorStatus.USERNAME_NOT_FOUND));
 
-        return new CustomUserDetails(nurse.getUsername(), nurse.getRole(), nurse.isActivated());
+        return new CustomUserDetails(
+                nurse.getUsername(), nurse.getPassword(), nurse.getRole(), nurse.isActivated());
     }
 }
