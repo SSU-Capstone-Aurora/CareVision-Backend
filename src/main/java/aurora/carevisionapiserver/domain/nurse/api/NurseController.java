@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseProfileResponse;
-import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
@@ -31,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequestMapping("/api")
 public class NurseController {
-    private final NurseService nurseService;
     private final PatientService patientService;
 
     @Operation(summary = "간호사 마이페이지 API", description = "간호사 마이페이지를 조회합니다._숙희")
@@ -42,8 +40,7 @@ public class NurseController {
     @GetMapping("/profile")
     public BaseResponse<NurseProfileResponse> getNurseProfile(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
-        Nurse nurseSelf = nurseService.getNurse(nurse.getId());
-        return BaseResponse.of(SuccessStatus._OK, NurseConverter.toNurseProfileResponse(nurseSelf));
+        return BaseResponse.of(SuccessStatus._OK, NurseConverter.toNurseProfileResponse(nurse));
     }
 
     @Operation(summary = "담당 환자 리스트 조회 API", description = "간호사가 담당하는 환자 리스트를 조회합니다._숙희")
