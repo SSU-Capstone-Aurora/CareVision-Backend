@@ -47,7 +47,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
         Object principal = authentication.getPrincipal();
         if (principal == null || principal.getClass() == String.class) {
-            throw new GeneralException(ErrorStatus.ADMIN_NOT_FOUND);
+            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
         }
 
         UsernamePasswordAuthenticationToken authenticationToken =
