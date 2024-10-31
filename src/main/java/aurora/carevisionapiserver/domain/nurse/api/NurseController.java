@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
@@ -18,8 +17,9 @@ import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.Pa
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
-import aurora.carevisionapiserver.global.util.validation.ExistNurse;
+import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,9 +41,9 @@ public class NurseController {
     })
     @GetMapping("/profile")
     public BaseResponse<NurseProfileResponse> getNurseProfile(
-            @ExistNurse @RequestParam(name = "nurseId") Long nurseId) {
-        Optional<Nurse> nurse = nurseService.getNurse(nurseId);
-        return BaseResponse.of(SuccessStatus._OK, NurseConverter.toNurseProfileResponse(nurse));
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
+        Nurse nurseSelf = nurseService.getNurse(nurse.getId());
+        return BaseResponse.of(SuccessStatus._OK, NurseConverter.toNurseProfileResponse(nurseSelf));
     }
 
     @Operation(summary = "담당 환자 리스트 조회 API", description = "간호사가 담당하는 환자 리스트를 조회합니다._숙희")
@@ -52,8 +52,7 @@ public class NurseController {
     })
     @GetMapping("/patients")
     public BaseResponse<PatientProfileListResponse> getPatientList(
-            @ExistNurse @RequestParam(name = "nurseId") Long nurseId) {
-        Nurse nurse = nurseService.getNurse(nurseId);
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
         List<Patient> patients = patientService.getPatients(nurse);
         return BaseResponse.of(
                 SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
