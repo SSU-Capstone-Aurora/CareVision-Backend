@@ -22,4 +22,6 @@ public interface NurseService {
     boolean isUsernameDuplicated(String username);
 
     void activateNurse(Long adminId, Long nurseId);
+
+    void deleteNurse(Long adminId, Long nurseId);
 }

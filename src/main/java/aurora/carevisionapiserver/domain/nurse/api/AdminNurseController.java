@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.nurse.api;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,5 +74,17 @@ public class AdminNurseController {
             @RequestParam(name = "adminId") Long adminId, @PathVariable Long nurseId) {
         nurseService.activateNurse(adminId, nurseId);
         return BaseResponse.of(SuccessStatus.ACCEPTED, null);
+    }
+
+    @Operation(summary = "간호사 요청 거부 API", description = "간호사 등록 요청을 거부합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
+    })
+    @DeleteMapping("/requests/{nurseId}")
+    public BaseResponse<Void> deleteNurse(
+            @RequestParam(name = "adminId") Long adminId, @PathVariable Long nurseId) {
+        nurseService.deleteNurse(adminId, nurseId);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 }

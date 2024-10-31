@@ -74,4 +74,12 @@ public class NurseServiceImpl implements NurseService {
         nurse.activateNurse();
         nurseRepository.save(nurse);
     }
+
+    @Override
+    public void deleteNurse(Long adminId, Long nurseId) {
+        if (!nurseRepository.existsById(nurseId)) {
+            throw new NurseException(ErrorStatus.NURSE_NOT_FOUND);
+        }
+        nurseRepository.deleteById(nurseId);
+    }
 }
