@@ -82,7 +82,7 @@ public class AdminNurseController {
 
     @Operation(summary = "간호사 요청 거부 API", description = "간호사 등록 요청을 거부합니다_예림")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
     @DeleteMapping("/requests/{nurseId}")
