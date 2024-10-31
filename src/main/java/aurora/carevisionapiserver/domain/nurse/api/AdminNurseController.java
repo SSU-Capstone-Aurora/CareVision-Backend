@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
@@ -17,7 +18,9 @@ import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseP
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,8 +39,8 @@ public class AdminNurseController {
     })
     @GetMapping("/nurses")
     public BaseResponse<NursePreviewListResponse> getNurseList(
-            @RequestParam(name = "adminId") Long adminId) {
-        List<Nurse> nurses = nurseService.getActiveNurses(adminId);
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
+        List<Nurse> nurses = nurseService.getActiveNurses(admin);
         return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
     }
 
@@ -59,8 +62,8 @@ public class AdminNurseController {
     })
     @GetMapping("/requests")
     public BaseResponse<NurseRegisterRequestListResponse> getNurseRequestList(
-            @RequestParam(name = "adminId") Long adminId) {
-        List<Nurse> nurses = nurseService.getInActiveNurses(adminId);
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
+        List<Nurse> nurses = nurseService.getInActiveNurses(admin);
         return BaseResponse.onSuccess(NurseConverter.toNurseRegisterRequestListResponse(nurses));
     }
 
@@ -71,8 +74,9 @@ public class AdminNurseController {
     })
     @PostMapping("/requests/{nurseId}")
     public BaseResponse<Void> acceptNurseRequest(
-            @RequestParam(name = "adminId") Long adminId, @PathVariable Long nurseId) {
-        nurseService.activateNurse(adminId, nurseId);
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @PathVariable Long nurseId) {
+        nurseService.activateNurse(admin, nurseId);
         return BaseResponse.of(SuccessStatus.ACCEPTED, null);
     }
 
@@ -83,8 +87,9 @@ public class AdminNurseController {
     })
     @DeleteMapping("/requests/{nurseId}")
     public BaseResponse<Void> deleteNurse(
-            @RequestParam(name = "adminId") Long adminId, @PathVariable Long nurseId) {
-        nurseService.deleteNurse(adminId, nurseId);
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @PathVariable Long nurseId) {
+        nurseService.deleteNurse(admin, nurseId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 }
