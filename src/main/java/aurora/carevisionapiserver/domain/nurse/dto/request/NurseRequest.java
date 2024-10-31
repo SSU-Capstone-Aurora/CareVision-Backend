@@ -4,12 +4,14 @@ import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.Ho
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class NurseRequest {
 
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class NurseSignUpRequest {
         private NurseCreateRequest nurse;
         private HospitalSelectRequest hospital;
@@ -18,6 +20,7 @@ public class NurseRequest {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class NurseCreateRequest {
         private String username;
         private String password;
@@ -27,6 +30,7 @@ public class NurseRequest {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class NurseLoginRequest {
         private String username;
         private String password;
