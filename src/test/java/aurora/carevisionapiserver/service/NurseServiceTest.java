@@ -17,20 +17,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.Impl.NurseServiceImpl;
+import aurora.carevisionapiserver.util.AdminUtils;
+import aurora.carevisionapiserver.util.HospitalUtils;
 import aurora.carevisionapiserver.util.NurseUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class NurseServiceTest {
     @InjectMocks private NurseServiceImpl nurseService;
+
+    @Mock private AdminService adminService;
     @Mock private NurseRepository nurseRepository;
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -98,11 +103,18 @@ public class NurseServiceTest {
     @DisplayName("간호사 찾기 성공한다.")
     void getNurseListSuccess() {
         // given
-        List<Nurse> nurses = List.of(NurseUtils.createOtherNurse(), NurseUtils.createNurse());
-        given(nurseRepository.findAll(Sort.by(Sort.Direction.DESC, "registeredAt")))
-                .willReturn(nurses);
+        Hospital hospital = HospitalUtils.createHospital();
+        Admin admin = AdminUtils.createAdmin(hospital);
+        Long adminId = admin.getId();
+
+        List<Nurse> nurses =
+                List.of(NurseUtils.createOtherActiveNurse(), NurseUtils.createActiveNurse());
+        given(nurseRepository.findActiveNursesByAdmin(admin)).willReturn(nurses);
+        given(adminService.getAdmin(adminId)).willReturn(admin);
+
         // when
-        List<Nurse> result = nurseService.getNurseList();
+        List<Nurse> result = nurseService.getActiveNurses(adminId);
+
         // then
         assertEquals(nurses.size(), result.size());
         assertEquals(nurses.get(0).getId(), result.get(0).getId());
