@@ -3,6 +3,8 @@ package aurora.carevisionapiserver.domain.nurse.api;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +15,7 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseReg
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
+import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -58,5 +61,17 @@ public class AdminNurseController {
             @RequestParam(name = "adminId") Long adminId) {
         List<Nurse> nurses = nurseService.getInActiveNurses(adminId);
         return BaseResponse.onSuccess(NurseConverter.toNurseRegisterRequestListResponse(nurses));
+    }
+
+    @Operation(summary = "간호사 요청 수락 API", description = "간호사 등록 요청을 수락합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
+    })
+    @PostMapping("/requests/{nurseId}")
+    public BaseResponse<Void> acceptNurseRequest(
+            @RequestParam(name = "adminId") Long adminId, @PathVariable Long nurseId) {
+        nurseService.activateNurse(adminId, nurseId);
+        return BaseResponse.of(SuccessStatus.ACCEPTED, null);
     }
 }
