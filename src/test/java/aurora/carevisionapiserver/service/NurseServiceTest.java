@@ -124,7 +124,8 @@ public class NurseServiceTest {
     void existsNurseTest() {
         // given
         Nurse nurse = NurseUtils.createActiveNurse();
-        given(nurseRepository.findActiveNurseById(nurse.getId())).willReturn(Optional.of(nurse));
+        given(nurseRepository.findByIdAndIsActivatedTrue(nurse.getId()))
+                .willReturn(Optional.of(nurse));
 
         // when
         Nurse result = nurseService.getActiveNurse(nurse.getId());

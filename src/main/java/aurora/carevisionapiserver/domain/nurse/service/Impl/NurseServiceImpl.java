@@ -39,14 +39,14 @@ public class NurseServiceImpl implements NurseService {
     @Override
     public Nurse getActiveNurse(Long nurseId) {
         return nurseRepository
-                .findActiveNurseById(nurseId)
+                .findByIdAndIsActivatedTrue(nurseId)
                 .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
     }
 
     @Override
     public Nurse getInActiveNurse(Long nurseId) {
         return nurseRepository
-                .findInActiveNurseById(nurseId)
+                .findByIdAndIsActivatedFalse(nurseId)
                 .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
     }
 

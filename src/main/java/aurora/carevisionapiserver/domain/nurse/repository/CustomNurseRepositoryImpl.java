@@ -1,7 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -43,25 +42,5 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
                                 .and(nurse.isActivated.isFalse()))
                 .orderBy(nurse.registeredAt.desc())
                 .fetch();
-    }
-
-    @Override
-    public Optional<Nurse> findActiveNurseById(Long nurseId) {
-        QNurse nurse = QNurse.nurse;
-        return Optional.ofNullable(
-                queryFactory
-                        .selectFrom(nurse)
-                        .where(nurse.id.eq(nurseId), nurse.isActivated.isTrue())
-                        .fetchOne());
-    }
-
-    @Override
-    public Optional<Nurse> findInActiveNurseById(Long nurseId) {
-        QNurse nurse = QNurse.nurse;
-        return Optional.ofNullable(
-                queryFactory
-                        .selectFrom(nurse)
-                        .where(nurse.id.eq(nurseId), nurse.isActivated.isFalse())
-                        .fetchOne());
     }
 }
