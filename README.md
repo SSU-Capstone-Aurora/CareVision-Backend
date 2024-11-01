@@ -20,9 +20,9 @@
 
 ## 💉 Backend Team Member
 
-| 정예림 | 최숙희 |
-|--------|--------|
-| [<img src="https://avatars.githubusercontent.com/u/101961939?v=4" height=100 width=100>](https://github.com/yel-m) | [<img src="https://avatars.githubusercontent.com/u/110217133?v=4" height=100 width=100>](https://github.com/88dldl) |
-| [@yel-m](https://github.com/yel-m) | [@88dldl](https://github.com/88dldl) |
+| 박찬웅 | 정예림 | 최숙희 |
+|--------|--------|--------|
+|[<img src="https://avatars.githubusercontent.com/u/51525421?v=4" height=100 width=100>](https://github.com/leopark88)| [<img src="https://avatars.githubusercontent.com/u/101961939?v=4" height=100 width=100>](https://github.com/yel-m) | [<img src="https://avatars.githubusercontent.com/u/110217133?v=4" height=100 width=100>](https://github.com/88dldl) |
+| [@leopark88](https://github.com/leopark88)| [@yel-m](https://github.com/yel-m) | [@88dldl](https://github.com/88dldl) |
 
 </div>
