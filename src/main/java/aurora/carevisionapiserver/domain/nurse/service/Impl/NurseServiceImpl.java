@@ -91,4 +91,9 @@ public class NurseServiceImpl implements NurseService {
         Nurse nurse = getInActiveNurse(nurseId);
         nurseRepository.delete(nurse);
     }
+
+    @Override
+    public long getNurseRegisterRequestCount(Admin admin) {
+        return nurseRepository.countInActiveNursesByAdmin(admin);
+    }
 }

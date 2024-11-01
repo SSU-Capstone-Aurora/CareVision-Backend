@@ -57,4 +57,12 @@ public class NurseRequest {
         private String username;
         private String requestTime;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NurseRegisterRequestCountResponse {
+        private long count;
+    }
 }

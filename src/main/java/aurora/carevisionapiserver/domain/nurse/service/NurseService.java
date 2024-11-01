@@ -29,4 +29,6 @@ public interface NurseService {
     void activateNurse(Admin admin, Long nurseId);
 
     void deleteNurse(Admin admin, Long nurseId);
+
+    long getNurseRegisterRequestCount(Admin admin);
 }
