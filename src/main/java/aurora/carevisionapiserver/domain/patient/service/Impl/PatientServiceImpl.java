@@ -2,6 +2,8 @@ package aurora.carevisionapiserver.domain.patient.service.Impl;
 
 import java.util.List;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -37,5 +39,21 @@ public class PatientServiceImpl implements PatientService {
         Admin admin = adminService.getAdmin(adminId);
 
         return patientRepository.findPatientByAdmin(admin);
+    }
+
+    @Transactional
+    @Override
+    public String registerNurse(Nurse nurse, String patientCode) {
+        Patient patient = getPatientsByPatientId(patientCode);
+
+        patient.registerPatient(nurse);
+        return patient.getName();
+    }
+
+    public Patient getPatientsByPatientId(String patientCode) {
+        Patient patient = patientRepository.findPatientByCode(patientCode);
+        if (patient == null) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
+
+        return patientRepository.findPatientByCode(patientCode);
     }
 }
