@@ -57,4 +57,10 @@ public class NurseRequest {
         private String username;
         private String requestTime;
     }
+
+    public record NurseRegisterRequestCountResponse(long count) {
+        public static NurseRegisterRequestCountResponse from(long count) {
+            return new NurseRegisterRequestCountResponse(count);
+        }
+    }
 }

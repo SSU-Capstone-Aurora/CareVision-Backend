@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
@@ -82,5 +83,10 @@ public class NurseConverter {
                 .hospital(hospital)
                 .isActivated(false)
                 .build();
+    }
+
+    public static NurseRegisterRequestCountResponse toNurseRegisterRequestCountResponse(
+            long count) {
+        return NurseRegisterRequestCountResponse.from(count);
     }
 }

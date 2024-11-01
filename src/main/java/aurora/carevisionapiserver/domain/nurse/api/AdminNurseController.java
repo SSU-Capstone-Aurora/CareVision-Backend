@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
@@ -55,13 +56,13 @@ public class AdminNurseController {
         return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
     }
 
-    @Operation(summary = "간호사 요청 리스트 API", description = "간호사 등록 요청 리스트를 조회합니다_예림")
+    @Operation(summary = "간호사 요청 리스트 조회 API", description = "간호사 등록 요청 리스트를 조회합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
-    @GetMapping("/requests")
-    public BaseResponse<NurseRegisterRequestListResponse> getNurseRequestList(
+    @GetMapping("nurses/requests")
+    public BaseResponse<NurseRegisterRequestListResponse> getNurseRegisterRequestList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
         List<Nurse> nurses = nurseService.getInActiveNurses(admin);
         return BaseResponse.onSuccess(NurseConverter.toNurseRegisterRequestListResponse(nurses));
@@ -72,8 +73,8 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
-    @PostMapping("/requests/{nurseId}")
-    public BaseResponse<Void> acceptNurseRequest(
+    @PostMapping("nurses/requests/{nurseId}")
+    public BaseResponse<Void> acceptNurseRegisterRequest(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
         nurseService.activateNurse(admin, nurseId);
@@ -85,11 +86,23 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
-    @DeleteMapping("/requests/{nurseId}")
+    @DeleteMapping("nurses/requests/{nurseId}")
     public BaseResponse<Void> deleteNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
         nurseService.deleteNurse(admin, nurseId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+    }
+
+    @Operation(summary = "간호사 등록 요청 수 조회 API", description = "간호사 등록 요청 수를 조회합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 성공"),
+    })
+    @GetMapping("nurses/requests/count")
+    public BaseResponse<NurseRegisterRequestCountResponse> getNurseRegisterRequestCount(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
+        long requestCount = nurseService.getNurseRegisterRequestCount(admin);
+        return BaseResponse.onSuccess(
+                NurseConverter.toNurseRegisterRequestCountResponse(requestCount));
     }
 }

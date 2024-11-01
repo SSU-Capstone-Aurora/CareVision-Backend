@@ -9,4 +9,6 @@ public interface CustomNurseRepository {
     List<Nurse> findActiveNursesByAdmin(Admin admin);
 
     List<Nurse> findInActiveNursesByAdmin(Admin admin);
+
+    long countInActiveNursesByAdmin(Admin admin);
 }
