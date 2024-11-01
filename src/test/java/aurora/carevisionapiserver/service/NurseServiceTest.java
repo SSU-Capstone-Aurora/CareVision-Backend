@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -35,8 +34,6 @@ import aurora.carevisionapiserver.util.NurseUtils;
 @ExtendWith(MockitoExtension.class)
 public class NurseServiceTest {
     @InjectMocks private NurseServiceImpl nurseService;
-
-    @Mock private AdminService adminService;
     @Mock private NurseRepository nurseRepository;
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -127,8 +124,7 @@ public class NurseServiceTest {
     void existsNurseTest() {
         // given
         Nurse nurse = NurseUtils.createActiveNurse();
-        given(nurseRepository.findActiveNurseById(nurse.getId()))
-                .willReturn(Optional.of(nurse));
+        given(nurseRepository.findActiveNurseById(nurse.getId())).willReturn(Optional.of(nurse));
 
         // when
         Nurse result = nurseService.getActiveNurse(nurse.getId());
