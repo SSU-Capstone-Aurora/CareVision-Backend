@@ -1,9 +1,7 @@
 package aurora.carevisionapiserver.service;
 
-import static aurora.carevisionapiserver.util.NurseUtils.createNurse;
-import static aurora.carevisionapiserver.util.PatientUtil.createOtherPatient;
-import static aurora.carevisionapiserver.util.PatientUtil.createPatient;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -29,6 +27,8 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.Impl.PatientServiceImpl;
+import aurora.carevisionapiserver.util.NurseUtils;
+import aurora.carevisionapiserver.util.PatientUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
@@ -41,7 +41,8 @@ public class PatientServiceTest {
     void searchPatientSuccess() {
         // given
         String patientName = "test";
-        List<Patient> patients = List.of(createPatient(), createOtherPatient());
+        List<Patient> patients =
+                List.of(PatientUtil.createPatient(), PatientUtil.createOtherPatient());
         given(patientRepository.searchByName(patientName)).willReturn(patients);
         // when
         List<Patient> result = patientService.searchPatient(patientName);
@@ -71,7 +72,7 @@ public class PatientServiceTest {
     @DisplayName("간호사로 환자를 검색한다.")
     void searchPatientByNurse() {
         // given
-        Nurse nurse = createNurse();
+        Nurse nurse = NurseUtils.createNurse();
         List<Patient> patients = nurse.getPatients();
         given(patientRepository.findPatientByNurse(nurse)).willReturn(nurse.getPatients());
 
@@ -88,13 +89,13 @@ public class PatientServiceTest {
     @Test
     @DisplayName("관리자의 환자를 조회합니다.")
     void getPatientByAdmin() {
-        Nurse nurse = createNurse();
+        Nurse nurse = NurseUtils.createNurse();
 
         Hospital hospital = Hospital.builder().id(1L).name(nurse.getHospital().getName()).build();
         Admin admin = Admin.builder().id(1L).username("admin1").hospital(hospital).build();
 
-        Patient patient = createPatient();
-        Patient otherPatient = createOtherPatient();
+        Patient patient = PatientUtil.createPatient();
+        Patient otherPatient = PatientUtil.createOtherPatient();
 
         // Given
         List<Patient> patients = Arrays.asList(patient, otherPatient);
