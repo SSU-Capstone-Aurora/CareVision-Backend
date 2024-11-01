@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
 public class AdminController {
-    @Operation(summary = "관리자 프로필 조회 API", description = "간호사 프로필을 조회합니다_예림")
+    @Operation(summary = "관리자 프로필 조회 API", description = "관리자 프로필을 조회합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
