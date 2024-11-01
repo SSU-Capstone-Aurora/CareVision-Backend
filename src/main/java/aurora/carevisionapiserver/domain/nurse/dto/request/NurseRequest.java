@@ -58,11 +58,6 @@ public class NurseRequest {
         private String requestTime;
     }
 
-    @Getter
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class NurseRegisterRequestCountResponse {
-        private long count;
-    }
+    public record NurseRegisterRequestCountResponse(long count) {}
 }
