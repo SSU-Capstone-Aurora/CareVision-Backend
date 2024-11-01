@@ -79,6 +79,7 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    @Transactional
     public void activateNurse(Admin admin, Long nurseId) {
         Nurse nurse = getInActiveNurse(nurseId);
         nurse.activateNurse();
