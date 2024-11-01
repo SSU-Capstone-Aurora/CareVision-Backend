@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NurseServiceImpl implements NurseService {
     private final NurseRepository nurseRepository;
+    private final AdminService adminService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override

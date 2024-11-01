@@ -34,6 +34,8 @@ import aurora.carevisionapiserver.util.NurseUtils;
 @ExtendWith(MockitoExtension.class)
 public class NurseServiceTest {
     @InjectMocks private NurseServiceImpl nurseService;
+
+    @Mock private AdminService adminService;
     @Mock private NurseRepository nurseRepository;
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 

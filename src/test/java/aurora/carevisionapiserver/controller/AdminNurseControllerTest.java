@@ -42,7 +42,10 @@ public class AdminNurseControllerTest {
 
         given(nurseService.getActiveNurses(admin)).willReturn(nurses);
 
-        mockMvc.perform(get("/api/admin/nurses").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                        get("/api/admin/nurses")
+                                .param("adminId", String.valueOf(adminId))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.nurseList[1].name").value("최간호사"))

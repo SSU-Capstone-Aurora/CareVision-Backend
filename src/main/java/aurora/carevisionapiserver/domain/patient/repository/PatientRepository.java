@@ -11,4 +11,6 @@ import aurora.carevisionapiserver.global.common.repository.SearchRepository;
 public interface PatientRepository
         extends JpaRepository<Patient, Long>, SearchRepository<Patient>, CustomPatientRepository {
     List<Patient> findPatientByNurse(Nurse nurse);
+
+    Patient findPatientByCode(String patientCode);
 }

@@ -68,4 +68,8 @@ public class Patient extends BaseEntity {
         this.bed = bed;
         this.videos = videos;
     }
+
+    public void registerPatient(Nurse nurse) {
+        this.nurse = nurse;
+    }
 }

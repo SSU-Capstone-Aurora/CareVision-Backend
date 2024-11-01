@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
@@ -53,5 +55,18 @@ public class NurseController {
         List<Patient> patients = patientService.getPatients(nurse);
         return BaseResponse.of(
                 SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
+    }
+
+    @Operation(summary = "담당 환자 등록 API", description = "간호사가 담당하는 환자를 등록합니다._숙희")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON201", description = "요청 성공 및 리소스 생성됨"),
+        @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다"),
+    })
+    @PatchMapping("/patients")
+    public BaseResponse<String> registerPatient(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestParam(name = "patient") String patientCode) {
+        String patientName = patientService.registerNurse(nurse, patientCode);
+        return BaseResponse.of(SuccessStatus._CREATED, patientName);
     }
 }
