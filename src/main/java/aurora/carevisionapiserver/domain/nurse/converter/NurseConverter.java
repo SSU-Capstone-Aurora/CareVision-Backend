@@ -87,6 +87,6 @@ public class NurseConverter {
 
     public static NurseRegisterRequestCountResponse toNurseRegisterRequestCountResponse(
             long count) {
-        return NurseRegisterRequestCountResponse.builder().count(count).build();
+        return NurseRegisterRequestCountResponse.from(count);
     }
 }
