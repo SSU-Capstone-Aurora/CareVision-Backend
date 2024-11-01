@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NurseServiceImpl implements NurseService {
     private final NurseRepository nurseRepository;
-    private final AdminService adminService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -41,14 +39,14 @@ public class NurseServiceImpl implements NurseService {
     @Override
     public Nurse getActiveNurse(Long nurseId) {
         return nurseRepository
-                .findByIdAndIsActivatedTrue(nurseId)
+                .findActiveNurseById(nurseId)
                 .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
     }
 
     @Override
     public Nurse getInActiveNurse(Long nurseId) {
         return nurseRepository
-                .findByIdAndIsActivatedFalse(nurseId)
+                .findInActiveNurseById(nurseId)
                 .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
     }
 
