@@ -59,7 +59,8 @@ public class NurseController {
 
     @Operation(summary = "담당 환자 등록 API", description = "간호사가 담당하는 환자를 등록합니다._숙희")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(responseCode = "COMMON201", description = "요청 성공 및 리소스 생성됨"),
+        @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다"),
     })
     @PatchMapping("/patients")
     public BaseResponse<String> registerPatient(
