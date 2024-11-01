@@ -51,7 +51,7 @@ class NurseControllerTest {
         Nurse nurse = createNurse();
         Long nurseId = nurse.getId();
 
-        given(nurseService.getNurse(nurseId)).willReturn(nurse);
+        given(nurseService.getActiveNurse(nurseId)).willReturn(nurse);
         when(nurseService.existsByNurseId(nurseId)).thenReturn(true);
 
         mockMvc.perform(

@@ -56,15 +56,16 @@ public class NurseConverter {
     public static NurseRegisterRequestListResponse toNurseRegisterRequestListResponse(
             List<Nurse> nurseList) {
         List<NurseRegisterRequestInfoResponse> nurseRequestInfoList =
-                nurseList.stream().map(NurseConverter::toNurseRequestInfoResponse).toList();
+                nurseList.stream().map(NurseConverter::toNurseRegisterRequestInfoResponse).toList();
 
         return new NurseRegisterRequestListResponse(
                 nurseRequestInfoList.size(), nurseRequestInfoList);
     }
 
-    public static NurseRegisterRequestInfoResponse toNurseRequestInfoResponse(Nurse nurse) {
+    public static NurseRegisterRequestInfoResponse toNurseRegisterRequestInfoResponse(Nurse nurse) {
         String timeAgoMessage = TimeAgoUtil.getTimeAgoMessage(nurse.getCreatedAt());
         return NurseRegisterRequestInfoResponse.builder()
+                .nurseId(nurse.getId())
                 .name(nurse.getName())
                 .username(nurse.getUsername())
                 .requestTime(timeAgoMessage)

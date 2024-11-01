@@ -12,12 +12,15 @@ import lombok.Getter;
 public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON200", "성공입니다."),
     _CREATED(HttpStatus.CREATED, "COMMON201", "요청 성공 및 리소스 생성됨"),
+    _NO_CONTENT(HttpStatus.NO_CONTENT, "COMMON202", "요청 성공 및 반환할 콘텐츠가 없음"),
 
     // Auth
     USERNAME_AVAILABLE(HttpStatus.OK, "AUTH200", "사용 가능한 아이디입니다."),
     LOGIN_SUCCESS(HttpStatus.OK, "AUTH201", "성공적으로 로그인 되었습니다."),
     REFRESH_TOKEN_ISSUED(HttpStatus.OK, "AUTH202", "refresh token이 발급되었습니다."),
-    ;
+
+    // Admin
+    ACCEPTED(HttpStatus.OK, "ADMIN200", "요청이 성공적으로 수락되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

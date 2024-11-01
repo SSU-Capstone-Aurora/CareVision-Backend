@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.nurse.service;
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
@@ -9,17 +10,23 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCre
 public interface NurseService {
     boolean existsByNurseId(Long value);
 
-    Nurse getNurse(Long nurseId);
-
     Nurse getNurse(String username);
 
-    List<Nurse> getActiveNurses(Long adminId);
+    Nurse getActiveNurse(Long nurseId);
 
-    List<Nurse> getInActiveNurses(Long adminId);
+    Nurse getInActiveNurse(Long nurseId);
+
+    List<Nurse> getActiveNurses(Admin admin);
+
+    List<Nurse> getInActiveNurses(Admin admin);
 
     List<Nurse> searchNurse(String nurseName);
 
     Nurse createNurse(NurseCreateRequest nurseCreateRequest, Hospital hospital);
 
     boolean isUsernameDuplicated(String username);
+
+    void activateNurse(Admin admin, Long nurseId);
+
+    void deleteNurse(Admin admin, Long nurseId);
 }

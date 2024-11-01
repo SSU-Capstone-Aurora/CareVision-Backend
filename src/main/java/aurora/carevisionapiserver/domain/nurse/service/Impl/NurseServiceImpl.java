@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -32,13 +31,6 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public Nurse getNurse(Long nurseId) {
-        return nurseRepository
-                .findById(nurseId)
-                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
-    }
-
-    @Override
     public Nurse getNurse(String username) {
         return nurseRepository
                 .findByUsername(username)
@@ -46,14 +38,26 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> getActiveNurses(Long adminId) {
-        Admin admin = adminService.getAdmin(adminId);
+    public Nurse getActiveNurse(Long nurseId) {
+        return nurseRepository
+                .findByIdAndIsActivatedTrue(nurseId)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
+    public Nurse getInActiveNurse(Long nurseId) {
+        return nurseRepository
+                .findByIdAndIsActivatedFalse(nurseId)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
+    public List<Nurse> getActiveNurses(Admin admin) {
         return nurseRepository.findActiveNursesByAdmin(admin);
     }
 
     @Override
-    public List<Nurse> getInActiveNurses(Long adminId) {
-        Admin admin = adminService.getAdmin(adminId);
+    public List<Nurse> getInActiveNurses(Admin admin) {
         return nurseRepository.findInActiveNursesByAdmin(admin);
     }
 
@@ -73,5 +77,19 @@ public class NurseServiceImpl implements NurseService {
     @Override
     public boolean isUsernameDuplicated(String username) {
         return nurseRepository.existsByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public void activateNurse(Admin admin, Long nurseId) {
+        Nurse nurse = getInActiveNurse(nurseId);
+        nurse.activateNurse();
+        nurseRepository.save(nurse);
+    }
+
+    @Override
+    public void deleteNurse(Admin admin, Long nurseId) {
+        Nurse nurse = getInActiveNurse(nurseId);
+        nurseRepository.delete(nurse);
     }
 }

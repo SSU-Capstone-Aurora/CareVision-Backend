@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "patient")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE patient SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE patient SET deleted_at = NOW() WHERE patient_id = ?")
 public class Patient extends BaseEntity {
 
     @Id

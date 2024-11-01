@@ -37,11 +37,10 @@ public class AdminNurseControllerTest {
     void getNurseListSuccess() throws Exception {
         Hospital hospital = HospitalUtils.createHospital();
         Admin admin = AdminUtils.createAdmin(hospital);
-        Long adminId = admin.getId();
         List<Nurse> nurses =
                 List.of(NurseUtils.createActiveNurse(), NurseUtils.createOtherActiveNurse());
 
-        given(nurseService.getActiveNurses(adminId)).willReturn(nurses);
+        given(nurseService.getActiveNurses(admin)).willReturn(nurses);
 
         mockMvc.perform(
                         get("/api/admin/nurses")

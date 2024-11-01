@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "video")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE video SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE video SET deleted_at = NOW() WHERE video_id = ?")
 public class Video extends BaseEntity {
 
     @Id
