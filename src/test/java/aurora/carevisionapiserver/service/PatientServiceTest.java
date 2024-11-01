@@ -110,4 +110,21 @@ public class PatientServiceTest {
         verify(adminService, times(1)).getAdmin(admin.getId());
         verify(patientRepository, times(1)).findPatientByAdmin(admin);
     }
+
+    @Test
+    @DisplayName("간호사와 환자를 연결한다.")
+    void registerNurse() {
+        Nurse nurse = NurseUtils.createNurse();
+        Patient patient = Patient.builder().name("테스트").code("12E").build();
+
+        assertNull(patient.getNurse());
+
+        when(patientRepository.findPatientByCode(patient.getCode())).thenReturn(patient);
+        when(patientService.getPatientsByPatientId(patient.getCode())).thenReturn(patient);
+
+        String patientName = patientService.registerNurse(nurse, patient.getCode());
+
+        assertEquals(nurse, patient.getNurse());
+        assertEquals("테스트", patientName);
+    }
 }
