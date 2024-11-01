@@ -55,13 +55,13 @@ public class AdminNurseController {
         return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
     }
 
-    @Operation(summary = "간호사 요청 리스트 API", description = "간호사 등록 요청 리스트를 조회합니다_예림")
+    @Operation(summary = "간호사 요청 리스트 조회 API", description = "간호사 등록 요청 리스트를 조회합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
     @GetMapping("/requests")
-    public BaseResponse<NurseRegisterRequestListResponse> getNurseRequestList(
+    public BaseResponse<NurseRegisterRequestListResponse> getNurseRegisterRequestList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
         List<Nurse> nurses = nurseService.getInActiveNurses(admin);
         return BaseResponse.onSuccess(NurseConverter.toNurseRegisterRequestListResponse(nurses));
@@ -73,7 +73,7 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
     @PostMapping("/requests/{nurseId}")
-    public BaseResponse<Void> acceptNurseRequest(
+    public BaseResponse<Void> acceptNurseRegisterRequest(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
         nurseService.activateNurse(admin, nurseId);
