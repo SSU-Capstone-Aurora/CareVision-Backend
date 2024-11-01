@@ -61,9 +61,7 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
         return Optional.ofNullable(
                 queryFactory
                         .selectFrom(nurse)
-                        .where(
-                                nurse.id.eq(nurseId),
-                                nurse.isActivated.isFalse())
+                        .where(nurse.id.eq(nurseId), nurse.isActivated.isFalse())
                         .fetchOne());
     }
 }
