@@ -87,6 +87,7 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    @Transactional
     public void deleteInactiveNurse(Long nurseId) {
         Nurse nurse = getInactiveNurse(nurseId);
         nurseRepository.delete(nurse);
@@ -98,6 +99,7 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    @Transactional
     public void deleteActiveNurse(Long nurseId) {
         Nurse nurse = getActiveNurse(nurseId);
         nurseRepository.delete(nurse);
