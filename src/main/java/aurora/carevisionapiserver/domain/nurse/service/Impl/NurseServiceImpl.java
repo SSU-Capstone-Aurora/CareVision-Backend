@@ -80,14 +80,14 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     @Transactional
-    public void activateNurse(Admin admin, Long nurseId) {
+    public void activateNurse(Long nurseId) {
         Nurse nurse = getInActiveNurse(nurseId);
         nurse.activateNurse();
         nurseRepository.save(nurse);
     }
 
     @Override
-    public void deleteNurse(Admin admin, Long nurseId) {
+    public void deleteInActiveNurse(Long nurseId) {
         Nurse nurse = getInActiveNurse(nurseId);
         nurseRepository.delete(nurse);
     }
@@ -95,5 +95,11 @@ public class NurseServiceImpl implements NurseService {
     @Override
     public long getNurseRegisterRequestCount(Admin admin) {
         return nurseRepository.countInActiveNursesByAdmin(admin);
+    }
+
+    @Override
+    public void deleteActiveNurse(Long nurseId) {
+        Nurse nurse = getActiveNurse(nurseId);
+        nurseRepository.delete(nurse);
     }
 }

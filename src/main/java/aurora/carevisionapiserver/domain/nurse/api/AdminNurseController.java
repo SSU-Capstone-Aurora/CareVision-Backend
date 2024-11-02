@@ -61,7 +61,7 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
-    @GetMapping("nurses/requests")
+    @GetMapping("/nurses/requests")
     public BaseResponse<NurseRegisterRequestListResponse> getNurseRegisterRequestList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
         List<Nurse> nurses = nurseService.getInActiveNurses(admin);
@@ -73,11 +73,11 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
-    @PostMapping("nurses/requests/{nurseId}")
+    @PostMapping("/nurses/requests/{nurseId}")
     public BaseResponse<Void> acceptNurseRegisterRequest(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
-        nurseService.activateNurse(admin, nurseId);
+        nurseService.activateNurse(nurseId);
         return BaseResponse.of(SuccessStatus.ACCEPTED, null);
     }
 
@@ -86,11 +86,11 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
-    @DeleteMapping("nurses/requests/{nurseId}")
-    public BaseResponse<Void> deleteNurse(
+    @DeleteMapping("/nurses/requests/{nurseId}")
+    public BaseResponse<Void> deleteInActiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
-        nurseService.deleteNurse(admin, nurseId);
+        nurseService.deleteInActiveNurse(nurseId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 
@@ -98,11 +98,23 @@ public class AdminNurseController {
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON202", description = "OK, 성공"),
     })
-    @GetMapping("nurses/requests/count")
+    @GetMapping("/nurses/requests/count")
     public BaseResponse<NurseRegisterRequestCountResponse> getNurseRegisterRequestCount(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
         long requestCount = nurseService.getNurseRegisterRequestCount(admin);
         return BaseResponse.onSuccess(
                 NurseConverter.toNurseRegisterRequestCountResponse(requestCount));
+    }
+
+    @Operation(summary = "간호사 삭제 API", description = "간호사를 삭제합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 성공"),
+    })
+    @DeleteMapping("/nurses/{nurseId}")
+    public BaseResponse<Void> deleteActiveNurse(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @PathVariable Long nurseId) {
+        nurseService.deleteActiveNurse(nurseId);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 }
