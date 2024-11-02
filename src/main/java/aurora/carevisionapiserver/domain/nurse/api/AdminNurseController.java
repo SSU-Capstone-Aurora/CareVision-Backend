@@ -64,7 +64,7 @@ public class AdminNurseController {
     @GetMapping("/nurses/requests")
     public BaseResponse<NurseRegisterRequestListResponse> getNurseRegisterRequestList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
-        List<Nurse> nurses = nurseService.getInActiveNurses(admin);
+        List<Nurse> nurses = nurseService.getInactiveNurses(admin);
         return BaseResponse.onSuccess(NurseConverter.toNurseRegisterRequestListResponse(nurses));
     }
 
@@ -87,10 +87,10 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
     @DeleteMapping("/nurses/requests/{nurseId}")
-    public BaseResponse<Void> deleteInActiveNurse(
+    public BaseResponse<Void> deleteInactiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
-        nurseService.deleteInActiveNurse(nurseId);
+        nurseService.deleteInactiveNurse(nurseId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 

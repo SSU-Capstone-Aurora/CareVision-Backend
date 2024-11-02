@@ -44,7 +44,7 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public Nurse getInActiveNurse(Long nurseId) {
+    public Nurse getInactiveNurse(Long nurseId) {
         return nurseRepository
                 .findByIdAndIsActivatedFalse(nurseId)
                 .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
@@ -56,8 +56,8 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> getInActiveNurses(Admin admin) {
-        return nurseRepository.findInActiveNursesByAdmin(admin);
+    public List<Nurse> getInactiveNurses(Admin admin) {
+        return nurseRepository.findInactiveNursesByAdmin(admin);
     }
 
     @Override
@@ -81,20 +81,20 @@ public class NurseServiceImpl implements NurseService {
     @Override
     @Transactional
     public void activateNurse(Long nurseId) {
-        Nurse nurse = getInActiveNurse(nurseId);
+        Nurse nurse = getInactiveNurse(nurseId);
         nurse.activateNurse();
         nurseRepository.save(nurse);
     }
 
     @Override
-    public void deleteInActiveNurse(Long nurseId) {
-        Nurse nurse = getInActiveNurse(nurseId);
+    public void deleteInactiveNurse(Long nurseId) {
+        Nurse nurse = getInactiveNurse(nurseId);
         nurseRepository.delete(nurse);
     }
 
     @Override
     public long getNurseRegisterRequestCount(Admin admin) {
-        return nurseRepository.countInActiveNursesByAdmin(admin);
+        return nurseRepository.countInactiveNursesByAdmin(admin);
     }
 
     @Override

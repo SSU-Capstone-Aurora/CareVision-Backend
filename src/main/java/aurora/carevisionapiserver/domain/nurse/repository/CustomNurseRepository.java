@@ -8,7 +8,7 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 public interface CustomNurseRepository {
     List<Nurse> findActiveNursesByAdmin(Admin admin);
 
-    List<Nurse> findInActiveNursesByAdmin(Admin admin);
+    List<Nurse> findInactiveNursesByAdmin(Admin admin);
 
-    long countInActiveNursesByAdmin(Admin admin);
+    long countInactiveNursesByAdmin(Admin admin);
 }

@@ -14,11 +14,11 @@ public interface NurseService {
 
     Nurse getActiveNurse(Long nurseId);
 
-    Nurse getInActiveNurse(Long nurseId);
+    Nurse getInactiveNurse(Long nurseId);
 
     List<Nurse> getActiveNurses(Admin admin);
 
-    List<Nurse> getInActiveNurses(Admin admin);
+    List<Nurse> getInactiveNurses(Admin admin);
 
     List<Nurse> searchNurse(String nurseName);
 
@@ -28,7 +28,7 @@ public interface NurseService {
 
     void activateNurse(Long nurseId);
 
-    void deleteInActiveNurse(Long nurseId);
+    void deleteInactiveNurse(Long nurseId);
 
     long getNurseRegisterRequestCount(Admin admin);
 

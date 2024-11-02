@@ -32,7 +32,7 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
     }
 
     @Override
-    public List<Nurse> findInActiveNursesByAdmin(Admin admin) {
+    public List<Nurse> findInactiveNursesByAdmin(Admin admin) {
         QNurse nurse = QNurse.nurse;
         return queryFactory
                 .selectFrom(nurse)
@@ -46,7 +46,7 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
     }
 
     @Override
-    public long countInActiveNursesByAdmin(Admin admin) {
+    public long countInactiveNursesByAdmin(Admin admin) {
         QNurse nurse = QNurse.nurse;
         return Optional.ofNullable(
                         queryFactory
