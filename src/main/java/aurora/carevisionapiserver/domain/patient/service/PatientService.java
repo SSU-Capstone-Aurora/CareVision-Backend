@@ -13,4 +13,6 @@ public interface PatientService {
     List<Patient> getPatients(Long adminId);
 
     String registerNurse(Nurse nurse, String patientId);
+
+    void deletePatient(Long patientId);
 }

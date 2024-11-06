@@ -56,4 +56,17 @@ public class PatientServiceImpl implements PatientService {
 
         return patientRepository.findPatientByCode(patientCode);
     }
+
+    @Override
+    @Transactional
+    public void deletePatient(Long patientId) {
+        Patient patient = getPatient(patientId);
+        patientRepository.delete(patient);
+    }
+
+    private Patient getPatient(Long patientId) {
+        return patientRepository
+                .findById(patientId)
+                .orElseThrow(() -> new PatientException(ErrorStatus.PATIENT_NOT_FOUND));
+    }
 }
