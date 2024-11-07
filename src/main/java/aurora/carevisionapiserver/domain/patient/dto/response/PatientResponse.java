@@ -27,6 +27,7 @@ public class PatientResponse {
     @Builder
     @Getter
     public static class PatientProfileResponse {
+        private Long id;
         private String name;
         private String code;
         private LocalDate createdAt;
