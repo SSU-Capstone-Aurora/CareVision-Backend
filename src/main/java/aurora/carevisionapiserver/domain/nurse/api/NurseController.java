@@ -83,7 +83,7 @@ public class NurseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deletePatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            @PathVariable Long patientId) {
+            @PathVariable(name = "patientId") Long patientId) {
         patientService.deletePatient(patientId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }

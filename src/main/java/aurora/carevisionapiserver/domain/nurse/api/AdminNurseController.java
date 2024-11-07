@@ -78,7 +78,7 @@ public class AdminNurseController {
     @PostMapping("/nurses/requests/{nurseId}")
     public BaseResponse<Void> acceptNurseRegisterRequest(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @PathVariable Long nurseId) {
+            @PathVariable(name = "nurseId") Long nurseId) {
         nurseService.activateNurse(nurseId);
         return BaseResponse.of(SuccessStatus.ACCEPTED, null);
     }
@@ -92,7 +92,7 @@ public class AdminNurseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deleteInactiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @PathVariable Long nurseId) {
+            @PathVariable(name = "nurseId") Long nurseId) {
         nurseService.deleteInactiveNurse(nurseId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
@@ -117,7 +117,7 @@ public class AdminNurseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deleteActiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @PathVariable Long nurseId) {
+            @PathVariable(name = "nurseId") Long nurseId) {
         nurseService.deleteActiveNurse(nurseId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
