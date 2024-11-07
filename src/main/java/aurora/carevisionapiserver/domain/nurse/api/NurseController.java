@@ -80,7 +80,6 @@ public class NurseController {
         @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다.")
     })
     @DeleteMapping("/{patientId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deletePatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @PathVariable(name = "patientId") Long patientId) {
