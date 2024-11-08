@@ -7,8 +7,15 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import jakarta.servlet.http.Cookie;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,94 +23,105 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.domain.nurse.api.NurseAuthController;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
+import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.util.HospitalUtils;
+import aurora.carevisionapiserver.util.NurseUtils;
 
 @WebMvcTest(NurseAuthController.class)
 public class NurseAuthControllerTest {
     @Autowired private MockMvc mockMvc;
-
+    @Autowired private ObjectMapper objectMapper;
     @MockBean private NurseService nurseService;
-
     @MockBean private HospitalService hospitalService;
+    @MockBean private AuthService authService;
+    @MockBean private AdminService adminService;
+    @MockBean private AuthenticationManager authenticationManager;
+    @MockBean private NurseRepository nurseRepository;
 
-    private static final String NURSE_SIGN_UP_REQUEST_JSON =
-            """
-            {
-                "nurse": {
-                    "username": "nurse1",
-                    "password": "password123",
-                    "name": "오로라"
-                },
-                "hospital": {
-                    "id": 1
-                }
-            }
-            """;
-
-    private Hospital createHospital() {
-        return Hospital.builder().id(1L).name("오로라 병원").department("정형외과").build();
-    }
-
-    private Nurse createNurse(Hospital hospital) {
-        return Nurse.builder().id(1L).username("nurse1").hospital(hospital).name("오로라").build();
-    }
+    private static final String ACTIVE_NURSE_ONLY_URL = "/api/patients";
 
     @Test
     @WithMockUser
     @DisplayName("간호사 회원가입에 성공한다.")
     public void testCreateNurseSuccess() throws Exception {
-        // Given
-        Hospital hospital = createHospital();
-        Nurse nurse = createNurse(hospital);
+        Hospital hospital = HospitalUtils.createHospital();
+        Nurse nurse = NurseUtils.createInActiveNurse();
 
-        // When
         given(hospitalService.getHospital(anyLong())).willReturn(hospital);
         given(nurseService.createNurse(any(NurseCreateRequest.class), any(Hospital.class)))
                 .willReturn(nurse);
 
-        // Then
+        Map<String, Object> nurseSignUpRequest = new HashMap<>();
+        Map<String, Object> nurseDetails = new HashMap<>();
+        nurseDetails.put("username", "nurse1");
+        nurseDetails.put("password", "password123");
+        nurseDetails.put("name", "오로라");
+        nurseSignUpRequest.put("nurse", nurseDetails);
+
+        Map<String, Object> hospitalDetails = new HashMap<>();
+        hospitalDetails.put("id", 1);
+        nurseSignUpRequest.put("hospital", hospitalDetails);
+
         mockMvc.perform(
                         post("/api/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(NURSE_SIGN_UP_REQUEST_JSON)
+                                .content(objectMapper.writeValueAsString(nurseSignUpRequest))
                                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
-                .andExpect(jsonPath("$.code").value("COMMON200"))
-                .andExpect(jsonPath("$.message").value("성공입니다."))
+                .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
+                .andExpect(jsonPath("$.message").value(SuccessStatus._OK.getMessage()))
                 .andExpect(jsonPath("$.result.id").value(1))
-                .andExpect(jsonPath("$.result.name").value("오로라"));
+                .andExpect(jsonPath("$.result.name").value(nurse.getName()));
     }
 
     @Test
     @WithMockUser
     @DisplayName("병원을 찾을 수 없어 실패한다.")
     public void testCreateNurseHospital_NotFound() throws Exception {
-        // Given
+
+        Map<String, Object> nurseSignUpRequest = new HashMap<>();
+        Map<String, Object> nurseDetails = new HashMap<>();
+        nurseDetails.put("username", "nurse1");
+        nurseDetails.put("password", "password123");
+        nurseDetails.put("name", "오로라");
+        nurseSignUpRequest.put("nurse", nurseDetails);
+
+        Map<String, Object> hospitalDetails = new HashMap<>();
+        hospitalDetails.put("id", 1);
+        nurseSignUpRequest.put("hospital", hospitalDetails);
+
         given(hospitalService.getHospital(anyLong()))
                 .willThrow(new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND));
 
-        // When & Then
         mockMvc.perform(
                         post("/api/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(NURSE_SIGN_UP_REQUEST_JSON)
+                                .content(objectMapper.writeValueAsString(nurseSignUpRequest))
                                 .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.isSuccess").value(false))
-                .andExpect(jsonPath("$.code").value("HOSPITAL400"))
-                .andExpect(jsonPath("$.message").value("병원을 찾을 수 없습니다."));
+                .andExpect(jsonPath("$.code").value(ErrorStatus.HOSPITAL_NOT_FOUND.getCode()))
+                .andExpect(
+                        jsonPath("$.message").value(ErrorStatus.HOSPITAL_NOT_FOUND.getMessage()));
     }
 
     @Test
@@ -148,5 +166,59 @@ public class NurseAuthControllerTest {
                 .andExpect(
                         jsonPath("$.message").value(ErrorStatus.USERNAME_DUPLICATED.getMessage()))
                 .andExpect(jsonPath("$.result").value(false));
+    }
+
+    @Test
+    @DisplayName("활성화된 Nurse는 성공적으로 로그인하여 accessToken과 refreshToken을 받는다.")
+    @WithMockUser
+    void testSuccessfulLoginWithActiveNurse() throws Exception {
+        Map<String, String> loginRequest = new HashMap<>();
+        loginRequest.put("username", "kim1");
+        loginRequest.put("password", "password123");
+
+        Nurse activeNurse = NurseUtils.createActiveNurse();
+        given(nurseRepository.findByUsername("kim1")).willReturn(Optional.of(activeNurse));
+
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken("kim1", "password123");
+        given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .willReturn(authToken);
+
+        given(authService.createAccessToken("kim1", "NURSE")).willReturn("testAccessToken");
+        given(authService.createRefreshToken("kim1", "NURSE")).willReturn("testRefreshToken");
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", "testRefreshToken");
+        given(authService.createRefreshTokenCookie("testRefreshToken"))
+                .willReturn(refreshTokenCookie);
+
+        mockMvc.perform(
+                        post("/api/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequest))
+                                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
+                .andExpect(cookie().value("refreshToken", "testRefreshToken"));
+    }
+
+    @Test
+    @DisplayName("비활성화된 Nurse는 로그인에 실패한다.")
+    void testFailedLoginWithInactiveNurse() throws Exception {
+        Map<String, String> loginRequest = new HashMap<>();
+        loginRequest.put("username", "kim2");
+        loginRequest.put("password", "password123");
+
+        Nurse inactiveNurse = NurseUtils.createInActiveNurse();
+        given(nurseRepository.findByUsername("kim2")).willReturn(Optional.of(inactiveNurse));
+
+        mockMvc.perform(
+                        post("/api/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequest))
+                                .with(csrf()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(ErrorStatus.USER_NOT_ACTIVATED.getCode()))
+                .andExpect(
+                        jsonPath("$.message").value(ErrorStatus.USER_NOT_ACTIVATED.getMessage()));
     }
 }
