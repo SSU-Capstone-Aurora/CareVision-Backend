@@ -2,12 +2,14 @@ package aurora.carevisionapiserver.domain.nurse.api;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -87,6 +89,7 @@ public class AdminNurseController {
         @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다."),
     })
     @DeleteMapping("/nurses/requests/{nurseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deleteInactiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
@@ -108,9 +111,10 @@ public class AdminNurseController {
 
     @Operation(summary = "간호사 삭제 API", description = "간호사를 삭제합니다_예림")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON202", description = "OK, 성공"),
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
     })
     @DeleteMapping("/nurses/{nurseId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deleteActiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {

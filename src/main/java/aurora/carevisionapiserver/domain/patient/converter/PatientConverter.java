@@ -32,6 +32,7 @@ public class PatientConverter {
     public static PatientProfileResponse toPatientProfileResponse(Patient patient) {
         Bed bed = patient.getBed();
         return PatientProfileResponse.builder()
+                .id(patient.getId())
                 .name(patient.getName())
                 .inpatientWardNumber(bed.getInpatientWardNumber())
                 .patientRoomNumber(bed.getPatientRoomNumber())

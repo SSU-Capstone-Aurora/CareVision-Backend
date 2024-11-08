@@ -2,11 +2,15 @@ package aurora.carevisionapiserver.domain.nurse.api;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
@@ -59,7 +63,7 @@ public class NurseController {
 
     @Operation(summary = "담당 환자 등록 API", description = "간호사가 담당하는 환자를 등록합니다._숙희")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON201", description = "요청 성공 및 리소스 생성됨"),
+        @ApiResponse(responseCode = "COMMON201", description = "OK, 요청 성공 및 리소스 생성됨"),
         @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다"),
     })
     @PatchMapping("/patients")
@@ -68,5 +72,19 @@ public class NurseController {
             @RequestParam(name = "patient") String patientCode) {
         String patientName = patientService.registerNurse(nurse, patientCode);
         return BaseResponse.of(SuccessStatus._CREATED, patientName);
+    }
+
+    @Operation(summary = "담당 환자 퇴원 API", description = "환자를 퇴원합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
+        @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다.")
+    })
+    @DeleteMapping("/{patientId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public BaseResponse<Void> deletePatient(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @PathVariable Long patientId) {
+        patientService.deletePatient(patientId);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 }
