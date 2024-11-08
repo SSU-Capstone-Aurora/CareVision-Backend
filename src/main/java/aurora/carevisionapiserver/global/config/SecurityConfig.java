@@ -88,10 +88,9 @@ public class SecurityConfig {
                                 .authenticated());
 
         // JWT 인증 필터 추가
-        http.addFilterBefore(
-                new JWTFilter(jwtUtil, nurseRepository, objectMapper),
-                UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        // nurse 활성화 여부 필터 추가
+        http.addFilterBefore(nurseIsActivateFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
