@@ -198,8 +198,8 @@ public class NurseAuthControllerTest {
                                 .content(objectMapper.writeValueAsString(loginRequest))
                                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
-                .andExpect(cookie().value("refreshToken", "testRefreshToken"));
+                .andExpect(jsonPath("$.result.accessToken").value(accessToken))
+                .andExpect(cookie().value("refreshToken", refreshToken));
     }
 
     @Test
