@@ -72,7 +72,7 @@ public class PatientServiceTest {
     @DisplayName("간호사로 환자를 검색한다.")
     void searchPatientByNurse() {
         // given
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = NurseUtils.createActiveNurse();
         List<Patient> patients = nurse.getPatients();
         given(patientRepository.findPatientByNurse(nurse)).willReturn(nurse.getPatients());
 
@@ -89,7 +89,7 @@ public class PatientServiceTest {
     @Test
     @DisplayName("관리자의 환자를 조회합니다.")
     void getPatientByAdmin() {
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = NurseUtils.createActiveNurse();
 
         Hospital hospital = Hospital.builder().id(1L).name(nurse.getHospital().getName()).build();
         Admin admin = Admin.builder().id(1L).username("admin1").hospital(hospital).build();
@@ -115,7 +115,7 @@ public class PatientServiceTest {
     @Test
     @DisplayName("간호사와 환자를 연결한다.")
     void registerNurse() {
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = NurseUtils.createActiveNurse();
         Patient patient = Patient.builder().name("테스트").code("12E").build();
 
         assertNull(patient.getNurse());

@@ -34,8 +34,6 @@ import aurora.carevisionapiserver.util.NurseUtils;
 @ExtendWith(MockitoExtension.class)
 public class NurseServiceTest {
     @InjectMocks private NurseServiceImpl nurseService;
-
-    @Mock private AdminService adminService;
     @Mock private NurseRepository nurseRepository;
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -143,7 +141,8 @@ public class NurseServiceTest {
     void searchNurseSuccess() {
         // given
         String nurseName = "test";
-        List<Nurse> nurses = List.of(NurseUtils.createNurse(), NurseUtils.createOtherNurse());
+        List<Nurse> nurses =
+                List.of(NurseUtils.createActiveNurse(), NurseUtils.createOtherActiveNurse());
         given(nurseRepository.searchByName(nurseName)).willReturn(nurses);
 
         // when
@@ -156,4 +155,63 @@ public class NurseServiceTest {
         assertEquals(nurses.get(1).getName(), result.get(1).getName());
         assertEquals(nurses.get(1).getId(), result.get(1).getId());
     }
+    //
+    //    @Test
+    //    @DisplayName("간호사의 로그인 테스트 - 활성화된 간호사")
+    //    void loginActiveNurseSuccess() {
+    //        // Given
+    //        String username = "activeNurse";
+    //        String password = "password123";
+    //        Nurse activeNurse = NurseUtils.createActiveNurse();
+    //        //
+    // given(nurseRepository.findByUsernameAndIsActivatedTrue(username)).willReturn(Optional.of(activeNurse));
+    //        given(bCryptPasswordEncoder.matches(password,
+    // activeNurse.getPassword())).willReturn(true);
+    //
+    //        // When
+    //        // Nurse result = nurseService.login(username, password);
+    //
+    //        //        // Then
+    //        //        assertNotNull(result);
+    //        //        assertEquals(activeNurse.getUsername(), result.getUsername());
+    //        //        assertEquals(activeNurse.getName(), result.getName());
+    //        //        assertTrue(result.isActivated());  // 활성화된 간호사여야 함
+    //    }
+    //
+    //    //    @Test
+    //    //    @DisplayName("간호사의 로그인 테스트 - 비활성화된 간호사")
+    //    //    void loginInactiveNurseFailure() {
+    //    //        // Given
+    //    //        String username = "inactiveNurse";
+    //    //        String password = "password123";
+    //    //        Nurse inactiveNurse = NurseUtils.createInActiveNurse();
+    //    //
+    //    //
+    // given(nurseRepository.findByUsernameAndIsActivatedTrue(username)).willReturn(Optional.empty());
+    //    //
+    //    //        // When
+    //    //        Nurse result = nurseService.login(username, password);
+    //    //
+    //    //        // Then
+    //    //        assertNull(result); // 로그인 실패
+    //    //    }
+    //
+    //    @Test
+    //    @DisplayName("간호사의 로그인 테스트 - 잘못된 비밀번호")
+    //    void loginWrongPasswordFailure() {
+    //        // Given
+    //        String username = "activeNurse";
+    //        String password = "wrongPassword";
+    //        Nurse activeNurse = NurseUtils.createActiveNurse(); // isActivated == true
+    //        //
+    // given(nurseRepository.findByIdAndIsActivatedTrue(username)).willReturn(Optional.of(activeNurse));
+    //        given(bCryptPasswordEncoder.matches(password,
+    // activeNurse.getPassword())).willReturn(false);
+    //
+    //        // When
+    //        // Nurse result = nurseService.(username, password);
+    //
+    //        // Then
+    //        // assertNull(result); // 비밀번호 불일치로 로그인 실패
+    //    }
 }
