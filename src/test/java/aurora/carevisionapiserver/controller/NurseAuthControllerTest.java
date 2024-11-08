@@ -63,7 +63,7 @@ public class NurseAuthControllerTest {
     @DisplayName("간호사 회원가입에 성공한다.")
     public void testCreateNurseSuccess() throws Exception {
         Hospital hospital = HospitalUtils.createHospital();
-        Nurse nurse = NurseUtils.createInActiveNurse();
+        Nurse nurse = NurseUtils.createInactiveNurse();
 
         given(hospitalService.getHospital(anyLong())).willReturn(hospital);
         given(nurseService.createNurse(any(NurseCreateRequest.class), any(Hospital.class)))
@@ -208,7 +208,7 @@ public class NurseAuthControllerTest {
         loginRequest.put("username", "kim2");
         loginRequest.put("password", "password123");
 
-        Nurse inactiveNurse = NurseUtils.createInActiveNurse();
+        Nurse inactiveNurse = NurseUtils.createInactiveNurse();
         given(nurseRepository.findByUsername("kim2")).willReturn(Optional.of(inactiveNurse));
 
         mockMvc.perform(
