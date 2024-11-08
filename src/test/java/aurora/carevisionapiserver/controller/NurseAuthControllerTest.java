@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +26,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -172,24 +175,28 @@ public class NurseAuthControllerTest {
     @DisplayName("활성화된 Nurse는 성공적으로 로그인하여 accessToken과 refreshToken을 받는다.")
     @WithMockUser
     void testSuccessfulLoginWithActiveNurse() throws Exception {
+        String username = "kim1";
+        String password = "password123";
+        String role = "NURSE";
+        String refreshToken = "testRefreshToken";
+        String accessToken = "testAccessToken";
+
         Map<String, String> loginRequest = new HashMap<>();
-        loginRequest.put("username", "kim1");
-        loginRequest.put("password", "password123");
+        loginRequest.put("username", username);
+        loginRequest.put("password", password);
 
-        Nurse activeNurse = NurseUtils.createActiveNurse();
-        given(nurseRepository.findByUsername("kim1")).willReturn(Optional.of(activeNurse));
+        when(authService.createAccessToken(username, role)).thenReturn(accessToken);
+        when(authService.createRefreshToken(username, role)).thenReturn(refreshToken);
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        when(authService.createRefreshTokenCookie(refreshToken)).thenReturn(refreshTokenCookie);
 
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken("kim1", "password123");
-        given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .willReturn(authToken);
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
 
-        given(authService.createAccessToken("kim1", "NURSE")).willReturn("testAccessToken");
-        given(authService.createRefreshToken("kim1", "NURSE")).willReturn("testRefreshToken");
-
-        Cookie refreshTokenCookie = new Cookie("refreshToken", "testRefreshToken");
-        given(authService.createRefreshTokenCookie("testRefreshToken"))
-                .willReturn(refreshTokenCookie);
+        when(authService.authenticate(username, password)).thenReturn(Optional.of(authentication));
 
         mockMvc.perform(
                         post("/api/login")
