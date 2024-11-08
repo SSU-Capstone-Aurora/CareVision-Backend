@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import aurora.carevisionapiserver.global.auth.util.JWTFilter;
-import aurora.carevisionapiserver.global.auth.util.NurseIsActivateFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JWTFilter jwtFilter;
-    private final NurseIsActivateFilter nurseIsActivateFilter;
     private final String[] allowedUrls = {
         "/api/admin/login",
         "/api/sign-up",
@@ -83,8 +81,6 @@ public class SecurityConfig {
 
         // JWT 인증 필터 추가
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        // nurse 활성화 여부 필터 추가
-        http.addFilterBefore(nurseIsActivateFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
