@@ -10,7 +10,7 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 public class NurseUtils {
 
-    public static Nurse createInActiveNurse() {
+    public static Nurse createInactiveNurse() {
         Hospital hospital = HospitalUtils.createHospital();
         Patient patient = PatientUtil.createPatient();
         Patient otherPatient = PatientUtil.createOtherPatient();
@@ -27,7 +27,7 @@ public class NurseUtils {
                 .build();
     }
 
-    public static Nurse createOtherInActiveNurse() {
+    public static Nurse createOtherInactiveNurse() {
         Hospital hospital = Hospital.builder().id(2L).name("대구병원").department("성형외과").build();
 
         String dateTime = "2024-09-10 17:57:00";
