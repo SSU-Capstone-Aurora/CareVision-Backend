@@ -48,7 +48,7 @@ public class NurseAuthController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
     })
     @PostMapping("/sign-up")
-    public BaseResponse<NurseInfoResponse> createAdmin(
+    public BaseResponse<NurseInfoResponse> createNurse(
             @RequestBody NurseSignUpRequest nurseSignUpRequest) {
 
         NurseCreateRequest nurseCreateRequest = nurseSignUpRequest.getNurse();
