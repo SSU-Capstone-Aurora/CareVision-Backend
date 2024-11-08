@@ -44,7 +44,7 @@ class NurseControllerTest {
 
     @BeforeEach
     void setup() {
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = NurseUtils.createActiveNurse();
 
         mockMvc =
                 MockMvcBuilders.standaloneSetup(nurseController)
@@ -60,7 +60,7 @@ class NurseControllerTest {
     @WithMockUser
     @DisplayName("간호사 마이페이지 조회 성공한다.")
     void getNurseMyPageSuccess() throws Exception {
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = NurseUtils.createActiveNurse();
         Long nurseId = nurse.getId();
 
         given(nurseService.getActiveNurse(nurseId)).willReturn(nurse);
