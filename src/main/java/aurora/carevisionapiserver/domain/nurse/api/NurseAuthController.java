@@ -85,7 +85,8 @@ public class NurseAuthController {
                     "간호사가 서비스에 로그인합니다_예림 Response Body에 accessToken을, Cookie에 refreshToken을 발급합니다.")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-        @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
+        @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다."),
+        @ApiResponse(responseCode = "AUTH407", description = "승인되지 않은 유저입니다."),
     })
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<NurseLoginResponse>> login(
