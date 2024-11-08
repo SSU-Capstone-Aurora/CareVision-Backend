@@ -13,22 +13,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.global.auth.util.JWTFilter;
-import aurora.carevisionapiserver.global.auth.util.JWTUtil;
+import aurora.carevisionapiserver.global.auth.util.NurseIsActivateFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final JWTUtil jwtUtil;
-    private final NurseRepository nurseRepository;
-    private final ObjectMapper objectMapper;
-
+    private final JWTFilter jwtFilter;
+    private final NurseIsActivateFilter nurseIsActivateFilter;
     private final String[] allowedUrls = {
         "/api/admin/login",
         "/api/sign-up",
