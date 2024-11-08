@@ -16,8 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetails;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.error.BaseResponse;
@@ -30,8 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
-
-    private final NurseRepository nurseRepository;
     private final ObjectMapper objectMapper;
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
@@ -68,13 +64,6 @@ public class JWTFilter extends OncePerRequestFilter {
         // 토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
-
-        Nurse nurse = nurseRepository.findByUsername(username).orElse(null);
-
-        if (nurse == null || !nurse.isActivated()) {
-            sendErrorResponse(response, ErrorStatus.USER_NOT_ACTIVATED);
-            return;
-        }
 
         // UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails;
