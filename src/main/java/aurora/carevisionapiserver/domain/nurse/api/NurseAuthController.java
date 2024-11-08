@@ -17,7 +17,7 @@ import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.Ho
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseLoginRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseSignUpRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
@@ -90,7 +90,7 @@ public class NurseAuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<NurseLoginResponse>> login(
-            @RequestBody NurseRequest.NurseLoginRequest nurseLoginRequest,
+            @RequestBody NurseLoginRequest nurseLoginRequest,
             HttpServletResponse response) {
 
         String username = nurseLoginRequest.getUsername();
