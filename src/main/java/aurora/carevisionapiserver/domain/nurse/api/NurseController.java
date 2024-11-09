@@ -23,6 +23,7 @@ import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
+import aurora.carevisionapiserver.global.util.validation.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -43,6 +44,7 @@ public class NurseController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "NURSE400", description = "NOT FOUND, 간호사를 찾을 수 없음")
     })
+    @RefreshTokenApiResponse
     @GetMapping("/profile")
     public BaseResponse<NurseProfileResponse> getNurseProfile(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
@@ -53,6 +55,7 @@ public class NurseController {
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
+    @RefreshTokenApiResponse
     @GetMapping("/patients")
     public BaseResponse<PatientProfileListResponse> getPatientList(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
@@ -66,6 +69,7 @@ public class NurseController {
         @ApiResponse(responseCode = "COMMON201", description = "OK, 요청 성공 및 리소스 생성됨"),
         @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다"),
     })
+    @RefreshTokenApiResponse
     @PatchMapping("/patients")
     public BaseResponse<String> registerPatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
@@ -79,6 +83,7 @@ public class NurseController {
         @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
         @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다.")
     })
+    @RefreshTokenApiResponse
     @DeleteMapping("/{patientId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deletePatient(

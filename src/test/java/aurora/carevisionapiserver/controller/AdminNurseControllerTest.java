@@ -17,6 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.api.AdminNurseController;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -30,6 +31,7 @@ import aurora.carevisionapiserver.util.NurseUtils;
 public class AdminNurseControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private NurseService nurseService;
+    @MockBean private AdminService adminService;
 
     @Test
     @WithMockUser
@@ -42,10 +44,7 @@ public class AdminNurseControllerTest {
 
         given(nurseService.getActiveNurses(admin)).willReturn(nurses);
 
-        mockMvc.perform(
-                        get("/api/admin/nurses")
-                                .param("adminId", String.valueOf(adminId))
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/admin/nurses").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.nurseList[1].name").value("최간호사"))
@@ -59,7 +58,7 @@ public class AdminNurseControllerTest {
     @WithMockUser
     @DisplayName("간호사 검색에 성공한다.")
     void searchNurseSuccess() throws Exception {
-        Nurse nurse = NurseUtils.createNurse();
+        Nurse nurse = NurseUtils.createActiveNurse();
         String nurseName = nurse.getName();
 
         given(nurseService.searchNurse(nurseName)).willReturn(List.of(nurse));

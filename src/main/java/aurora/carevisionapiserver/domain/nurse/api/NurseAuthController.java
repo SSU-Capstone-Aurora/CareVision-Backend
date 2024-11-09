@@ -5,6 +5,7 @@ import static aurora.carevisionapiserver.domain.nurse.converter.NurseConverter.t
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +18,8 @@ import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.Ho
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseLoginRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseSignUpRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
@@ -27,6 +28,7 @@ import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.util.validation.annotation.IsActivateNurse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Auth 🔐", description = "인증 관련 API")
 @RestController
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class NurseAuthController {
@@ -48,7 +51,7 @@ public class NurseAuthController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
     })
     @PostMapping("/sign-up")
-    public BaseResponse<NurseInfoResponse> createAdmin(
+    public BaseResponse<NurseInfoResponse> createNurse(
             @RequestBody NurseSignUpRequest nurseSignUpRequest) {
 
         NurseCreateRequest nurseCreateRequest = nurseSignUpRequest.getNurse();
@@ -85,11 +88,12 @@ public class NurseAuthController {
                     "간호사가 서비스에 로그인합니다_예림 Response Body에 accessToken을, Cookie에 refreshToken을 발급합니다.")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-        @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
+        @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다."),
+        @ApiResponse(responseCode = "AUTH407", description = "승인되지 않은 유저입니다."),
     })
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<NurseLoginResponse>> login(
-            @RequestBody NurseRequest.NurseLoginRequest nurseLoginRequest,
+            @RequestBody @IsActivateNurse NurseLoginRequest nurseLoginRequest,
             HttpServletResponse response) {
 
         String username = nurseLoginRequest.getUsername();

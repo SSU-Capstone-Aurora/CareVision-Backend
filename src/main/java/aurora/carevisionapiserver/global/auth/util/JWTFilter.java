@@ -11,17 +11,24 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetails;
 import aurora.carevisionapiserver.global.auth.domain.Role;
+import aurora.carevisionapiserver.global.error.BaseResponse;
+import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+    private final ObjectMapper objectMapper;
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Override
@@ -42,10 +49,7 @@ public class JWTFilter extends OncePerRequestFilter {
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-            PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendErrorResponse(response, ErrorStatus.REFRESH_TOKEN_EXPIRED);
             return;
         }
 
@@ -53,10 +57,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String category = jwtUtil.getCategory(accessToken);
 
         if (!category.equals("access")) {
-            PrintWriter writer = response.getWriter();
-            writer.print("invalid token expired");
-
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendErrorResponse(response, ErrorStatus.INVALID_REFRESH_TOKEN);
             return;
         }
 
@@ -72,10 +73,7 @@ public class JWTFilter extends OncePerRequestFilter {
         } else if (Role.ADMIN.getRole().equals(role)) {
             customUserDetails = new CustomUserDetails(username, null, Role.ADMIN, true);
         } else {
-            // 유효하지 않은 역할일 경우 처리
-            PrintWriter writer = response.getWriter();
-            writer.print("invalid role");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendErrorResponse(response, ErrorStatus.INVALID_ROLE);
             return;
         }
 
@@ -87,6 +85,21 @@ public class JWTFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, ErrorStatus errorStatus)
+            throws IOException {
+        BaseResponse<Void> errorResponse =
+                BaseResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
+
+        response.setStatus(errorStatus.getHttpStatus().value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+        PrintWriter writer = response.getWriter();
+        writer.print(jsonResponse);
+        writer.flush();
     }
 
     public String parseAccessToken(String header) {

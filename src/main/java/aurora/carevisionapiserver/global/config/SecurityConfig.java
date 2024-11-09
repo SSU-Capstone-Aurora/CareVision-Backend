@@ -13,20 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
 import aurora.carevisionapiserver.global.auth.util.JWTFilter;
-import aurora.carevisionapiserver.global.auth.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final JWTUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
-
+    private final JWTFilter jwtFilter;
     private final String[] allowedUrls = {
         "/api/admin/login",
         "/api/sign-up",
@@ -41,7 +35,9 @@ public class SecurityConfig {
         "/v3/api-docs/**",
     };
 
-    private final String[] nurseUrls = {"/api/patients", "/api/profile", "/api/reissue"};
+    private final String[] nurseUrls = {
+        "/api/patients", "/api/profile", "/api/reissue", "/api/patients/**"
+    };
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
@@ -84,8 +80,7 @@ public class SecurityConfig {
                                 .authenticated());
 
         // JWT 인증 필터 추가
-        http.addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -41,18 +41,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             WebDataBinderFactory binderFactory) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication.getName().equals("anonymousUser")) {
-            throw new GeneralException(ErrorStatus._BAD_REQUEST);
-        }
-
-        Object principal = authentication.getPrincipal();
-        if (principal == null || principal.getClass() == String.class) {
-            throw new GeneralException(ErrorStatus.USER_NOT_FOUND);
-        }
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                (UsernamePasswordAuthenticationToken) authentication;
-        String username = authenticationToken.getName();
+        String username = getUsername(authentication);
 
         boolean isAdmin =
                 authentication.getAuthorities().stream()
@@ -63,5 +52,20 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             return adminService.getAdmin(username);
         }
         return nurseService.getNurse(username);
+    }
+
+    private static String getUsername(Authentication authentication) {
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new GeneralException(ErrorStatus._UNAUTHORIZED);
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal == null || principal.getClass() == String.class) {
+            throw new GeneralException(ErrorStatus.INVALID_CREDENTIALS);
+        }
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) authentication;
+        return authenticationToken.getName();
     }
 }
