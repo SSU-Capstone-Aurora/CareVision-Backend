@@ -122,7 +122,6 @@ public class AdminNurseController {
     })
     @RefreshTokenApiResponse
     @DeleteMapping("/nurses/{nurseId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deleteActiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
