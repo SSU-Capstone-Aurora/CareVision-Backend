@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
@@ -41,8 +42,10 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCre
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
+import aurora.carevisionapiserver.global.auth.util.JWTUtil;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.util.validation.validator.IsActivateNurseValidator;
 import aurora.carevisionapiserver.util.HospitalUtils;
 import aurora.carevisionapiserver.util.NurseUtils;
 
@@ -54,6 +57,9 @@ public class NurseAuthControllerTest {
     @MockBean private HospitalService hospitalService;
     @MockBean private AuthService authService;
     @MockBean private NurseRepository nurseRepository;
+    @MockBean private JWTUtil jwtUtil;
+    @MockBean private AdminService adminService;
+    @MockBean private IsActivateNurseValidator isActivateNurseValidator;
 
     @Test
     @WithMockUser
@@ -179,6 +185,10 @@ public class NurseAuthControllerTest {
         loginRequest.put("username", username);
         loginRequest.put("password", password);
 
+        Nurse activeNurse = NurseUtils.createActiveNurse();
+
+        when(nurseRepository.findByUsername(username)).thenReturn(Optional.of(activeNurse));
+
         when(authService.createAccessToken(username, role)).thenReturn(accessToken);
         when(authService.createRefreshToken(username, role)).thenReturn(refreshToken);
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
@@ -204,20 +214,24 @@ public class NurseAuthControllerTest {
 
     @Test
     @DisplayName("비활성화된 Nurse는 로그인에 실패한다.")
+    @WithMockUser
     void testFailedLoginWithInactiveNurse() throws Exception {
+        String username = "kim2";
+        String password = "password123";
+
         Map<String, String> loginRequest = new HashMap<>();
-        loginRequest.put("username", "kim2");
-        loginRequest.put("password", "password123");
+        loginRequest.put("username", username);
+        loginRequest.put("password", password);
 
         Nurse inactiveNurse = NurseUtils.createInactiveNurse();
-        given(nurseRepository.findByUsername("kim2")).willReturn(Optional.of(inactiveNurse));
+        given(nurseRepository.findByUsername(username)).willReturn(Optional.of(inactiveNurse));
 
         mockMvc.perform(
                         post("/api/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(loginRequest))
                                 .with(csrf()))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value(ErrorStatus.USER_NOT_ACTIVATED.getCode()))
                 .andExpect(
                         jsonPath("$.message").value(ErrorStatus.USER_NOT_ACTIVATED.getMessage()));
