@@ -175,17 +175,17 @@ public class NurseAuthControllerTest {
     @DisplayName("활성화된 Nurse는 성공적으로 로그인하여 accessToken과 refreshToken을 받는다.")
     @WithMockUser
     void testSuccessfulLoginWithActiveNurse() throws Exception {
-        String username = "kim1";
-        String password = "password123";
-        String role = "NURSE";
+        Nurse activeNurse = NurseUtils.createActiveNurse();
+
+        String username = activeNurse.getUsername();
+        String password = activeNurse.getPassword();
+        String role = activeNurse.getRole().toString();
         String refreshToken = "testRefreshToken";
         String accessToken = "testAccessToken";
 
         Map<String, String> loginRequest = new HashMap<>();
         loginRequest.put("username", username);
         loginRequest.put("password", password);
-
-        Nurse activeNurse = NurseUtils.createActiveNurse();
 
         when(nurseRepository.findByUsername(username)).thenReturn(Optional.of(activeNurse));
 
@@ -216,14 +216,16 @@ public class NurseAuthControllerTest {
     @DisplayName("비활성화된 Nurse는 로그인에 실패한다.")
     @WithMockUser
     void testFailedLoginWithInactiveNurse() throws Exception {
-        String username = "kim2";
-        String password = "password123";
+
+        Nurse inactiveNurse = NurseUtils.createInactiveNurse();
+
+        String username = inactiveNurse.getUsername();
+        String password = inactiveNurse.getPassword();
 
         Map<String, String> loginRequest = new HashMap<>();
         loginRequest.put("username", username);
         loginRequest.put("password", password);
 
-        Nurse inactiveNurse = NurseUtils.createInactiveNurse();
         given(nurseRepository.findByUsername(username)).willReturn(Optional.of(inactiveNurse));
 
         mockMvc.perform(
@@ -241,7 +243,7 @@ public class NurseAuthControllerTest {
     @DisplayName("존재하지 않는 간호사로 로그인하면 인증에 실패한다.")
     @WithMockUser
     void testFailedLoginWithNonExistentNurse() throws Exception {
-        String username = "unknownUser";
+        String username = "unknownNurse";
         String password = "password123";
 
         Map<String, String> loginRequest = new HashMap<>();
