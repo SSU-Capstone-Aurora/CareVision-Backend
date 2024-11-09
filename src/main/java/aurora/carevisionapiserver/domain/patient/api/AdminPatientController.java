@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.patient.api;
 
 import java.util.List;
 
+import aurora.carevisionapiserver.global.util.validation.annotation.RefreshTokenApiResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,7 @@ public class AdminPatientController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "PATIENT400", description = "NOT FOUND, 환자가 없습니다.")
     })
+    @RefreshTokenApiResponse
     @GetMapping("/search")
     public BaseResponse<PatientSearchListResponse> searchPatient(
             @RequestParam(name = "search") String patientName) {
@@ -44,6 +46,7 @@ public class AdminPatientController {
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
+    @RefreshTokenApiResponse
     @GetMapping("")
     public BaseResponse<PatientSearchListResponse> getPatients(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
