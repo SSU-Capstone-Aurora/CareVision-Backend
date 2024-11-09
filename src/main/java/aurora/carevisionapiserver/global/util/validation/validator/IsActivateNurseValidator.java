@@ -25,7 +25,15 @@ public class IsActivateNurseValidator
         if (username != null) {
             Nurse nurse = nurseRepository.findByUsername(username).orElse(null);
 
-            if (nurse == null || !nurse.isActivated()) {
+            if (nurse == null) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(
+                                String.valueOf(ErrorStatus.INVALID_CREDENTIALS))
+                        .addConstraintViolation();
+                return false;
+            }
+
+            if (!nurse.isActivated()) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate(
                                 String.valueOf(ErrorStatus.USER_NOT_ACTIVATED))

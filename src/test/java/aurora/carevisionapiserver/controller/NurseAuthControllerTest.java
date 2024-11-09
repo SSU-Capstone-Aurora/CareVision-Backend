@@ -236,4 +236,28 @@ public class NurseAuthControllerTest {
                 .andExpect(
                         jsonPath("$.message").value(ErrorStatus.USER_NOT_ACTIVATED.getMessage()));
     }
+
+    @Test
+    @DisplayName("존재하지 않는 간호사로 로그인하면 인증에 실패한다.")
+    @WithMockUser
+    void testFailedLoginWithNonExistentNurse() throws Exception {
+        String username = "unknownUser";
+        String password = "password123";
+
+        Map<String, String> loginRequest = new HashMap<>();
+        loginRequest.put("username", username);
+        loginRequest.put("password", password);
+
+        given(nurseRepository.findByUsername(username)).willReturn(Optional.empty());
+
+        mockMvc.perform(
+                        post("/api/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequest))
+                                .with(csrf()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(ErrorStatus.INVALID_CREDENTIALS.getCode()))
+                .andExpect(
+                        jsonPath("$.message").value(ErrorStatus.INVALID_CREDENTIALS.getMessage()));
+    }
 }
