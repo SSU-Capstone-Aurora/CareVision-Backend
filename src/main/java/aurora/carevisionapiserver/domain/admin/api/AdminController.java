@@ -11,6 +11,7 @@ import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
+import aurora.carevisionapiserver.global.util.validation.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,6 +28,7 @@ public class AdminController {
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
+    @RefreshTokenApiResponse
     @GetMapping("/profile")
     public BaseResponse<HospitalInfoResponse> getNurseProfile(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {

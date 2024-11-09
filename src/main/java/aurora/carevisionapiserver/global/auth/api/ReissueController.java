@@ -44,15 +44,6 @@ public class ReissueController {
             description = "refresh 토큰이 만료된 경우 refresh 토큰을 재발급합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-        @ApiResponse(
-                responseCode = "AUTH401",
-                description = "BAD_REQUEST, refresh token이 null입니다."),
-        @ApiResponse(
-                responseCode = "AUTH402",
-                description = "BAD_REQUEST, refresh token이 인식되지 않았습니다."),
-        @ApiResponse(
-                responseCode = "AUTH403",
-                description = "BAD_REQUEST, refresh token이 만료되었습니다."),
     })
     @PostMapping("/api/reissue")
     public BaseResponse<?> reissueForNurse(
