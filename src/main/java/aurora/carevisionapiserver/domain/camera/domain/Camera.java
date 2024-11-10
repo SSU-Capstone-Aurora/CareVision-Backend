@@ -27,4 +27,8 @@ public class Camera extends BaseEntity {
         this.id = id;
         this.patient = patient;
     }
+
+    public void assignPatient(Patient patient) {
+        this.patient = patient;
+    }
 }

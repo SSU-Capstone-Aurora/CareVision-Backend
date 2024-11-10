@@ -38,7 +38,12 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Admin
     ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "관리자를 찾을 수 없습니다."),
-    ;
+
+    // Camera
+    CAMERA_NOT_FOUND(HttpStatus.NOT_FOUND, "CAMERA400", "카메라를 찾을 수 없습니다."),
+
+    // Bed
+    INVALID_BED_INFO(HttpStatus.BAD_REQUEST, "BED400", "잘못된 형식의 베드 정보입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

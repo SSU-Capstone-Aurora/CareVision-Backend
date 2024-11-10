@@ -4,8 +4,10 @@ import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResp
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.bed.converter.BedConverter;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
@@ -48,5 +50,17 @@ public class PatientConverter {
                         patients.stream().map(PatientConverter::toPatientProfileResponse).toList())
                 .count(patients.size())
                 .build();
+    }
+
+    public static Patient toPatient(PatientCreateRequest patientCreateRequest) {
+        Bed bed = BedConverter.toBed(patientCreateRequest.getBedInfo());
+        Patient patient =
+                Patient.builder()
+                        .name(patientCreateRequest.getName())
+                        .code(patientCreateRequest.getCode())
+                        .bed(bed)
+                        .build();
+        bed.assignPatient(patient);
+        return patient;
     }
 }

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
@@ -62,6 +64,13 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long patientId) {
         Patient patient = getPatient(patientId);
         patientRepository.delete(patient);
+    }
+
+    @Override
+    @Transactional
+    public Patient createPatient(PatientCreateRequest patientCreateRequest) {
+        Patient patient = PatientConverter.toPatient(patientCreateRequest);
+        return patientRepository.save(patient);
     }
 
     private Patient getPatient(Long patientId) {
