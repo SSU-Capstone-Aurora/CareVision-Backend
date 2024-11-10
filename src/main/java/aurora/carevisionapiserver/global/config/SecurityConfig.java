@@ -27,6 +27,8 @@ public class SecurityConfig {
         "/api/check-username",
         "/api/admin/check-username",
         "/api/admin/sign-up",
+        "/api/admin/departments",
+        "/api/admin/hospitals",
         "/api/login",
         "/health",
         "/error",
