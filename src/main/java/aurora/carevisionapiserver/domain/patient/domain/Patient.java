@@ -45,7 +45,10 @@ public class Patient extends BaseEntity {
     @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
     private Camera camera;
 
-    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
+    @OneToOne(
+            mappedBy = "patient",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Bed bed;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.REMOVE, orphanRemoval = true)

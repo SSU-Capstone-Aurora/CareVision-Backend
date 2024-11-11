@@ -41,4 +41,8 @@ public class Bed extends BaseEntity {
         this.bedNumber = bedNumber;
         this.patient = patient;
     }
+
+    public void assignPatient(Patient patient) {
+        this.patient = patient;
+    }
 }
