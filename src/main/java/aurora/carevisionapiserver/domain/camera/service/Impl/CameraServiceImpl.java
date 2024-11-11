@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.camera.service.Impl;
 
 import java.util.List;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
@@ -23,6 +24,7 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
+    @Transactional
     public void connectPatient(CameraSelectRequest cameraSelectRequest, Patient patient) {
         Camera camera = getCameraFromRequest(cameraSelectRequest);
         camera.assignPatient(patient);
