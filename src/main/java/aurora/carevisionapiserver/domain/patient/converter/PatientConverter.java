@@ -60,7 +60,7 @@ public class PatientConverter {
                         .code(patientCreateRequest.getCode())
                         .bed(bed)
                         .build();
-        bed.assignPatient(patient);
+        bed.registerPatient(patient);
         return patient;
     }
 }
