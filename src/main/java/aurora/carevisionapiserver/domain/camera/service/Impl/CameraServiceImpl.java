@@ -3,10 +3,10 @@ package aurora.carevisionapiserver.domain.camera.service.Impl;
 import java.util.List;
 
 import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
-import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.camera.repository.CameraRepository;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
@@ -25,14 +25,13 @@ public class CameraServiceImpl implements CameraService {
 
     @Override
     @Transactional
-    public void connectPatient(CameraSelectRequest cameraSelectRequest, Patient patient) {
-        Camera camera = getCameraFromRequest(cameraSelectRequest);
+    public void connectPatient(Camera camera, Patient patient) {
         camera.assignPatient(patient);
         cameraRepository.save(camera);
     }
 
-    private Camera getCameraFromRequest(CameraSelectRequest cameraSelectRequest) {
-        String cameraId = cameraSelectRequest.getId();
+    @Override
+    public Camera getCamera(String cameraId) {
         return cameraRepository
                 .findById(cameraId)
                 .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
@@ -69,14 +70,16 @@ public class AdminPatientController {
     })
     @RefreshTokenApiResponse
     @PostMapping("")
-    public BaseResponse<PatientSearchListResponse> createPatient(
+    public BaseResponse<Void> createPatient(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @RequestBody PatientRegisterRequest patientRegisterRequest) {
         PatientCreateRequest patientCreateRequest = patientRegisterRequest.getPatient();
         CameraSelectRequest cameraSelectRequest = patientRegisterRequest.getCamera();
 
         Patient patient = patientService.createPatient(patientCreateRequest);
-        cameraService.connectPatient(cameraSelectRequest, patient);
+        Camera camera = cameraService.getCamera(cameraSelectRequest.getId());
+
+        cameraService.connectPatient(camera, patient);
         return BaseResponse.of(SuccessStatus._CREATED, null);
     }
 }
