@@ -27,7 +27,6 @@ public class CameraServiceImpl implements CameraService {
     @Transactional
     public void connectPatient(Camera camera, Patient patient) {
         camera.registerPatient(patient);
-        cameraRepository.save(camera);
     }
 
     @Override
