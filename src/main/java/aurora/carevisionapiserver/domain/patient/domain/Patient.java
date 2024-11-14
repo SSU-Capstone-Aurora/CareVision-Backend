@@ -9,7 +9,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
@@ -42,9 +41,6 @@ public class Patient extends BaseEntity {
     @JoinColumn(name = "nurse_id")
     private Nurse nurse;
 
-    @OneToOne(mappedBy = "patient", fetch = FetchType.LAZY)
-    private Camera camera;
-
     @OneToOne(
             mappedBy = "patient",
             fetch = FetchType.LAZY,
@@ -55,24 +51,16 @@ public class Patient extends BaseEntity {
     private List<Video> videos;
 
     @Builder
-    public Patient(
-            Long id,
-            String name,
-            String code,
-            Nurse nurse,
-            Camera camera,
-            Bed bed,
-            List<Video> videos) {
+    public Patient(Long id, String name, String code, Nurse nurse, Bed bed, List<Video> videos) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.nurse = nurse;
-        this.camera = camera;
         this.bed = bed;
         this.videos = videos;
     }
 
-    public void registerPatient(Nurse nurse) {
+    public void registerNurse(Nurse nurse) {
         this.nurse = nurse;
     }
 }

@@ -26,4 +26,12 @@ public class PatientRequest {
         private String code;
         private String bedInfo;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PatientSelectRequest {
+        private Long patientId;
+    }
 }

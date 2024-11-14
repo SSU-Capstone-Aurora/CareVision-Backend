@@ -15,6 +15,7 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCre
 import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -103,5 +104,12 @@ public class NurseServiceImpl implements NurseService {
     public void deleteActiveNurse(Long nurseId) {
         Nurse nurse = getActiveNurse(nurseId);
         nurseRepository.delete(nurse);
+    }
+
+    @Override
+    @Transactional
+    public void connectPatient(Nurse nurse, Patient patient) {
+        patient.registerNurse(nurse);
+        nurse.getPatients().add(patient);
     }
 }

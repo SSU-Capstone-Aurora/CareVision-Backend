@@ -6,6 +6,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
+import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 public interface NurseService {
     boolean existsByNurseId(Long value);
@@ -33,4 +34,6 @@ public interface NurseService {
     long getNurseRegisterRequestCount(Admin admin);
 
     void deleteActiveNurse(Long nurseId);
+
+    void connectPatient(Nurse nurse, Patient patient);
 }
