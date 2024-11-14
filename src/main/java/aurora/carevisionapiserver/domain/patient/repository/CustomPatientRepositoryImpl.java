@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.QPatient;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,16 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
         return queryFactory
                 .selectFrom(patient)
                 .where(patient.nurse.hospital.name.eq(admin.getHospital().getName()))
+                .fetch();
+    }
+
+    @Override
+    public List<Patient> findUnlinkedPatientsByNurse(Nurse nurse) {
+        QPatient patient = QPatient.patient;
+
+        return queryFactory
+                .selectFrom(patient)
+                .where(patient.hospital.eq(nurse.getHospital()).and(patient.nurse.isNull()))
                 .fetch();
     }
 }

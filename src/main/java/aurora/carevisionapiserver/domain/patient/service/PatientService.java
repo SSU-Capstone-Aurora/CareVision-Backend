@@ -18,4 +18,6 @@ public interface PatientService {
     void deletePatient(Long patientId);
 
     Patient createPatient(PatientCreateRequest patientCreateRequest);
+
+    List<Patient> getUnlinkedPatients(Nurse nurse);
 }

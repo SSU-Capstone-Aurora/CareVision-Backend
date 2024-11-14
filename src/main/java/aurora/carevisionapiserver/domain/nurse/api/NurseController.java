@@ -2,7 +2,6 @@ package aurora.carevisionapiserver.domain.nurse.api;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
@@ -120,11 +118,25 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @DeleteMapping("/{patientId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public BaseResponse<Void> deletePatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @PathVariable Long patientId) {
         patientService.deletePatient(patientId);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+    }
+
+    @Operation(
+            summary = "아직 간호사와 연결되지 않은 환자 리스트 조회 API",
+            description = "등록되었지만 아직 간호사와 연결되지 않은 환자 리스트를 조회합니다._예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
+    })
+    @RefreshTokenApiResponse
+    @GetMapping("/patients/unlinked")
+    public BaseResponse<PatientProfileListResponse> getUnlinkedPatientList(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
+        List<Patient> patients = patientService.getUnlinkedPatients(nurse);
+        return BaseResponse.of(
+                SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
     }
 }

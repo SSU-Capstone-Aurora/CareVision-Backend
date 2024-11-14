@@ -70,6 +70,11 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.save(patient);
     }
 
+    @Override
+    public List<Patient> getUnlinkedPatients(Nurse nurse) {
+        return patientRepository.findUnlinkedPatientsByNurse(nurse);
+    }
+
     public Patient getPatient(Long patientId) {
         return patientRepository
                 .findById(patientId)
