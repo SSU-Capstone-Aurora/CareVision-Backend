@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
@@ -48,9 +48,9 @@ public class NurseHospitalController {
         @ApiResponse(responseCode = "COMMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다.")
     })
-    @GetMapping("{hospitalId}/departments")
+    @GetMapping("/departments")
     public BaseResponse<DepartmentListResponse> getDepartmentList(
-            @PathVariable("hospitalId") Long hospitalId) {
+            @RequestParam("hospitalId") Long hospitalId) {
         List<String> departments = hospitalService.getDepartments(hospitalId);
         return BaseResponse.of(
                 SuccessStatus._OK, HospitalConverter.toDepartmentListResponsse(departments));
