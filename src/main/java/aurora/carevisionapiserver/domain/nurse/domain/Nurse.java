@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.auth.domain.Role;
@@ -53,6 +54,10 @@ public class Nurse extends BaseEntity {
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
     @Builder
     public Nurse(
             Long id,
@@ -63,6 +68,7 @@ public class Nurse extends BaseEntity {
             boolean isActivated,
             Role role,
             Hospital hospital,
+            Department department,
             List<Patient> patients) {
         this.id = id;
         this.name = name;
@@ -72,6 +78,7 @@ public class Nurse extends BaseEntity {
         this.isActivated = isActivated;
         this.role = role;
         this.hospital = hospital;
+        this.department = department;
         this.patients = patients;
     }
 

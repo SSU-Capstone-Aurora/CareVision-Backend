@@ -3,6 +3,7 @@ package aurora.carevisionapiserver.domain.admin.domain;
 import jakarta.persistence.*;
 
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminLoginResponse;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
@@ -33,13 +34,24 @@ public class Admin extends BaseEntity {
     @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
     @Builder
-    public Admin(Long id, String username, String password, Role role, Hospital hospital) {
+    public Admin(
+            Long id,
+            String username,
+            String password,
+            Role role,
+            Hospital hospital,
+            Department department) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
         this.hospital = hospital;
+        this.department = department;
     }
 
     public static AdminLoginResponse toNurseLoginResponse(String accessToken) {
