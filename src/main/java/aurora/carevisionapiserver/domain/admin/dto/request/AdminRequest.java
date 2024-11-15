@@ -1,5 +1,6 @@
 package aurora.carevisionapiserver.domain.admin.dto.request;
 
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ public class AdminRequest {
     public static class AdminSignUpRequest {
         private AdminCreateRequest admin;
         private HospitalCreateRequest hospital;
+        private DepartmentCreateRequest department;
     }
 
     @Getter

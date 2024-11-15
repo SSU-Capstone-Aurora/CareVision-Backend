@@ -13,7 +13,14 @@ public class HospitalRequest {
     public static class HospitalCreateRequest {
         private String ykiho;
         private String name;
-        private String department;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DepartmentCreateRequest {
+        private String name;
     }
 
     @Getter

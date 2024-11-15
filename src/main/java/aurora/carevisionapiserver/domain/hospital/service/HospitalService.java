@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 
@@ -14,7 +15,7 @@ public interface HospitalService {
 
     Hospital createHospital(HospitalCreateRequest hospitalCreateRequest);
 
-    Department createDepartment(HospitalCreateRequest hospitalCreateRequest, Hospital hospital);
+    Department createDepartment(DepartmentCreateRequest departmentCreateRequest, Hospital hospital);
 
     List<HospitalSearchResponse> searchHospital(String hospitalName) throws IOException;
 

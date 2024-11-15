@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.exception.DepartmentException;
@@ -53,9 +54,9 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public Department createDepartment(
-            HospitalCreateRequest hospitalCreateRequest, Hospital hospital) {
+            DepartmentCreateRequest departmentCreateRequest, Hospital hospital) {
         Department department =
-                HospitalConverter.toDepartment(hospitalCreateRequest.getDepartment(), hospital);
+                HospitalConverter.toDepartment(departmentCreateRequest.getName(), hospital);
         return departmentRepository.save(department);
     }
 

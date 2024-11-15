@@ -21,6 +21,7 @@ import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminS
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
@@ -51,9 +52,10 @@ public class AdminAuthController {
 
         AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdmin();
         HospitalCreateRequest hospitalCreateRequest = adminSignUpRequest.getHospital();
+        DepartmentCreateRequest departmentCreateRequest = adminSignUpRequest.getDepartment();
 
         Hospital hospital = hospitalService.createHospital(hospitalCreateRequest);
-        Department department = hospitalService.createDepartment(hospitalCreateRequest, hospital);
+        Department department = hospitalService.createDepartment(departmentCreateRequest, hospital);
         Admin admin = adminService.createAdmin(adminCreateRequest, hospital, department);
 
         return BaseResponse.onSuccess(AdminConverter.toAdminSignUpResponse(admin));
