@@ -1,23 +1,14 @@
 package aurora.carevisionapiserver.domain.bed.converter;
 
-import java.util.Map;
-
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.bed.exception.BedException;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
-import aurora.carevisionapiserver.global.util.ParseUtil;
+import aurora.carevisionapiserver.domain.bed.dto.BedRequest.BedCreateRequest;
 
 public class BedConverter {
-    public static Bed toBed(String bedInfo) {
-        try {
-            Map<String, Long> bedInfoMap = ParseUtil.parseBedInfo(bedInfo);
-            return Bed.builder()
-                    .inpatientWardNumber(bedInfoMap.get("inpatientWardNumber"))
-                    .patientRoomNumber(bedInfoMap.get("patientRoomNumber"))
-                    .bedNumber(bedInfoMap.get("bedNumber"))
-                    .build();
-        } catch (IllegalArgumentException e) {
-            throw new BedException(ErrorStatus.INVALID_BED_INFO);
-        }
+    public static Bed toBed(BedCreateRequest bedCreateRequest) {
+        return Bed.builder()
+                .inpatientWardNumber(bedCreateRequest.getInpatientWardNumber())
+                .patientRoomNumber(bedCreateRequest.getPatientRoomNumber())
+                .bedNumber(bedCreateRequest.getBedNumber())
+                .build();
     }
 }
