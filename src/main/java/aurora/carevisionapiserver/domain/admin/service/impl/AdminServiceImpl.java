@@ -11,6 +11,7 @@ import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCre
 import aurora.carevisionapiserver.domain.admin.exception.AdminException;
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public Admin createAdmin(AdminCreateRequest adminCreateRequest, Hospital hospital) {
+    public Admin createAdmin(
+            AdminCreateRequest adminCreateRequest, Hospital hospital, Department department) {
         String encryptedPassword = bCryptPasswordEncoder.encode(adminCreateRequest.getPassword());
-        Admin admin = AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital);
+        Admin admin =
+                AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital, department);
         return adminRepository.save(admin);
     }
 

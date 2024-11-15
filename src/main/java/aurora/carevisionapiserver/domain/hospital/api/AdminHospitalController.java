@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
-import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentSearchResponse;
-import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchListResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentListResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalListResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
@@ -34,7 +34,7 @@ public class AdminHospitalController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
     })
     @GetMapping("/hospitals")
-    public BaseResponse<HospitalSearchListResponse> searchHospital(
+    public BaseResponse<HospitalListResponse<HospitalSearchResponse>> searchHospital(
             @RequestParam(name = "search") String hospitalName) throws IOException {
         List<HospitalSearchResponse> hospitalSearchListResponse =
                 hospitalService.searchHospital(hospitalName);
@@ -49,10 +49,10 @@ public class AdminHospitalController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다."),
     })
     @GetMapping("/departments")
-    public BaseResponse<DepartmentSearchResponse> searchDepartment(
+    public BaseResponse<DepartmentListResponse> searchDepartment(
             @RequestParam(name = "hospital") String ykiho) throws IOException {
         List<String> departments = hospitalService.searchDepartment(ykiho);
         return BaseResponse.of(
-                SuccessStatus._OK, HospitalConverter.toDepartmentSearchResponsse(departments));
+                SuccessStatus._OK, HospitalConverter.toDepartmentListResponsse(departments));
     }
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentSelectRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalSelectRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
@@ -56,9 +58,11 @@ public class NurseAuthController {
 
         NurseCreateRequest nurseCreateRequest = nurseSignUpRequest.getNurse();
         HospitalSelectRequest hospitalSelectRequest = nurseSignUpRequest.getHospital();
+        DepartmentSelectRequest departmentSelectRequest = nurseSignUpRequest.getDepartment();
 
         Hospital hospital = hospitalService.getHospital(hospitalSelectRequest.getId());
-        Nurse nurse = nurseService.createNurse(nurseCreateRequest, hospital);
+        Department department = hospitalService.getDepartment(departmentSelectRequest.getId());
+        Nurse nurse = nurseService.createNurse(nurseCreateRequest, hospital, department);
 
         return BaseResponse.onSuccess(NurseConverter.toNurseInfoResponse(nurse));
     }

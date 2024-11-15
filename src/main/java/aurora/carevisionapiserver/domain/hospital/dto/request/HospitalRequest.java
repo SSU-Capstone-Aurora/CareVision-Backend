@@ -11,7 +11,8 @@ public class HospitalRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class HospitalCreateRequest {
-        private String hospital;
+        private String ykiho;
+        private String name;
         private String department;
     }
 
@@ -19,6 +20,13 @@ public class HospitalRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class HospitalSelectRequest {
+        private Long id;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DepartmentSelectRequest {
         private Long id;
     }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
@@ -30,7 +31,7 @@ public class NurseConverter {
         return NurseProfileResponse.builder()
                 .name(nurse.getName())
                 .hospitalName(nurse.getHospital().getName())
-                .department(nurse.getHospital().getDepartment())
+                .department(nurse.getDepartment().getName())
                 .registeredAt(registeredAt)
                 .build();
     }
@@ -74,13 +75,17 @@ public class NurseConverter {
     }
 
     public static Nurse toNurse(
-            NurseCreateRequest nurseCreateRequest, String password, Hospital hospital) {
+            NurseCreateRequest nurseCreateRequest,
+            String password,
+            Hospital hospital,
+            Department department) {
         return Nurse.builder()
                 .username(nurseCreateRequest.getUsername())
                 .name(nurseCreateRequest.getName())
                 .password(password)
                 .role(Role.NURSE)
                 .hospital(hospital)
+                .department(department)
                 .isActivated(false)
                 .build();
     }
