@@ -24,6 +24,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Patient
     PATIENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PATIENT400", "환자를 찾을 수 없습니다."),
+    PATIENT_DUPLICATED(HttpStatus.BAD_REQUEST, "PATIENT401", "이미 존재하는 환자입니다"),
 
     // Auth
     USERNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "AUTH400", "이미 사용 중인 아이디입니다."),
@@ -43,7 +44,8 @@ public enum ErrorStatus implements BaseErrorCode {
     CAMERA_NOT_FOUND(HttpStatus.NOT_FOUND, "CAMERA400", "카메라를 찾을 수 없습니다."),
 
     // Bed
-    INVALID_BED_INFO(HttpStatus.BAD_REQUEST, "BED400", "잘못된 형식의 베드 정보입니다.");
+    INVALID_BED_INFO(
+            HttpStatus.BAD_REQUEST, "BED400", "잘못된 형식의 베드 정보입니다. '동 호 번' 또는 '호 번' 순서로 작성해 주세요.");
 
     private final HttpStatus httpStatus;
     private final String code;

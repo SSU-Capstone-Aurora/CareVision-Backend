@@ -13,4 +13,6 @@ public interface PatientRepository
     List<Patient> findPatientByNurse(Nurse nurse);
 
     Patient findPatientByCode(String patientCode);
+
+    boolean existsByCode(String code);
 }

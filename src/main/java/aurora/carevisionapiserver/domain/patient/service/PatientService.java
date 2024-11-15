@@ -9,13 +9,15 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 public interface PatientService {
     List<Patient> searchPatient(String patientName);
 
+    Patient getPatient(Long patientId);
+
     List<Patient> getPatients(Nurse nurse);
 
     List<Patient> getPatients(Long adminId);
 
-    String registerNurse(Nurse nurse, String patientId);
-
     void deletePatient(Long patientId);
 
     Patient createPatient(PatientCreateRequest patientCreateRequest);
+
+    List<Patient> getUnlinkedPatients(Nurse nurse);
 }

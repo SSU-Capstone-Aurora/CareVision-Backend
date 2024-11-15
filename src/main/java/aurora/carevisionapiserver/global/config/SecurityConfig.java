@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
     private final JWTFilter jwtFilter;
     private final String[] allowedUrls = {
-        "/**", // TODO : 일시적인 허용이므로 나중에 바꾸기
         "/api/admin/login",
         "/api/sign-up",
         "/api/check-username",

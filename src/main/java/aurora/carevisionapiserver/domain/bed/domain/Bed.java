@@ -42,7 +42,7 @@ public class Bed extends BaseEntity {
         this.patient = patient;
     }
 
-    public void assignPatient(Patient patient) {
+    public void registerPatient(Patient patient) {
         this.patient = patient;
     }
 }

@@ -43,15 +43,6 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findPatientByAdmin(admin);
     }
 
-    @Transactional
-    @Override
-    public String registerNurse(Nurse nurse, String patientCode) {
-        Patient patient = getPatientsByPatientId(patientCode);
-
-        patient.registerPatient(nurse);
-        return patient.getName();
-    }
-
     public Patient getPatientsByPatientId(String patientCode) {
         Patient patient = patientRepository.findPatientByCode(patientCode);
         if (patient == null) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
@@ -69,11 +60,22 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @Transactional
     public Patient createPatient(PatientCreateRequest patientCreateRequest) {
+        String patientCode = patientCreateRequest.getCode();
+
+        if (patientRepository.existsByCode(patientCode)) {
+            throw new PatientException(ErrorStatus.PATIENT_DUPLICATED);
+        }
+
         Patient patient = PatientConverter.toPatient(patientCreateRequest);
         return patientRepository.save(patient);
     }
 
-    private Patient getPatient(Long patientId) {
+    @Override
+    public List<Patient> getUnlinkedPatients(Nurse nurse) {
+        return patientRepository.findUnlinkedPatientsByNurse(nurse);
+    }
+
+    public Patient getPatient(Long patientId) {
         return patientRepository
                 .findById(patientId)
                 .orElseThrow(() -> new PatientException(ErrorStatus.PATIENT_NOT_FOUND));
