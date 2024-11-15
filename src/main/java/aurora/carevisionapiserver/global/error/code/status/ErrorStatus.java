@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // Hospital
     HOSPITAL_NOT_FOUND(HttpStatus.NOT_FOUND, "HOSPITAL400", "병원을 찾을 수 없습니다."),
+    DEPARTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "DEPARTMENT400", "과를 찾을 수 없습니다."),
 
     // Nurse
     NURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "NURSE400", "간호사를 찾을 수 없습니다."),

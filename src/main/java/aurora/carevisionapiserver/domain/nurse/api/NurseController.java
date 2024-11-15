@@ -117,7 +117,7 @@ public class NurseController {
         @ApiResponse(responseCode = "PATIENT400", description = "환자를 찾을 수 없습니다.")
     })
     @RefreshTokenApiResponse
-    @DeleteMapping("/{patientId}")
+    @DeleteMapping("patients/{patientId}")
     public BaseResponse<Void> deletePatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @PathVariable Long patientId) {

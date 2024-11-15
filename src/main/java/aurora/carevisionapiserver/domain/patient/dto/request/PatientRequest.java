@@ -1,5 +1,6 @@
 package aurora.carevisionapiserver.domain.patient.dto.request;
 
+import aurora.carevisionapiserver.domain.bed.dto.BedRequest.BedCreateRequest;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,7 @@ public class PatientRequest {
     public static class PatientCreateRequest {
         private String name;
         private String code;
-        private String bedInfo;
+        private BedCreateRequest bedInfo;
     }
 
     @Builder

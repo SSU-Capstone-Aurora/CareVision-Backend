@@ -3,6 +3,7 @@ package aurora.carevisionapiserver.domain.hospital.service.Impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -11,10 +12,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
+import aurora.carevisionapiserver.domain.hospital.exception.DepartmentException;
 import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
+import aurora.carevisionapiserver.domain.hospital.repository.DepartmentRepository;
 import aurora.carevisionapiserver.domain.hospital.repository.HospitalRepository;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
@@ -26,13 +31,33 @@ import lombok.RequiredArgsConstructor;
 public class HospitalServiceImpl implements HospitalService {
     private final ApiExplorer explorer;
     private final HospitalRepository hospitalRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Override
     public Hospital createHospital(HospitalCreateRequest hospitalCreateRequest) {
-        Hospital hosptial =
-                HospitalConverter.toHospital(
-                        hospitalCreateRequest.getHospital(), hospitalCreateRequest.getDepartment());
-        return hospitalRepository.save(hosptial);
+        // 병원이 이미 존재하는지 확인 (ykiho를 기준으로)
+        Hospital existingHospital = getHospital(hospitalCreateRequest.getYkiho());
+
+        if (existingHospital != null) {
+            // 이미 존재하는 병원 반환
+            return existingHospital;
+        }
+
+        // 병원이 없으면 새로 생성
+        Hospital newHosptial = HospitalConverter.toHospital(hospitalCreateRequest);
+        return hospitalRepository.save(newHosptial);
+    }
+
+    private Hospital getHospital(String ykiho) {
+        return hospitalRepository.findByYkiho(ykiho).orElse(null);
+    }
+
+    @Override
+    public Department createDepartment(
+            DepartmentCreateRequest departmentCreateRequest, Hospital hospital) {
+        Department department =
+                HospitalConverter.toDepartment(departmentCreateRequest.getName(), hospital);
+        return departmentRepository.save(department);
     }
 
     @Override
@@ -107,5 +132,25 @@ public class HospitalServiceImpl implements HospitalService {
         return hospitalRepository
                 .findById(id)
                 .orElseThrow(() -> new HospitalException(ErrorStatus.HOSPITAL_NOT_FOUND));
+    }
+
+    @Override
+    public Department getDepartment(Long id) {
+        return departmentRepository
+                .findById(id)
+                .orElseThrow(() -> new DepartmentException(ErrorStatus.DEPARTMENT_NOT_FOUND));
+    }
+
+    @Override
+    public List<Hospital> getHospitals() {
+        return hospitalRepository.findAll();
+    }
+
+    @Override
+    public List<String> getDepartments(Long hospitalId) {
+        Hospital hospital = getHospital(hospitalId);
+        return hospital.getDepartments().stream()
+                .map(Department::getName)
+                .collect(Collectors.toList());
     }
 }

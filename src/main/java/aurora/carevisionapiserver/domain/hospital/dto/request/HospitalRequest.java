@@ -11,14 +11,29 @@ public class HospitalRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class HospitalCreateRequest {
-        private String hospital;
-        private String department;
+        private String ykiho;
+        private String name;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DepartmentCreateRequest {
+        private String name;
     }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class HospitalSelectRequest {
+        private Long id;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DepartmentSelectRequest {
         private Long id;
     }
 }

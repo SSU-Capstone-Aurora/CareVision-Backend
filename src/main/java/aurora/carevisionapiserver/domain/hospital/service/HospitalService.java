@@ -5,13 +5,17 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalSearchResponse;
 
 public interface HospitalService {
 
-    Hospital createHospital(HospitalCreateRequest createHospitalDTO);
+    Hospital createHospital(HospitalCreateRequest hospitalCreateRequest);
+
+    Department createDepartment(DepartmentCreateRequest departmentCreateRequest, Hospital hospital);
 
     List<HospitalSearchResponse> searchHospital(String hospitalName) throws IOException;
 
@@ -23,4 +27,10 @@ public interface HospitalService {
     List<String> parseDepartmentInfo(StringBuilder departmentInfo) throws IOException;
 
     Hospital getHospital(Long id);
+
+    Department getDepartment(Long id);
+
+    List<Hospital> getHospitals();
+
+    List<String> getDepartments(Long hospitalId);
 }

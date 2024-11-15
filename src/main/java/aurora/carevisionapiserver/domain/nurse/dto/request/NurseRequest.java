@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.nurse.dto.request;
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentSelectRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalSelectRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class NurseRequest {
     public static class NurseSignUpRequest {
         private NurseCreateRequest nurse;
         private HospitalSelectRequest hospital;
+        private DepartmentSelectRequest department;
     }
 
     @Getter

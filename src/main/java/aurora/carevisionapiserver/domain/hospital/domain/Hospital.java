@@ -23,9 +23,12 @@ public class Hospital extends BaseEntity {
     @Column(name = "hospital_id")
     private Long id;
 
+    private String ykiho;
+
     private String name;
 
-    private String department;
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Department> departments;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Admin> admins;
@@ -34,9 +37,9 @@ public class Hospital extends BaseEntity {
     private List<Nurse> nurses;
 
     @Builder
-    public Hospital(Long id, String name, String department) {
+    public Hospital(Long id, String name, String ykiho) {
         this.id = id;
         this.name = name;
-        this.department = department;
+        this.ykiho = ykiho;
     }
 }

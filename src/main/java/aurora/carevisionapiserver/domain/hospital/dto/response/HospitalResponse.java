@@ -16,14 +16,14 @@ public class HospitalResponse {
 
     @Getter
     @Builder
-    public static class HospitalSearchListResponse {
-        private List<HospitalSearchResponse> hospitals;
+    public static class HospitalListResponse<T> {
+        private List<T> hospitals;
         private Long totalCount;
     }
 
     @Getter
     @Builder
-    public static class DepartmentSearchResponse {
+    public static class DepartmentListResponse {
         private List<String> departments;
         private Long totalCount;
     }
@@ -33,5 +33,12 @@ public class HospitalResponse {
     public static class HospitalInfoResponse {
         private String name;
         private String department;
+    }
+
+    @Getter
+    @Builder
+    public static class HospitalIdentifierResponse {
+        private Long id;
+        private String name;
     }
 }
