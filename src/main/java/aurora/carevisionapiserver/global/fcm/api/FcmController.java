@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/fcm")
 public class FcmController {
-    private final FcmService alarmService;
+    private final FcmService fcmService;
     private final PatientService patientService;
 
     @Operation(summary = "클라이언트 토큰 등록 API", description = "클라이언트 토큰을 저장합니다._숙희")
@@ -32,7 +32,7 @@ public class FcmController {
     })
     @PostMapping("/registeration-token")
     public BaseResponse saveClientToken(@RequestBody FcmClientRequest fcmClientRequest) {
-        alarmService.saveClientToken(fcmClientRequest);
+        fcmService.saveClientToken(fcmClientRequest);
         return BaseResponse.onSuccess("클라이언트 토큰 저장 완료");
     }
 
@@ -44,9 +44,9 @@ public class FcmController {
     @PostMapping("/alarm/{patientId}")
     public BaseResponse sendAlarm(@PathVariable(name = "patientId") Long patientId) {
         Patient patient = patientService.getPatient(patientId);
-        String token = alarmService.findClientToken(patient.getNurse());
+        String token = fcmService.findClientToken(patient.getNurse());
 
-        alarmService.abnormalBehaviorAlarm(patient, patient.getNurse().getId(), token);
+        fcmService.abnormalBehaviorAlarm(patient, patient.getNurse().getId(), token);
 
         return BaseResponse.onSuccess("이상행동 감지 알림 전송 완료");
     }
