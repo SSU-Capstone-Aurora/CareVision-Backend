@@ -1,12 +1,12 @@
 package aurora.carevisionapiserver.global.fcm.service.Impl;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -47,13 +47,13 @@ public class FcmServiceImpl implements FcmService {
 
     @Override
     public void abnormalBehaviorAlarm(Patient patient, Long nurseId, String registrationToken) {
-        String time = LocalDateTime.now().toString();
+        Timestamp time = Timestamp.now();
 
         sendMessageToFcm(patient, registrationToken, time);
         saveMassageToFireStore(patient, nurseId, time);
     }
 
-    private void sendMessageToFcm(Patient patient, String registrationToken, String time) {
+    private void sendMessageToFcm(Patient patient, String registrationToken, Timestamp time) {
         Message message =
                 Message.builder()
                         .putData("bedNumber", String.valueOf(patient.getBed().getBedNumber()))
@@ -64,7 +64,7 @@ public class FcmServiceImpl implements FcmService {
                                 "patientRoomNumber",
                                 String.valueOf(patient.getBed().getPatientRoomNumber()))
                         .putData("patientName", patient.getName())
-                        .putData("time", time)
+                        .putData("time", time.toString())
                         .setToken(registrationToken)
                         .build();
         try {
@@ -76,12 +76,12 @@ public class FcmServiceImpl implements FcmService {
         }
     }
 
-    private void saveMassageToFireStore(Patient patient, Long nurseId, String time) {
-        Map<String, String> data = new HashMap<>();
+    private void saveMassageToFireStore(Patient patient, Long nurseId, Timestamp time) {
+        Map<String, Object> data = new HashMap<>();
         data.put("patientName", patient.getName());
-        data.put("inpatientWardNumber", String.valueOf(patient.getBed().getInpatientWardNumber()));
-        data.put("patientRoomNumber", String.valueOf(patient.getBed().getPatientRoomNumber()));
-        data.put("bedNumber", String.valueOf(patient.getBed().getBedNumber()));
+        data.put("inpatientWardNumber", patient.getBed().getInpatientWardNumber());
+        data.put("patientRoomNumber", patient.getBed().getPatientRoomNumber());
+        data.put("bedNumber", patient.getBed().getBedNumber());
         data.put("time", time);
 
         db.collection("cv").document(nurseId.toString()).set(data);
