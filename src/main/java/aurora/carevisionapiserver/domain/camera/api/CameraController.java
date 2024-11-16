@@ -55,7 +55,7 @@ public class CameraController {
         @ApiResponse(responseCode = "CAMERA400", description = "NOT FOUND, 카메라를 찾을 수 없습니다.")
     })
     @GetMapping("/streaming")
-    public BaseResponse<StreamingInfoListResponse> getStreamingUrls(
+    public BaseResponse<StreamingInfoListResponse> getStreamingInfoList(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
         List<Patient> patients = patientService.getPatients(nurse);
         Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients);
