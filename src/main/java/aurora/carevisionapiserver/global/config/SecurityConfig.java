@@ -39,7 +39,12 @@ public class SecurityConfig {
     };
 
     private final String[] nurseUrls = {
-        "/api/patients", "/api/profile", "/api/reissue", "/api/patients/**", "/api/streaming/**"
+        "/api/patients",
+        "/api/profile",
+        "/api/reissue",
+        "/api/patients/**",
+        "/api/streaming/**",
+        "/api/fcm/**"
     };
 
     @Bean
