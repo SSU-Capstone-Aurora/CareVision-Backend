@@ -84,6 +84,6 @@ public class FcmServiceImpl implements FcmService {
         data.put("bedNumber", patient.getBed().getBedNumber());
         data.put("time", time);
 
-        db.collection("cv").document(nurseId.toString()).set(data);
+        db.collection("cv").document(nurseId.toString()).collection("alarms").add(data);
     }
 }
