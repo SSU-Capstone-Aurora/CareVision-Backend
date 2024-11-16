@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraUrl;
+import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
+import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,15 +24,19 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api")
 public class CameraController {
     private final CameraService cameraService;
+    private final PatientService patientService;
 
-    @Operation(summary = "특정 환자 실시간 영상 스트리밍 url 조회 API", description = "환자의 스트리밍 url을 조회합니다_숙희")
+    @Operation(summary = "특정 환자 실시간 영상 스트리밍 관련 정보 조회 API", description = "환자의 스트리밍 관련 정보를 조회합니다_숙희")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "CAMERA400", description = "NOT FOUND, 카메라를 찾을 수 없습니다.")
     })
     @GetMapping("/streaming/{id}")
-    public BaseResponse<CameraUrl> getStreamingUrl(@PathVariable(name = "id") Long patient_id) {
-        String streamingUrl = cameraService.getStreamingUrl(patient_id);
-        return BaseResponse.of(SuccessStatus._OK, CameraUrl.from(streamingUrl));
+    public BaseResponse<StreamingInfoResponse> getStreamingInfo(
+            @PathVariable(name = "id") Long patient_id) {
+        Patient patient = patientService.getPatient(patient_id);
+        String cameraUrl = cameraService.getStreamingUrl(patient_id);
+        return BaseResponse.of(
+                SuccessStatus._OK, CameraConverter.toStreamingInfoResponse(cameraUrl, patient));
     }
 }
