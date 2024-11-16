@@ -1,8 +1,7 @@
 package aurora.carevisionapiserver.global.config;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import jakarta.annotation.PostConstruct;
 
@@ -21,14 +20,15 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void init() throws IOException {
+        FileInputStream serviceAccount = new FileInputStream(serviceAccountJson);
+
         FirebaseOptions options =
                 FirebaseOptions.builder()
-                        .setCredentials(
-                                GoogleCredentials.fromStream(
-                                        new ByteArrayInputStream(
-                                                serviceAccountJson.getBytes(
-                                                        StandardCharsets.UTF_8))))
+                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                         .build();
-        FirebaseApp.initializeApp(options);
+
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseApp.initializeApp(options);
+        }
     }
 }
