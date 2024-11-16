@@ -46,7 +46,7 @@ public class FcmController {
         Patient patient = patientService.getPatient(patientId);
         String token = fcmService.findClientToken(patient.getNurse());
 
-        fcmService.abnormalBehaviorAlarm(patient, patient.getNurse().getId(), token);
+        fcmService.abnormalBehaviorAlarm(patient, token);
 
         return BaseResponse.onSuccess("이상행동 감지 알림 전송 완료");
     }

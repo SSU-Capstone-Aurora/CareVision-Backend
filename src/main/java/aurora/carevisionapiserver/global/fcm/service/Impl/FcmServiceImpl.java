@@ -46,11 +46,11 @@ public class FcmServiceImpl implements FcmService {
     }
 
     @Override
-    public void abnormalBehaviorAlarm(Patient patient, Long nurseId, String registrationToken) {
+    public void abnormalBehaviorAlarm(Patient patient, String registrationToken) {
         Timestamp time = Timestamp.now();
 
         sendMessageToFcm(patient, registrationToken, time);
-        saveMassageToFireStore(patient, nurseId, time);
+        saveMassageToFireStore(patient, time);
     }
 
     private void sendMessageToFcm(Patient patient, String registrationToken, Timestamp time) {
@@ -76,14 +76,22 @@ public class FcmServiceImpl implements FcmService {
         }
     }
 
-    private void saveMassageToFireStore(Patient patient, Long nurseId, Timestamp time) {
+    private void saveMassageToFireStore(Patient patient, Timestamp time) {
+        Map<String, Object> data = createAlarmData(patient, time);
+        saveToFirestore(data, patient.getNurse().getId().toString());
+    }
+
+    private Map<String, Object> createAlarmData(Patient patient, Timestamp time) {
         Map<String, Object> data = new HashMap<>();
         data.put("patientName", patient.getName());
         data.put("inpatientWardNumber", patient.getBed().getInpatientWardNumber());
         data.put("patientRoomNumber", patient.getBed().getPatientRoomNumber());
         data.put("bedNumber", patient.getBed().getBedNumber());
         data.put("time", time);
+        return data;
+    }
 
-        db.collection("cv").document(nurseId.toString()).collection("alarms").add(data);
+    private void saveToFirestore(Map<String, Object> data, String nurseId) {
+        db.collection("cv").document(nurseId).collection("alarms").add(data);
     }
 }

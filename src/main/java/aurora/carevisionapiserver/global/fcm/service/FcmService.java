@@ -9,5 +9,5 @@ public interface FcmService {
 
     String findClientToken(Nurse nurse);
 
-    void abnormalBehaviorAlarm(Patient patient, Long nurseId, String registrationToken);
+    void abnormalBehaviorAlarm(Patient patient, String registrationToken);
 }
