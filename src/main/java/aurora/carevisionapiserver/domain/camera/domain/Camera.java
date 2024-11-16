@@ -17,8 +17,10 @@ public class Camera extends BaseEntity {
     @Id
     @Column(name = "camera_id")
     private String id;
+
     private String ip;
     private String password;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id")
     private Patient patient;
