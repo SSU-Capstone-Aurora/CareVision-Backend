@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.camera.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
-import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
@@ -48,17 +48,18 @@ public class CameraController {
     }
 
     @Operation(
-            summary = "전체 담당 환자 실시간 영상 스트리밍 url 조회 API",
-            description = "담당하는 환자의 전체 스트리밍 url을 조회합니다_숙희")
+            summary = "전체 담당 환자 실시간 영상 스트리밍 관련 정보 조회 API",
+            description = "담당하는 환자의 전체 스트리밍 관련 정보를 조회합니다_숙희")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "CAMERA400", description = "NOT FOUND, 카메라를 찾을 수 없습니다.")
     })
     @GetMapping("/streaming")
-    public BaseResponse<List<CameraUrl>> getStreamingUrls(
+    public BaseResponse<StreamingInfoListResponse> getStreamingUrls(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
         List<Patient> patients = patientService.getPatients(nurse);
-        List<CameraUrl> streamingUrl = cameraService.getStreamingUrls(patients);
-        return BaseResponse.of(SuccessStatus._OK, streamingUrl);
+        Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients);
+        return BaseResponse.of(
+                SuccessStatus._OK, CameraConverter.toStreamingInfoListResponse(streamingInfo));
     }
 }
