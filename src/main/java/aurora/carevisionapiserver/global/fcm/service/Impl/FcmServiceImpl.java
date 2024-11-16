@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class FcmServiceImpl implements FcmService {
     private static final String TOKEN_ERROR_MESSAGE = "NotRegistered";
     private final ClientTokenRepository clientTokenRepository;
+    private final Firestore db = FirestoreClient.getFirestore();
 
     @Override
     @Transactional
@@ -76,8 +77,6 @@ public class FcmServiceImpl implements FcmService {
     }
 
     private void saveMassageToFireStore(Patient patient, Long nurseId, String time) {
-        Firestore db = FirestoreClient.getFirestore();
-
         Map<String, String> data = new HashMap<>();
         data.put("patientName", patient.getName());
         data.put("inpatientWardNumber", String.valueOf(patient.getBed().getInpatientWardNumber()));
