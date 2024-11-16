@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.camera.service.Impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraUrl;
 import aurora.carevisionapiserver.domain.camera.repository.CameraRepository;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
@@ -50,11 +52,21 @@ public class CameraServiceImpl implements CameraService {
                 urlFormat, cameraInfo.get(CAMERA_IP_INDEX), cameraInfo.get(CAMERA_PW_INDEX));
     }
 
+    @Override
+    public List<CameraUrl> getStreamingUrls(List<Patient> patients) {
+        return patients.stream().map(this::createCameraUrlFromPatient).collect(Collectors.toList());
+    }
+
     private List<String> getCameraInfo(Long patient_id) {
         Camera camera =
                 cameraRepository
                         .findByPatient_Id(patient_id)
                         .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
         return List.of(camera.getIp(), camera.getPassword());
+    }
+
+    private CameraUrl createCameraUrlFromPatient(Patient patient) {
+        String streamingUrl = getStreamingUrl(patient.getId());
+        return CameraUrl.from(streamingUrl);
     }
 }
