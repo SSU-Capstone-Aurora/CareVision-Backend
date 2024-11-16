@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
@@ -17,6 +18,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CameraServiceImpl implements CameraService {
+    private static final int CAMERA_IP_INDEX = 0;
+    private static final int CAMERA_PW_INDEX = 1;
+
+    @Value("${camera.streaming.url}")
+    String urlFormat;
+
     private final CameraRepository cameraRepository;
 
     public List<Camera> getCameras() {
@@ -34,5 +41,20 @@ public class CameraServiceImpl implements CameraService {
         return cameraRepository
                 .findById(cameraId)
                 .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
+    }
+
+    @Override
+    public String getStreamingUrl(Long patient_id) {
+        List<String> cameraInfo = getCameraInfo(patient_id);
+        return String.format(
+                urlFormat, cameraInfo.get(CAMERA_IP_INDEX), cameraInfo.get(CAMERA_PW_INDEX));
+    }
+
+    private List<String> getCameraInfo(Long patient_id) {
+        Camera camera =
+                cameraRepository
+                        .findByPatient_Id(patient_id)
+                        .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
+        return List.of(camera.getIp(), camera.getPassword());
     }
 }
