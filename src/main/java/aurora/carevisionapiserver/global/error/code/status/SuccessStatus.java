@@ -20,7 +20,12 @@ public enum SuccessStatus implements BaseCode {
     REFRESH_TOKEN_ISSUED(HttpStatus.OK, "AUTH202", "refresh token이 발급되었습니다."),
 
     // Admin
-    ACCEPTED(HttpStatus.OK, "ADMIN200", "요청이 성공적으로 수락되었습니다.");
+    ACCEPTED(HttpStatus.OK, "ADMIN200", "요청이 성공적으로 수락되었습니다."),
+
+    // Camera
+    FIREBASE_TOKEN_SUCCESS(HttpStatus.OK, "FCM200", "클라이언트 토큰 저장 완료"),
+    ALARM_SUCCESS(HttpStatus.OK, "FCM201", "이상행동 감지 알림 전송 완료"),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
