@@ -64,6 +64,9 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.session:spring-session-data-redis'
+
+    //firebase
+    implementation 'com.google.firebase:firebase-admin:9.1.0'
 }
 
 def querydslSrcDir = 'src/main/generated'

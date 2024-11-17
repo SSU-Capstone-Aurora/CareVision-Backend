@@ -24,3 +24,6 @@ jwt:
 camera:
   streaming:
     url: ${CAMERA_STREAMING_URL}
+
+firebase:
+  secret: ${FIREBASE_SECRET_KEY}

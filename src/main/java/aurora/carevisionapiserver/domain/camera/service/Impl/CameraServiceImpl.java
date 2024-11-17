@@ -46,8 +46,8 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public String getStreamingUrl(Long patient_id) {
-        List<String> cameraInfo = getCameraInfo(patient_id);
+    public String getStreamingUrl(Long patientId) {
+        List<String> cameraInfo = getCameraInfo(patientId);
         return String.format(
                 urlFormat, cameraInfo.get(CAMERA_IP_INDEX), cameraInfo.get(CAMERA_PW_INDEX));
     }
@@ -60,10 +60,10 @@ public class CameraServiceImpl implements CameraService {
                                 patient -> patient, patient -> getStreamingUrl(patient.getId())));
     }
 
-    private List<String> getCameraInfo(Long patient_id) {
+    private List<String> getCameraInfo(Long patientId) {
         Camera camera =
                 cameraRepository
-                        .findByPatient_Id(patient_id)
+                        .findByPatient_Id(patientId)
                         .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
         return List.of(camera.getIp(), camera.getPassword());
     }

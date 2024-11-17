@@ -13,7 +13,7 @@ public interface CameraService {
 
     void connectPatient(Camera cameraSelectRequest, Patient patient);
 
-    String getStreamingUrl(Long patient_id);
+    String getStreamingUrl(Long patientId);
 
     Map<Patient, String> getStreamingInfo(List<Patient> patients);
 }
