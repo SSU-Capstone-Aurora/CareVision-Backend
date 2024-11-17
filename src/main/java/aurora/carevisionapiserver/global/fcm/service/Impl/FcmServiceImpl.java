@@ -43,7 +43,6 @@ import lombok.RequiredArgsConstructor;
 public class FcmServiceImpl implements FcmService {
     private static final String TOKEN_ERROR_MESSAGE = "NotRegistered";
     private final ClientTokenRepository clientTokenRepository;
-    private final Firestore db = FirestoreClient.getFirestore();
 
     @Override
     @Transactional
