@@ -28,6 +28,8 @@ import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.Pa
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
+import aurora.carevisionapiserver.global.fcm.service.FcmService;
 import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
 import aurora.carevisionapiserver.global.util.validation.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +48,7 @@ public class NurseController {
     private final PatientService patientService;
     private final NurseService nurseService;
     private final CameraService cameraService;
+    private final FcmService fcmService;
 
     @Operation(summary = "간호사 마이페이지 API", description = "간호사 마이페이지를 조회합니다._숙희")
     @ApiResponses({
@@ -138,5 +141,19 @@ public class NurseController {
         List<Patient> patients = patientService.getUnlinkedPatients(nurse);
         return BaseResponse.of(
                 SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
+    }
+
+    @Operation(summary = "간호사의 알람 리스트 조회 API", description = "간호사의 이상행동 감지 알람 리스트를 조회합니다._숙희")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(
+                responseCode = "FCM402",
+                description = "EXECUTION_FAILED, FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다.")
+    })
+    @RefreshTokenApiResponse
+    @GetMapping("/alarms")
+    public BaseResponse<AlarmInfoListResponse> getAlarmsInfo(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
+        return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmsInfo(nurse));
     }
 }
