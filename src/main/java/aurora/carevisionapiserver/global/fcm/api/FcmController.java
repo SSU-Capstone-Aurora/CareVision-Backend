@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
+import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.fcm.dto.FcmClientRequest;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,27 +28,31 @@ public class FcmController {
 
     @Operation(summary = "클라이언트 토큰 등록 API", description = "클라이언트 토큰을 저장합니다._숙희")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(
+                responseCode = "FCM200",
+                description = "FIREBASE_TOKEN_SUCCESS, 클라이언트 토큰 저장 완료되었습니다."),
         @ApiResponse(responseCode = "FCM400", description = "BAD_REQUEST, 토큰이 만료되었습니다"),
     })
     @PostMapping("/registeration-token")
-    public BaseResponse saveClientToken(@RequestBody FcmClientRequest fcmClientRequest) {
+    public BaseResponse<Void> saveClientToken(@RequestBody FcmClientRequest fcmClientRequest) {
         fcmService.saveClientToken(fcmClientRequest);
-        return BaseResponse.onSuccess("클라이언트 토큰 저장 완료");
+        return BaseResponse.of(SuccessStatus.FIREBASE_TOKEN_SUCCESS, null);
     }
 
     @Operation(summary = "이상행동 감지 알람 전송 API", description = "환자의 이상행동을 감지하고 알림을 보냅니다._숙희")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+        @ApiResponse(
+                responseCode = "FCM201",
+                description = "ALARM_SUCCESS, 이상행동 감지 알림 전송 완료되었습니다."),
         @ApiResponse(responseCode = "FCM400", description = "BAD_REQUEST, 토큰이 만료되었습니다"),
     })
     @PostMapping("/alarm/{patientId}")
-    public BaseResponse sendAlarm(@PathVariable(name = "patientId") Long patientId) {
+    public BaseResponse<Void> sendAlarm(@PathVariable(name = "patientId") Long patientId) {
         Patient patient = patientService.getPatient(patientId);
         String token = fcmService.findClientToken(patient.getNurse());
 
         fcmService.abnormalBehaviorAlarm(patient, token);
 
-        return BaseResponse.onSuccess("이상행동 감지 알림 전송 완료");
+        return BaseResponse.of(SuccessStatus.ALARM_SUCCESS, null);
     }
 }

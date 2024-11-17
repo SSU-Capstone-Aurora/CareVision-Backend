@@ -1,15 +1,35 @@
 package aurora.carevisionapiserver.global.fcm.converter;
 
 import java.util.List;
+import java.util.Map;
 
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse;
+import aurora.carevisionapiserver.global.fcm.dto.FcmResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmData;
 
 public class AlarmConverter {
-    public static AlarmInfoResponse toAlarmInfoResponse(
-            FireStoreResponse alarmInfo, String timeAgo) {
-        return AlarmInfoResponse.builder()
+    public static Map<String, Object> toAlarmData(Patient patient) {
+        AlarmData alarmData =
+                AlarmData.builder()
+                        .patientId(patient.getId())
+                        .patientName(patient.getName())
+                        .inpatientWardNumber(patient.getBed().getInpatientWardNumber())
+                        .patientRoomNumber(patient.getBed().getPatientRoomNumber())
+                        .bedNumber(patient.getBed().getBedNumber())
+                        .build();
+        return toMap(alarmData);
+    }
+
+    private static Map<String, Object> toMap(AlarmData alarmData) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(alarmData, Map.class);
+    }
+    public static AlarmResponse.AlarmInfoResponse toAlarmInfoResponse(
+            FcmResponse.FireStoreResponse alarmInfo, String timeAgo) {
+        return AlarmResponse.AlarmInfoResponse.builder()
                 .patientId(alarmInfo.getPatientId())
                 .patientName(alarmInfo.getPatientName())
                 .inpatientWardNumber(alarmInfo.getInpatientWardNumber())
@@ -19,9 +39,9 @@ public class AlarmConverter {
                 .build();
     }
 
-    public static AlarmInfoListResponse toAlarmInfoListResponse(
-            List<AlarmInfoResponse> alarmInfoResponse) {
-        return AlarmInfoListResponse.builder()
+    public static AlarmResponse.AlarmInfoListResponse toAlarmInfoListResponse(
+            List<AlarmResponse.AlarmInfoResponse> alarmInfoResponse) {
+        return AlarmResponse.AlarmInfoListResponse.builder()
                 .alarmInfoList(alarmInfoResponse)
                 .totalCount(alarmInfoResponse.size())
                 .build();

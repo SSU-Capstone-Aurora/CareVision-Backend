@@ -2,7 +2,6 @@ package aurora.carevisionapiserver.global.fcm.service.Impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class FcmServiceImpl implements FcmService {
     private static final String TOKEN_ERROR_MESSAGE = "NotRegistered";
     private final ClientTokenRepository clientTokenRepository;
+    private final Firestore db = FirestoreClient.getFirestore();
 
     @Override
     @Transactional
@@ -107,14 +107,9 @@ public class FcmServiceImpl implements FcmService {
     }
 
     private Map<String, Object> createAlarmData(Patient patient, Timestamp time) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("patientId", patient.getId());
-        data.put("patientName", patient.getName());
-        data.put("inpatientWardNumber", patient.getBed().getInpatientWardNumber());
-        data.put("patientRoomNumber", patient.getBed().getPatientRoomNumber());
-        data.put("bedNumber", patient.getBed().getBedNumber());
-        data.put("time", time);
-        return data;
+        Map<String, Object> alarmData = AlarmConverter.toAlarmData(patient);
+        alarmData.put("time", time);
+        return alarmData;
     }
 
     private void saveToFirestore(Map<String, Object> data, String nurseId) {

@@ -38,11 +38,11 @@ public class CameraController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "CAMERA400", description = "NOT FOUND, 카메라를 찾을 수 없습니다.")
     })
-    @GetMapping("/streaming/{id}")
+    @GetMapping("/streaming/{patientId}")
     public BaseResponse<StreamingInfoResponse> getStreamingInfo(
-            @PathVariable(name = "id") Long patient_id) {
-        Patient patient = patientService.getPatient(patient_id);
-        String cameraUrl = cameraService.getStreamingUrl(patient_id);
+            @PathVariable(name = "patientId") Long patientId) {
+        Patient patient = patientService.getPatient(patientId);
+        String cameraUrl = cameraService.getStreamingUrl(patientId);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toStreamingInfoResponse(cameraUrl, patient));
     }
