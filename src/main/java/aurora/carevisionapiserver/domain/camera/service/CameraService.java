@@ -11,4 +11,6 @@ public interface CameraService {
     List<Camera> getCameras();
 
     void connectPatient(Camera cameraSelectRequest, Patient patient);
+
+    String getStreamingUrl(Long patient_id);
 }
