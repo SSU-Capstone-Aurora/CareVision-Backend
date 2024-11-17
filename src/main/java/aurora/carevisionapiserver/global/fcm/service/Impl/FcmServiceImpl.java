@@ -64,6 +64,7 @@ public class FcmServiceImpl implements FcmService {
                                 "patientRoomNumber",
                                 String.valueOf(patient.getBed().getPatientRoomNumber()))
                         .putData("patientName", patient.getName())
+                        .putData("patientId", patient.getId().toString())
                         .putData("time", time.toString())
                         .setToken(registrationToken)
                         .build();
@@ -83,6 +84,7 @@ public class FcmServiceImpl implements FcmService {
 
     private Map<String, Object> createAlarmData(Patient patient, Timestamp time) {
         Map<String, Object> data = new HashMap<>();
+        data.put("patientId", patient.getId());
         data.put("patientName", patient.getName());
         data.put("inpatientWardNumber", patient.getBed().getInpatientWardNumber());
         data.put("patientRoomNumber", patient.getBed().getPatientRoomNumber());
