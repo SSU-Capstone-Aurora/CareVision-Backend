@@ -1,6 +1,5 @@
 package aurora.carevisionapiserver.global.fcm.service.Impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import com.google.firebase.messaging.Message;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.fcm.converter.AlarmConverter;
 import aurora.carevisionapiserver.global.fcm.converter.ClientTokenConverter;
 import aurora.carevisionapiserver.global.fcm.domain.ClientToken;
 import aurora.carevisionapiserver.global.fcm.dto.FcmClientRequest;
@@ -83,14 +83,9 @@ public class FcmServiceImpl implements FcmService {
     }
 
     private Map<String, Object> createAlarmData(Patient patient, Timestamp time) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("patientId", patient.getId());
-        data.put("patientName", patient.getName());
-        data.put("inpatientWardNumber", patient.getBed().getInpatientWardNumber());
-        data.put("patientRoomNumber", patient.getBed().getPatientRoomNumber());
-        data.put("bedNumber", patient.getBed().getBedNumber());
-        data.put("time", time);
-        return data;
+        Map<String, Object> alarmData = AlarmConverter.toAlarmData(patient);
+        alarmData.put("time", time);
+        return alarmData;
     }
 
     private void saveToFirestore(Map<String, Object> data, String nurseId) {
