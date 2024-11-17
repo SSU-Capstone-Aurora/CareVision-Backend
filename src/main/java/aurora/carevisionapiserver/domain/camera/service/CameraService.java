@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.camera.service;
 
 import java.util.List;
+import java.util.Map;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
@@ -13,4 +14,6 @@ public interface CameraService {
     void connectPatient(Camera cameraSelectRequest, Patient patient);
 
     String getStreamingUrl(Long patient_id);
+
+    Map<Patient, String> getStreamingInfo(List<Patient> patients);
 }

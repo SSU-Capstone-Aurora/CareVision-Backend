@@ -1,6 +1,8 @@
 package aurora.carevisionapiserver.domain.camera.service.Impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -48,6 +50,14 @@ public class CameraServiceImpl implements CameraService {
         List<String> cameraInfo = getCameraInfo(patient_id);
         return String.format(
                 urlFormat, cameraInfo.get(CAMERA_IP_INDEX), cameraInfo.get(CAMERA_PW_INDEX));
+    }
+
+    @Override
+    public Map<Patient, String> getStreamingInfo(List<Patient> patients) {
+        return patients.stream()
+                .collect(
+                        Collectors.toMap(
+                                patient -> patient, patient -> getStreamingUrl(patient.getId())));
     }
 
     private List<String> getCameraInfo(Long patient_id) {

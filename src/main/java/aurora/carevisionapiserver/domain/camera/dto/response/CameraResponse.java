@@ -30,4 +30,11 @@ public class CameraResponse {
         String patientName;
         BedInfoResponse bedInfo;
     }
+
+    @Getter
+    @Builder
+    public static class StreamingInfoListResponse {
+        List<StreamingInfoResponse> streamingInfoList;
+        Long totalCount;
+    }
 }
