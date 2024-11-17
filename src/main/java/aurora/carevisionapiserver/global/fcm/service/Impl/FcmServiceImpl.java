@@ -129,42 +129,42 @@ public class FcmServiceImpl implements FcmService {
 
     private List<FireStoreResponse> fetchFireStoreData(CollectionReference alarmsCollection) {
         Query query = alarmsCollection.orderBy("time", Query.Direction.DESCENDING);
-        List<FireStoreResponse> responseList;
+        List<FireStoreResponse> responses;
 
         try {
             ApiFuture<QuerySnapshot> querySnapshotFuture = query.get();
             QuerySnapshot querySnapshot = querySnapshotFuture.get();
-            responseList = extractFireStoreData(querySnapshot);
+            responses = extractFireStoreData(querySnapshot);
         } catch (InterruptedException | ExecutionException e) {
             throw new FcmException(ErrorStatus.EXECUTION_FAILED);
         }
 
-        return responseList;
+        return responses;
     }
 
     private List<FireStoreResponse> extractFireStoreData(QuerySnapshot querySnapshot) {
-        List<FireStoreResponse> responseList = new ArrayList<>();
+        List<FireStoreResponse> responses = new ArrayList<>();
 
         for (QueryDocumentSnapshot document : querySnapshot.getDocuments()) {
             FireStoreResponse fireStoreInfo = document.toObject(FireStoreResponse.class);
-            responseList.add(fireStoreInfo);
+            responses.add(fireStoreInfo);
         }
 
-        return responseList;
+        return responses;
     }
 
     private List<AlarmInfoResponse> convertToAlarmInfoList(
             List<FireStoreResponse> fireStoreResponses) {
-        List<AlarmInfoResponse> alarmInfoList = new ArrayList<>();
+        List<AlarmInfoResponse> alarmsInfo = new ArrayList<>();
 
         for (FireStoreResponse fireStoreInfo : fireStoreResponses) {
             String timeAgoMessage = generateTimeAgoMessage(fireStoreInfo.getTime());
             AlarmInfoResponse alarmInfo =
                     AlarmConverter.toAlarmInfoResponse(fireStoreInfo, timeAgoMessage);
-            alarmInfoList.add(alarmInfo);
+            alarmsInfo.add(alarmInfo);
         }
 
-        return alarmInfoList;
+        return alarmsInfo;
     }
 
     private String generateTimeAgoMessage(Timestamp timestamp) {
