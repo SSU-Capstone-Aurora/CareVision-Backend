@@ -3,6 +3,7 @@ package aurora.carevisionapiserver.domain.hospital.service.Impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -147,10 +148,9 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<String> getDepartments(Long hospitalId) {
+    public Map<Long, String> getDepartments(Long hospitalId) {
         Hospital hospital = getHospital(hospitalId);
         return hospital.getDepartments().stream()
-                .map(Department::getName)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(Department::getId, Department::getName));
     }
 }
