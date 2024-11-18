@@ -41,7 +41,7 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
                                 .name
                                 .eq(admin.getHospital().getName())
                                 .and(nurse.isActivated.isFalse()))
-                .orderBy(nurse.registeredAt.desc())
+                .orderBy(nurse.requestedAt.desc())
                 .fetch();
     }
 
