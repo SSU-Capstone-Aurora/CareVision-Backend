@@ -3,6 +3,7 @@ package aurora.carevisionapiserver.domain.hospital.converter;
 import static aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -47,9 +48,19 @@ public class HospitalConverter {
                 .build();
     }
 
-    public static DepartmentListResponse toDepartmentListResponsse(List<String> departments) {
+    public static DepartmentListResponse toDepartmentListResponse(List<String> departments) {
         return DepartmentListResponse.builder()
                 .departments(departments)
+                .totalCount((long) departments.size())
+                .build();
+    }
+
+    public static DepartmentListForNurseResponse toDepartmentListResponseForNurse(
+            Map<Long, String> departments) {
+        List<DepartmentResponse> departmentResponses = createDepartmentResponseList(departments);
+
+        return DepartmentListForNurseResponse.builder()
+                .departments(departmentResponses)
                 .totalCount((long) departments.size())
                 .build();
     }
@@ -77,5 +88,16 @@ public class HospitalConverter {
 
     public static Department toDepartment(String name, Hospital hospital) {
         return Department.builder().name(name).hospital(hospital).build();
+    }
+
+    private static List<DepartmentResponse> createDepartmentResponseList(
+            Map<Long, String> departments) {
+        return departments.entrySet().stream()
+                .map(entry -> toDepartmentResponse(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    private static DepartmentResponse toDepartmentResponse(Long id, String name) {
+        return DepartmentResponse.builder().id(id).name(name).build();
     }
 }

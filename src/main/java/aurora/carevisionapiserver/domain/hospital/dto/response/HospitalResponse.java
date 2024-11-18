@@ -23,8 +23,22 @@ public class HospitalResponse {
 
     @Getter
     @Builder
+    public static class DepartmentResponse {
+        private Long id;
+        private String name;
+    }
+
+    @Getter
+    @Builder
     public static class DepartmentListResponse {
         private List<String> departments;
+        private Long totalCount;
+    }
+
+    @Getter
+    @Builder
+    public static class DepartmentListForNurseResponse {
+        private List<DepartmentResponse> departments;
         private Long totalCount;
     }
 

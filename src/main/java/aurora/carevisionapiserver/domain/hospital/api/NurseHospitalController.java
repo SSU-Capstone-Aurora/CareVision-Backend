@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.hospital.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentListResponse;
+import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.DepartmentListForNurseResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalIdentifierResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalListResponse;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
@@ -49,10 +50,10 @@ public class NurseHospitalController {
         @ApiResponse(responseCode = "HOSPITAL400", description = "NOT_FOUND, 병원을 찾을 수 없습니다.")
     })
     @GetMapping("/departments")
-    public BaseResponse<DepartmentListResponse> getDepartmentList(
+    public BaseResponse<DepartmentListForNurseResponse> getDepartmentList(
             @RequestParam("hospitalId") Long hospitalId) {
-        List<String> departments = hospitalService.getDepartments(hospitalId);
+        Map<Long, String> departments = hospitalService.getDepartments(hospitalId);
         return BaseResponse.of(
-                SuccessStatus._OK, HospitalConverter.toDepartmentListResponsse(departments));
+                SuccessStatus._OK, HospitalConverter.toDepartmentListResponseForNurse(departments));
     }
 }
