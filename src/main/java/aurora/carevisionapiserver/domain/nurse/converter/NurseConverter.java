@@ -86,6 +86,7 @@ public class NurseConverter {
                 .role(Role.NURSE)
                 .hospital(hospital)
                 .department(department)
+                .requestedAt(LocalDateTime.now())
                 .isActivated(false)
                 .build();
     }

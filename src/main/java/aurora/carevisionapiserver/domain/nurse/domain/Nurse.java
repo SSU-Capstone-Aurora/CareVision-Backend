@@ -39,6 +39,8 @@ public class Nurse extends BaseEntity {
 
     private LocalDateTime registeredAt;
 
+    private LocalDateTime requestedAt;
+
     private boolean isActivated;
 
     @Column(name = "deleted_at")
@@ -65,6 +67,7 @@ public class Nurse extends BaseEntity {
             String username,
             String password,
             LocalDateTime registeredAt,
+            LocalDateTime requestedAt,
             boolean isActivated,
             Role role,
             Hospital hospital,
@@ -75,6 +78,7 @@ public class Nurse extends BaseEntity {
         this.username = username;
         this.password = password;
         this.registeredAt = registeredAt;
+        this.requestedAt = requestedAt;
         this.isActivated = isActivated;
         this.role = role;
         this.hospital = hospital;
