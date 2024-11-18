@@ -60,7 +60,7 @@ public class NurseConverter {
     }
 
     public static NurseRegisterRequestInfoResponse toNurseRegisterRequestInfoResponse(Nurse nurse) {
-        String timeAgoMessage = TimeAgoUtil.getTimeAgoMessage(nurse.getCreatedAt());
+        String timeAgoMessage = TimeAgoUtil.getTimeAgoMessage(nurse.getRequestedAt());
         return NurseRegisterRequestInfoResponse.builder()
                 .nurseId(nurse.getId())
                 .name(nurse.getName())
@@ -81,6 +81,7 @@ public class NurseConverter {
                 .role(Role.NURSE)
                 .hospital(hospital)
                 .department(department)
+                .requestedAt(LocalDateTime.now())
                 .isActivated(false)
                 .build();
     }

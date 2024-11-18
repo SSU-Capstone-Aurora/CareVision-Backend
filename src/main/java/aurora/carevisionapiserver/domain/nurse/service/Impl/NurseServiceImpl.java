@@ -53,6 +53,13 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
+    public Nurse getInactiveNurse(String username) {
+        return nurseRepository
+                .findByUsernameAndIsActivatedFalse(username)
+                .orElseThrow(() -> new NurseException(ErrorStatus.NURSE_NOT_FOUND));
+    }
+
+    @Override
     public List<Nurse> getActiveNurses(Admin admin) {
         return nurseRepository.findActiveNursesByAdmin(admin);
     }
@@ -109,5 +116,12 @@ public class NurseServiceImpl implements NurseService {
     public void connectPatient(Nurse nurse, Patient patient) {
         patient.registerNurse(nurse);
         nurse.getPatients().add(patient);
+    }
+
+    @Override
+    @Transactional
+    public void retryAcceptanceRequest(String username) {
+        Nurse nurse = getInactiveNurse(username);
+        nurse.updateRequestedAt();
     }
 }
