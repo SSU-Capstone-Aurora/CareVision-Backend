@@ -44,7 +44,8 @@ public class SecurityConfig {
         "/api/reissue",
         "/api/patients/**",
         "/api/streaming/**",
-        "/api/fcm/**"
+        "/api/fcm/**",
+        "api/alarm"
     };
 
     @Bean

@@ -50,7 +50,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // fcm
     CLIENT_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "FCM400", "token이 만료되었습니다."),
-    CLIENT_TOKEN_NOTFOUND(HttpStatus.NOT_FOUND, "FCM401", "token을 찾을 수 없습니다."),
+    CLIENT_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "FCM401", "token을 찾을 수 없습니다."),
+    EXECUTION_FAILED(HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;
