@@ -36,4 +36,12 @@ public class HospitalRequest {
     public static class DepartmentSelectRequest {
         private Long id;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class HospitalDepartmentRequest {
+        HospitalSelectRequest hospital;
+        DepartmentSelectRequest department;
+    }
 }
