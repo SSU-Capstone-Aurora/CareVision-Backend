@@ -2,8 +2,6 @@ package aurora.carevisionapiserver.domain.admin.api;
 
 import static aurora.carevisionapiserver.global.auth.converter.AuthConverter.toLoginResponse;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -89,8 +87,7 @@ public class AdminAuthController {
         @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
     })
     @PostMapping("/login")
-    public BaseResponse<LoginResponse> login(
-            @RequestBody LoginRequest adminLoginRequest, HttpServletResponse response) {
+    public BaseResponse<LoginResponse> login(@RequestBody LoginRequest adminLoginRequest) {
 
         String username = adminLoginRequest.getUsername();
 

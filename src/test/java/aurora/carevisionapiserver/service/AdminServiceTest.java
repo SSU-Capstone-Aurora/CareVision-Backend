@@ -51,7 +51,7 @@ public class AdminServiceTest {
                 .thenReturn(encryptedPassword);
 
         when(adminRepository.save(any(Admin.class))).thenReturn(admin);
-        Admin resultAdmin = adminService.createAdmin(adminCreateRequest, hospital);
+        Admin resultAdmin = adminService.createAdmin(adminCreateRequest, hospital, department);
 
         // Then
         assertEquals(admin.getUsername(), resultAdmin.getUsername());

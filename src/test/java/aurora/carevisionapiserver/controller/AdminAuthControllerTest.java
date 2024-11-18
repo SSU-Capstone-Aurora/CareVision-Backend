@@ -114,7 +114,7 @@ public class AdminAuthControllerTest {
         String username = "admin1";
 
         // When
-        when(authService.validateUsername(username)).thenReturn(true);
+        when(authService.isUsernameDuplicated(username)).thenReturn(true);
 
         // Then
         mockMvc.perform(
