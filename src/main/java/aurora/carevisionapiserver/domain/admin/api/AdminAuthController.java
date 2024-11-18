@@ -1,10 +1,7 @@
 package aurora.carevisionapiserver.domain.admin.api;
 
-import static aurora.carevisionapiserver.domain.nurse.converter.NurseConverter.toNurseLoginResponse;
+import static aurora.carevisionapiserver.global.auth.converter.AuthConverter.toLoginResponse;
 
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
-import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminLoginRequest;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminSignUpRequest;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
@@ -24,7 +20,9 @@ import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
+import aurora.carevisionapiserver.global.auth.domain.Role;
+import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
@@ -50,6 +48,9 @@ public class AdminAuthController {
     public BaseResponse<AdminSignUpResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {
 
+        String username = adminSignUpRequest.getAdmin().getUsername();
+        authService.validateUsername(username);
+
         AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdmin();
         HospitalCreateRequest hospitalCreateRequest = adminSignUpRequest.getHospital();
         DepartmentCreateRequest departmentCreateRequest = adminSignUpRequest.getDepartment();
@@ -68,7 +69,7 @@ public class AdminAuthController {
     })
     @GetMapping("/check-username")
     public BaseResponse<Boolean> checkUsername(@RequestParam String username) {
-        boolean isDuplicated = adminService.isUsernameDuplicated(username);
+        boolean isDuplicated = authService.isUsernameDuplicated(username);
 
         if (isDuplicated) {
             return BaseResponse.onFailure(
@@ -80,19 +81,18 @@ public class AdminAuthController {
         }
     }
 
-    @Operation(
-            summary = "관리자 로그인 API",
-            description =
-                    "관리자가 서비스에 로그인합니다_예림 Response Body에 accessToken을, Cookie에 refreshToken을 발급합니다.")
+    @Operation(summary = "관리자 로그인 API", description = "관리자가 서비스에 로그인합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
         @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
     })
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<NurseLoginResponse>> login(
-            @RequestBody AdminLoginRequest adminLoginRequest, HttpServletResponse response) {
+    public BaseResponse<LoginResponse> login(@RequestBody LoginRequest adminLoginRequest) {
 
         String username = adminLoginRequest.getUsername();
+
+        authService.validateUsername(username, Role.ADMIN);
+
         String password = adminLoginRequest.getPassword();
         return authService
                 .authenticate(username, password)
@@ -101,17 +101,13 @@ public class AdminAuthController {
                             String accessToken = authService.createAccessToken(username, "ADMIN");
                             String refreshToken = authService.createRefreshToken(username, "ADMIN");
 
-                            response.addCookie(authService.createRefreshTokenCookie(refreshToken));
-
-                            return ResponseEntity.ok(
-                                    BaseResponse.onSuccess(toNurseLoginResponse(accessToken)));
+                            return BaseResponse.onSuccess(
+                                    toLoginResponse(accessToken, refreshToken));
                         })
                 .orElse(
-                        ResponseEntity.status(ErrorStatus.INVALID_CREDENTIALS.getHttpStatus())
-                                .body(
-                                        BaseResponse.onFailure(
-                                                ErrorStatus.INVALID_CREDENTIALS.getCode(),
-                                                ErrorStatus.INVALID_CREDENTIALS.getMessage(),
-                                                null)));
+                        BaseResponse.onFailure(
+                                ErrorStatus.INVALID_CREDENTIALS.getCode(),
+                                ErrorStatus.INVALID_CREDENTIALS.getMessage(),
+                                null));
     }
 }

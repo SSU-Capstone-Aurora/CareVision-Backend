@@ -35,15 +35,6 @@ public class NurseRequest {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class NurseLoginRequest {
-        private String username;
-        private String password;
-    }
-
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class NurseRegisterRequestListResponse {
         private int requestCount;
         private List<NurseRegisterRequestInfoResponse> requests;

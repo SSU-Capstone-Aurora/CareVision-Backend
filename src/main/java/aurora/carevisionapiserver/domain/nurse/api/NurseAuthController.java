@@ -1,10 +1,5 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
-import static aurora.carevisionapiserver.domain.nurse.converter.NurseConverter.toNurseLoginResponse;
-
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,11 +16,12 @@ import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseLoginRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseSignUpRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.auth.converter.AuthConverter;
+import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
@@ -56,6 +52,9 @@ public class NurseAuthController {
     public BaseResponse<NurseInfoResponse> createNurse(
             @RequestBody NurseSignUpRequest nurseSignUpRequest) {
 
+        String username = nurseSignUpRequest.getNurse().getUsername();
+        authService.validateUsername(username);
+
         NurseCreateRequest nurseCreateRequest = nurseSignUpRequest.getNurse();
         HospitalSelectRequest hospitalSelectRequest = nurseSignUpRequest.getHospital();
         DepartmentSelectRequest departmentSelectRequest = nurseSignUpRequest.getDepartment();
@@ -74,7 +73,7 @@ public class NurseAuthController {
     })
     @GetMapping("/check-username")
     public BaseResponse<Boolean> checkUsername(@RequestParam String username) {
-        boolean isDuplicated = nurseService.isUsernameDuplicated(username);
+        boolean isDuplicated = authService.isUsernameDuplicated(username);
 
         if (isDuplicated) {
             return BaseResponse.onFailure(
@@ -96,12 +95,11 @@ public class NurseAuthController {
         @ApiResponse(responseCode = "AUTH407", description = "승인되지 않은 유저입니다."),
     })
     @PostMapping("/login")
-    public ResponseEntity<BaseResponse<NurseLoginResponse>> login(
-            @RequestBody @IsActivateNurse NurseLoginRequest nurseLoginRequest,
-            HttpServletResponse response) {
+    public BaseResponse<LoginResponse> login(
+            @RequestBody @IsActivateNurse LoginRequest loginRequest) {
 
-        String username = nurseLoginRequest.getUsername();
-        String password = nurseLoginRequest.getPassword();
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
 
         return authService
                 .authenticate(username, password)
@@ -110,17 +108,13 @@ public class NurseAuthController {
                             String accessToken = authService.createAccessToken(username, "NURSE");
                             String refreshToken = authService.createRefreshToken(username, "NURSE");
 
-                            response.addCookie(authService.createRefreshTokenCookie(refreshToken));
-
-                            return ResponseEntity.ok(
-                                    BaseResponse.onSuccess(toNurseLoginResponse(accessToken)));
+                            return BaseResponse.onSuccess(
+                                    AuthConverter.toLoginResponse(accessToken, refreshToken));
                         })
                 .orElse(
-                        ResponseEntity.status(ErrorStatus.INVALID_CREDENTIALS.getHttpStatus())
-                                .body(
-                                        BaseResponse.onFailure(
-                                                ErrorStatus.INVALID_CREDENTIALS.getCode(),
-                                                ErrorStatus.INVALID_CREDENTIALS.getMessage(),
-                                                null)));
+                        BaseResponse.onFailure(
+                                ErrorStatus.INVALID_CREDENTIALS.getCode(),
+                                ErrorStatus.INVALID_CREDENTIALS.getMessage(),
+                                null));
     }
 }

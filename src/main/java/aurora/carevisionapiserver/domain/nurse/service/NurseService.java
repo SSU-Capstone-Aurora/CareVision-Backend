@@ -27,8 +27,6 @@ public interface NurseService {
     Nurse createNurse(
             NurseCreateRequest nurseCreateRequest, Hospital hospital, Department department);
 
-    boolean isUsernameDuplicated(String username);
-
     void activateNurse(Long nurseId);
 
     void deleteInactiveNurse(Long nurseId);

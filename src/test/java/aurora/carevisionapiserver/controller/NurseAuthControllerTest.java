@@ -135,7 +135,7 @@ public class NurseAuthControllerTest {
         String username = "nurse1";
 
         // When
-        when(nurseService.isUsernameDuplicated(username)).thenReturn(false);
+        when(authService.isUsernameDuplicated(username)).thenReturn(false);
 
         // Then
         mockMvc.perform(
@@ -156,7 +156,7 @@ public class NurseAuthControllerTest {
         String username = "nurse1";
 
         // When
-        when(nurseService.isUsernameDuplicated(username)).thenReturn(true);
+        when(authService.isUsernameDuplicated(username)).thenReturn(true);
 
         // Then
         mockMvc.perform(

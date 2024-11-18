@@ -29,13 +29,4 @@ public class AdminRequest {
 
         private String password;
     }
-
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class AdminLoginRequest {
-        private String username;
-        private String password;
-    }
 }
