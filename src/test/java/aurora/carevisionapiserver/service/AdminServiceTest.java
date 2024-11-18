@@ -21,6 +21,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.impl.AdminServiceImpl;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 
@@ -39,9 +40,11 @@ public class AdminServiceTest {
         AdminCreateRequest adminCreateRequest =
                 AdminCreateRequest.builder().username("admin1").password("password123").build();
 
-        Hospital hospital = Hospital.builder().id(1L).name("오로라 병원").department("성형외과").build();
+        Hospital hospital = Hospital.builder().id(1L).name("오로라 병원").build();
+        Department department = Department.builder().id(1L).name("정형외과").build();
         String encryptedPassword = "encryptedPassword123";
-        Admin admin = AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital);
+        Admin admin =
+                AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital, department);
 
         // When
         when(bCryptPasswordEncoder.encode(adminCreateRequest.getPassword()))
@@ -64,7 +67,7 @@ public class AdminServiceTest {
         given(adminRepository.existsByUsername(username)).willReturn(true);
 
         // When
-        boolean result = authService.validateUsername(username);
+        boolean result = authService.isUsernameDuplicated(username);
 
         // Then
         assertTrue(result);
@@ -79,7 +82,7 @@ public class AdminServiceTest {
         given(adminRepository.existsByUsername(username)).willReturn(false);
 
         // When
-        boolean result = authService.validateUsername(username);
+        boolean result = authService.isUsernameDuplicated(username);
 
         // Then
         assertFalse(result);

@@ -22,6 +22,7 @@ import aurora.carevisionapiserver.domain.admin.api.AdminAuthController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
@@ -64,7 +65,11 @@ public class AdminAuthControllerTest {
         // When
         given(hospitalService.createHospital(any(HospitalCreateRequest.class)))
                 .willReturn(hospital);
-        given(adminService.createAdmin(any(AdminCreateRequest.class), any(Hospital.class)))
+        given(
+                        adminService.createAdmin(
+                                any(AdminCreateRequest.class),
+                                any(Hospital.class),
+                                any(Department.class)))
                 .willReturn(admin);
 
         // Then
