@@ -3,12 +3,14 @@ package aurora.carevisionapiserver.global.fcm.converter;
 import java.util.List;
 import java.util.Map;
 
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmResponse;
+import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmData;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
+import aurora.carevisionapiserver.global.fcm.dto.FcmResponse;
 
 public class AlarmConverter {
     public static Map<String, Object> toAlarmData(Patient patient) {
@@ -27,9 +29,10 @@ public class AlarmConverter {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(alarmData, Map.class);
     }
-    public static AlarmResponse.AlarmInfoResponse toAlarmInfoResponse(
-            FcmResponse.FireStoreResponse alarmInfo, String timeAgo) {
-        return AlarmResponse.AlarmInfoResponse.builder()
+
+    public static AlarmInfoResponse toAlarmInfoResponse(
+            FireStoreResponse alarmInfo, String timeAgo) {
+        return AlarmInfoResponse.builder()
                 .patientId(alarmInfo.getPatientId())
                 .patientName(alarmInfo.getPatientName())
                 .inpatientWardNumber(alarmInfo.getInpatientWardNumber())
@@ -40,7 +43,7 @@ public class AlarmConverter {
     }
 
     public static AlarmResponse.AlarmInfoListResponse toAlarmInfoListResponse(
-            List<AlarmResponse.AlarmInfoResponse> alarmInfoResponse) {
+            List<AlarmInfoResponse> alarmInfoResponse) {
         return AlarmResponse.AlarmInfoListResponse.builder()
                 .alarmInfoList(alarmInfoResponse)
                 .totalCount(alarmInfoResponse.size())
