@@ -55,7 +55,7 @@ public class FcmServiceImpl implements FcmService {
     public String findClientToken(Nurse nurse) {
         return clientTokenRepository
                 .findClientTokenByUsername(nurse.getUsername())
-                .orElseThrow(() -> new FcmException(ErrorStatus.CLIENT_TOKEN_NOTFOUND));
+                .orElseThrow(() -> new FcmException(ErrorStatus.CLIENT_TOKEN_NOT_FOUND));
     }
 
     @Override
