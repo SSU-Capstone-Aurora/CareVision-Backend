@@ -22,12 +22,15 @@ import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCre
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.impl.AdminServiceImpl;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.global.auth.service.AuthService;
 
 @ExtendWith(MockitoExtension.class)
 public class AdminServiceTest {
     @InjectMocks private AdminServiceImpl adminService;
     @Mock private AdminRepository adminRepository;
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Mock private AuthService authService;
 
     @Test
     @DisplayName("관리자 회원가입에 성공한다.")
@@ -61,7 +64,7 @@ public class AdminServiceTest {
         given(adminRepository.existsByUsername(username)).willReturn(true);
 
         // When
-        boolean result = adminService.isUsernameDuplicated(username);
+        boolean result = authService.validateUsername(username);
 
         // Then
         assertTrue(result);
@@ -76,7 +79,7 @@ public class AdminServiceTest {
         given(adminRepository.existsByUsername(username)).willReturn(false);
 
         // When
-        boolean result = adminService.isUsernameDuplicated(username);
+        boolean result = authService.validateUsername(username);
 
         // Then
         assertFalse(result);

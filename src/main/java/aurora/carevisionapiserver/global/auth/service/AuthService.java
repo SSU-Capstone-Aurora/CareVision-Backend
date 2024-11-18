@@ -6,6 +6,8 @@ import jakarta.servlet.http.Cookie;
 
 import org.springframework.security.core.Authentication;
 
+import aurora.carevisionapiserver.global.auth.domain.Role;
+
 public interface AuthService {
     Optional<Authentication> authenticate(String username, String password);
 
@@ -18,4 +20,10 @@ public interface AuthService {
     Cookie createRefreshTokenCookie(String refreshToken);
 
     String getCurrentUserRole();
+
+    void validateUsername(String username);
+
+    boolean isUsernameDuplicated(String username);
+
+    void validateUsername(String username, Role role);
 }

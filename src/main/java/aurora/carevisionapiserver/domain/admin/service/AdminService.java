@@ -9,8 +9,6 @@ public interface AdminService {
     Admin createAdmin(
             AdminCreateRequest adminCreateRequest, Hospital hospital, Department department);
 
-    boolean isUsernameDuplicated(String username);
-
     Admin getAdmin(Long adminId);
 
     Admin getAdmin(String username);

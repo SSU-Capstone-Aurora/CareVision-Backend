@@ -25,6 +25,7 @@ import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
+import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.util.AdminUtils;
@@ -35,6 +36,7 @@ public class AdminAuthControllerTest {
     @Autowired private MockMvc mockMvc;
     @MockBean private AdminService adminService;
     @MockBean private HospitalService hospitalService;
+    @MockBean private AuthService authService;
 
     private static final String ADMIN_SIGN_UP_REQUEST_JSON =
             """
@@ -86,7 +88,7 @@ public class AdminAuthControllerTest {
         String username = "admin1";
 
         // When
-        when(adminService.isUsernameDuplicated(username)).thenReturn(false);
+        when(authService.isUsernameDuplicated(username)).thenReturn(false);
 
         // Then
         mockMvc.perform(
@@ -107,7 +109,7 @@ public class AdminAuthControllerTest {
         String username = "admin1";
 
         // When
-        when(adminService.isUsernameDuplicated(username)).thenReturn(true);
+        when(authService.validateUsername(username)).thenReturn(true);
 
         // Then
         mockMvc.perform(

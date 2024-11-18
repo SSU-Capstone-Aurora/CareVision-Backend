@@ -14,7 +14,6 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseLoginResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseProfileResponse;
@@ -49,10 +48,6 @@ public class NurseConverter {
 
     public static NurseInfoResponse toNurseInfoResponse(Nurse nurse) {
         return NurseInfoResponse.builder().id(nurse.getId()).name(nurse.getName()).build();
-    }
-
-    public static NurseLoginResponse toNurseLoginResponse(String accessToken) {
-        return NurseLoginResponse.builder().accessToken(accessToken).build();
     }
 
     public static NurseRegisterRequestListResponse toNurseRegisterRequestListResponse(

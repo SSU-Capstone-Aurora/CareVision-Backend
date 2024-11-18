@@ -13,6 +13,7 @@ import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -21,21 +22,18 @@ import lombok.RequiredArgsConstructor;
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
+    private final AuthService authService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     @Transactional
     public Admin createAdmin(
             AdminCreateRequest adminCreateRequest, Hospital hospital, Department department) {
+
         String encryptedPassword = bCryptPasswordEncoder.encode(adminCreateRequest.getPassword());
         Admin admin =
                 AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital, department);
         return adminRepository.save(admin);
-    }
-
-    @Override
-    public boolean isUsernameDuplicated(String username) {
-        return adminRepository.existsByUsername(username);
     }
 
     @Override
