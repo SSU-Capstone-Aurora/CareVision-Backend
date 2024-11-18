@@ -47,7 +47,7 @@ public class HospitalConverter {
                 .build();
     }
 
-    public static DepartmentListResponse toDepartmentListResponsse(List<String> departments) {
+    public static DepartmentListResponse toDepartmentListResponse(List<String> departments) {
         return DepartmentListResponse.builder()
                 .departments(departments)
                 .totalCount((long) departments.size())

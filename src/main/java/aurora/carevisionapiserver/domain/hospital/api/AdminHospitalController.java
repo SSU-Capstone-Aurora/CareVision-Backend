@@ -53,6 +53,6 @@ public class AdminHospitalController {
             @RequestParam(name = "hospital") String ykiho) throws IOException {
         List<String> departments = hospitalService.searchDepartment(ykiho);
         return BaseResponse.of(
-                SuccessStatus._OK, HospitalConverter.toDepartmentListResponsse(departments));
+                SuccessStatus._OK, HospitalConverter.toDepartmentListResponse(departments));
     }
 }
