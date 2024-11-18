@@ -3,14 +3,13 @@ package aurora.carevisionapiserver.global.fcm.converter;
 import java.util.List;
 import java.util.Map;
 
-import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmData;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmResponse;
+import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
 
 public class AlarmConverter {
     public static Map<String, Object> toAlarmData(Patient patient) {
@@ -42,9 +41,9 @@ public class AlarmConverter {
                 .build();
     }
 
-    public static AlarmResponse.AlarmInfoListResponse toAlarmInfoListResponse(
+    public static AlarmInfoListResponse toAlarmInfoListResponse(
             List<AlarmInfoResponse> alarmInfoResponse) {
-        return AlarmResponse.AlarmInfoListResponse.builder()
+        return AlarmInfoListResponse.builder()
                 .alarmInfoList(alarmInfoResponse)
                 .totalCount(alarmInfoResponse.size())
                 .build();
