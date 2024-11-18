@@ -89,4 +89,8 @@ public class Nurse extends BaseEntity {
     public void activateNurse() {
         this.isActivated = true;
     }
+
+    public void updateRequestedAt() {
+        this.requestedAt = LocalDateTime.now();
+    }
 }

@@ -17,6 +17,7 @@ import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.Camera
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseAcceptanceRetryRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseProfileResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
@@ -155,5 +156,18 @@ public class NurseController {
     public BaseResponse<AlarmInfoListResponse> getAlarmsInfo(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
         return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmsInfo(nurse));
+    }
+
+    @Operation(summary = "간호사의 수락 재요청 API", description = "간호사가 수락을 재요청합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "NURSE200", description = "OK, 재요청이 정상적으로 처리되었습니다."),
+        @ApiResponse(responseCode = "NURSE400", description = "NOT_FOUND, 간호사를 찾을 수 없습니다.")
+    })
+    @RefreshTokenApiResponse
+    @PostMapping("/requests/retry")
+    public BaseResponse<Void> retryNurseAcceptanceRequest(
+            @RequestBody NurseAcceptanceRetryRequest nurseAcceptanceRetryRequest) {
+        nurseService.retryAcceptanceRequest(nurseAcceptanceRetryRequest.getUsername());
+        return BaseResponse.of(SuccessStatus.NURSE_REQUEST_RETRIED, null);
     }
 }

@@ -18,6 +18,8 @@ public interface NurseService {
 
     Nurse getInactiveNurse(Long nurseId);
 
+    Nurse getInactiveNurse(String username);
+
     List<Nurse> getActiveNurses(Admin admin);
 
     List<Nurse> getInactiveNurses(Admin admin);
@@ -36,4 +38,6 @@ public interface NurseService {
     void deleteActiveNurse(Long nurseId);
 
     void connectPatient(Nurse nurse, Patient patient);
+
+    void retryAcceptanceRequest(String username);
 }

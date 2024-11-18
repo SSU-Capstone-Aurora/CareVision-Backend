@@ -16,4 +16,6 @@ public interface NurseRepository
     Optional<Nurse> findByIdAndIsActivatedTrue(Long id);
 
     Optional<Nurse> findByIdAndIsActivatedFalse(Long id);
+
+    Optional<Nurse> findByUsernameAndIsActivatedFalse(String username);
 }

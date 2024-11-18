@@ -35,6 +35,14 @@ public class NurseRequest {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class NurseAcceptanceRetryRequest {
+        private String username;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class NurseRegisterRequestListResponse {
         private int requestCount;
         private List<NurseRegisterRequestInfoResponse> requests;

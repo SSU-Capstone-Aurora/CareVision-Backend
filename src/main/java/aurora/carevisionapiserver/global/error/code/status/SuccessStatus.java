@@ -22,6 +22,9 @@ public enum SuccessStatus implements BaseCode {
     // Admin
     ACCEPTED(HttpStatus.OK, "ADMIN200", "요청이 성공적으로 수락되었습니다."),
 
+    // Nurse
+    NURSE_REQUEST_RETRIED(HttpStatus.OK, "NURSE200", "재요청이 정상적으로 처리되었습니다."),
+
     // Camera
     FIREBASE_TOKEN_SUCCESS(HttpStatus.OK, "FCM200", "클라이언트 토큰 저장 완료"),
     ALARM_SUCCESS(HttpStatus.OK, "FCM201", "이상행동 감지 알림 전송 완료"),
