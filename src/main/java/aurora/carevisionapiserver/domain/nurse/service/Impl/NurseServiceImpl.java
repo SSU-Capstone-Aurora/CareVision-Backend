@@ -78,11 +78,6 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public boolean isUsernameDuplicated(String username) {
-        return nurseRepository.existsByUsername(username);
-    }
-
-    @Override
     @Transactional
     public void activateNurse(Long nurseId) {
         Nurse nurse = getInactiveNurse(nurseId);

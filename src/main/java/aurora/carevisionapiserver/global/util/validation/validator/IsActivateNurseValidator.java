@@ -6,8 +6,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseLoginRequest;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
+import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.validation.annotation.IsActivateNurse;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,12 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class IsActivateNurseValidator
-        implements ConstraintValidator<IsActivateNurse, NurseLoginRequest> {
+        implements ConstraintValidator<IsActivateNurse, LoginRequest> {
 
     private final NurseRepository nurseRepository;
 
     @Override
-    public boolean isValid(NurseLoginRequest value, ConstraintValidatorContext context) {
+    public boolean isValid(LoginRequest value, ConstraintValidatorContext context) {
         String username = value.getUsername();
         if (username != null) {
             Nurse nurse = nurseRepository.findByUsername(username).orElse(null);

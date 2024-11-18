@@ -27,6 +27,7 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.Impl.NurseServiceImpl;
+import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.util.AdminUtils;
 import aurora.carevisionapiserver.util.HospitalUtils;
 import aurora.carevisionapiserver.util.NurseUtils;
@@ -36,6 +37,7 @@ public class NurseServiceTest {
     @InjectMocks private NurseServiceImpl nurseService;
     @Mock private NurseRepository nurseRepository;
     @Mock private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock private AuthService authService;
 
     @Test
     @DisplayName("간호사 회원가입에 성공한다.")
@@ -48,7 +50,7 @@ public class NurseServiceTest {
                         .name("오로라")
                         .build();
 
-        Hospital hospital = Hospital.builder().id(1L).name("오로라 병원").department("정형외과").build();
+        Hospital hospital = Hospital.builder().id(1L).name("오로라 병원").build();
 
         String encryptedPassword = "encryptedPassword123";
         Nurse expectedNurse =
@@ -75,7 +77,7 @@ public class NurseServiceTest {
         given(nurseRepository.existsByUsername(username)).willReturn(true);
 
         // When
-        boolean result = nurseService.isUsernameDuplicated(username);
+        boolean result = authService.isUsernameDuplicated(username);
 
         // Then
         assertTrue(result);
@@ -90,7 +92,7 @@ public class NurseServiceTest {
         given(nurseRepository.existsByUsername(username)).willReturn(false);
 
         // When
-        boolean result = nurseService.isUsernameDuplicated(username);
+        boolean result = authService.validateUsername(username);
 
         // Then
         assertFalse(result);

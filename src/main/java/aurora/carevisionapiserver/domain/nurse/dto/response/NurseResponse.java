@@ -36,14 +36,4 @@ public class NurseResponse {
         private Long id;
         private String name;
     }
-
-    @Getter
-    public static class NurseLoginResponse {
-        private String accessToken;
-
-        @Builder
-        public NurseLoginResponse(String accessToken) {
-            this.accessToken = accessToken;
-        }
-    }
 }

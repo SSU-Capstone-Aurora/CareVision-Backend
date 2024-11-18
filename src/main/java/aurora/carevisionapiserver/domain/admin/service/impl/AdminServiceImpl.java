@@ -27,15 +27,11 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     public Admin createAdmin(
             AdminCreateRequest adminCreateRequest, Hospital hospital, Department department) {
+
         String encryptedPassword = bCryptPasswordEncoder.encode(adminCreateRequest.getPassword());
         Admin admin =
                 AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital, department);
         return adminRepository.save(admin);
-    }
-
-    @Override
-    public boolean isUsernameDuplicated(String username) {
-        return adminRepository.existsByUsername(username);
     }
 
     @Override
