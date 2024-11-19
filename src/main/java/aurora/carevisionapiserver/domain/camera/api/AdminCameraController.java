@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,8 +32,8 @@ public class AdminCameraController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @GetMapping("")
-    public BaseResponse<CameraInfoListResponse> getCameras() {
-        List<Camera> cameras = cameraService.getCameras();
+    public BaseResponse<CameraInfoListResponse> getCameras(@AuthUser Admin admin) {
+        List<Camera> cameras = cameraService.getCameras(admin);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toCameraInfoListResponse(cameras));
     }

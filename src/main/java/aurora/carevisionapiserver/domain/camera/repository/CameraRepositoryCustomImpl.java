@@ -17,12 +17,15 @@ public class CameraRepositoryCustomImpl implements CameraRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Camera> sortByBedInfo() {
+    public List<Camera> sortByBedInfo(long hospitalId, long departmentId) {
         QBed bed = QBed.bed;
         QCamera camera = QCamera.camera;
         return queryFactory
                 .selectFrom(camera)
                 .leftJoin(bed)
+                .where(
+                        camera.patient.nurse.department.hospital.id.eq(hospitalId),
+                        camera.patient.nurse.department.id.eq(departmentId))
                 .on(camera.patient.id.eq(bed.patient.id))
                 .orderBy(
                         bed.inpatientWardNumber.asc(),
