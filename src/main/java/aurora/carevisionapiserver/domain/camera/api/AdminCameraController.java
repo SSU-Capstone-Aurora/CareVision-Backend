@@ -15,6 +15,7 @@ import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,8 @@ public class AdminCameraController {
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @GetMapping("")
-    public BaseResponse<CameraInfoListResponse> getCameras(@AuthUser Admin admin) {
+    public BaseResponse<CameraInfoListResponse> getCameras(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
         List<Camera> cameras = cameraService.getCameras(admin);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toCameraInfoListResponse(cameras));

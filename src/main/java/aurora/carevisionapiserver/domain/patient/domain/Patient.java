@@ -10,7 +10,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -42,6 +42,16 @@ public class Patient extends BaseEntity {
     @JoinColumn(name = "nurse_id")
     private Nurse nurse;
 
+    @ManyToOne
+    @JoinColumn(name = "department_id", insertable = false, updatable = false)
+    private Department department;
+
+    @PrePersist
+    @PreUpdate
+    private void syncDepartment() {
+        this.department = this.nurse.getDepartment();
+    }
+
     @OneToOne(
             mappedBy = "patient",
             fetch = FetchType.LAZY,
@@ -52,14 +62,7 @@ public class Patient extends BaseEntity {
     private List<Video> videos;
 
     @Builder
-    public Patient(
-            Long id,
-            String name,
-            String code,
-            Nurse nurse,
-            Bed bed,
-            List<Video> videos,
-            Hospital hospital) {
+    public Patient(Long id, String name, String code, Nurse nurse, Bed bed, List<Video> videos) {
         this.id = id;
         this.name = name;
         this.code = code;
