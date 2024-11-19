@@ -20,10 +20,11 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
     @Override
     public List<Patient> findPatientByAdmin(Admin admin) {
         QPatient patient = QPatient.patient;
+
         return queryFactory
                 .selectFrom(patient)
                 .where(
-                        patient.nurse.department.hospital.name.eq(
+                        patient.department.hospital.name.eq(
                                 admin.getDepartment().getHospital().getName()))
                 .fetch();
     }
@@ -35,8 +36,7 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
         return queryFactory
                 .selectFrom(patient)
                 .where(
-                        patient.nurse
-                                .department
+                        patient.department
                                 .hospital
                                 .eq(nurse.getDepartment().getHospital())
                                 .and(patient.nurse.isNull()))
