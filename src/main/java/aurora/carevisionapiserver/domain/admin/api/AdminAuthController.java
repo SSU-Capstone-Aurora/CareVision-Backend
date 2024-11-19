@@ -57,7 +57,7 @@ public class AdminAuthController {
 
         Hospital hospital = hospitalService.createHospital(hospitalCreateRequest);
         Department department = hospitalService.createDepartment(departmentCreateRequest, hospital);
-        Admin admin = adminService.createAdmin(adminCreateRequest, hospital, department);
+        Admin admin = adminService.createAdmin(adminCreateRequest, department);
 
         return BaseResponse.onSuccess(AdminConverter.toAdminSignUpResponse(admin));
     }

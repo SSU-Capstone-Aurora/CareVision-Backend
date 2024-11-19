@@ -6,6 +6,7 @@ import java.util.List;
 
 import aurora.carevisionapiserver.domain.bed.converter.BedConverter;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
@@ -52,13 +53,15 @@ public class PatientConverter {
                 .build();
     }
 
-    public static Patient toPatient(PatientCreateRequest patientCreateRequest) {
-        Bed bed = BedConverter.toBed(patientCreateRequest.getBedInfo());
+    public static Patient toPatient(
+            PatientCreateRequest patientCreateRequest, Department department) {
+        Bed bed = BedConverter.toBed(patientCreateRequest.getBed());
         Patient patient =
                 Patient.builder()
                         .name(patientCreateRequest.getName())
                         .code(patientCreateRequest.getCode())
                         .bed(bed)
+                        .department(department)
                         .build();
         bed.registerPatient(patient);
         return patient;

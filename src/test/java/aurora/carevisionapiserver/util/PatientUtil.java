@@ -19,7 +19,7 @@ public class PatientUtil {
         return PatientCreateRequest.builder()
                 .name("test")
                 .code("kk-123")
-                .bedInfo("100동 200호 30번")
+                .bed("100동 200호 30번")
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class PatientUtil {
         return PatientCreateRequest.builder()
                 .name("test")
                 .code("kk-123")
-                .bedInfo("잘못된 형식의 베드 번호")
+                .bed("잘못된 형식의 베드 번호")
                 .build();
     }
 }

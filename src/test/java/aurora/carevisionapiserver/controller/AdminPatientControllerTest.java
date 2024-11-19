@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
@@ -77,7 +78,9 @@ class AdminPatientControllerTest {
         PatientRegisterRequest patientRegisterRequest =
                 new PatientRegisterRequest(patientCreateRequest, cameraSelectRequest);
 
-        given(patientService.createPatient(patientCreateRequest)).willReturn(createPatient());
+        Admin admin = null;
+        given(patientService.createAndConnectPatient(patientCreateRequest, admin))
+                .willReturn(createPatient());
 
         mockMvc.perform(
                         post("/api/admin/patients")

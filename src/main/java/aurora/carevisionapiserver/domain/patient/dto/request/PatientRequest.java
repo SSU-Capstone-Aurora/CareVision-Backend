@@ -25,7 +25,7 @@ public class PatientRequest {
     public static class PatientCreateRequest {
         private String name;
         private String code;
-        private BedCreateRequest bedInfo;
+        private BedCreateRequest bed;
     }
 
     @Builder

@@ -79,7 +79,6 @@ public class NurseConverter {
                 .name(nurseCreateRequest.getName())
                 .password(password)
                 .role(Role.NURSE)
-                .hospital(hospital)
                 .department(department)
                 .requestedAt(LocalDateTime.now())
                 .isActivated(false)

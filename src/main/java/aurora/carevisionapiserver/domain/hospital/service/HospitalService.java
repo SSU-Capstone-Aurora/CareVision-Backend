@@ -31,6 +31,8 @@ public interface HospitalService {
 
     Department getDepartment(Long id);
 
+    Department getDepartment(Hospital hospital);
+
     List<Hospital> getHospitals();
 
     Map<Long, String> getDepartments(Long hospitalId);

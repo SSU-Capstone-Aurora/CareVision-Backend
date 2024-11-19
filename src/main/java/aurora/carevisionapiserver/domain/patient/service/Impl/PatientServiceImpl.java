@@ -8,7 +8,12 @@ import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
+import aurora.carevisionapiserver.domain.camera.domain.Camera;
+import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
+import aurora.carevisionapiserver.domain.camera.service.CameraService;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
@@ -23,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final AdminService adminService;
+    private final NurseService nurseService;
+    private final CameraService cameraService;
 
     @Override
     public List<Patient> searchPatient(String patientName) {
@@ -59,14 +66,45 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Transactional
-    public Patient createPatient(PatientCreateRequest patientCreateRequest) {
+    public void createAndConnectPatient(
+            PatientCreateRequest patientCreateRequest,
+            CameraSelectRequest cameraSelectRequest,
+            Nurse nurse) {
+        Patient patient = createPatient(patientCreateRequest, nurse.getDepartment());
+        connectCameraAndNurseToPatient(cameraSelectRequest, patient, nurse);
+    }
+
+    @Override
+    @Transactional
+    public void createAndConnectPatient(
+            PatientCreateRequest patientCreateRequest,
+            CameraSelectRequest cameraSelectRequest,
+            Admin admin) {
+        Patient patient = createPatient(patientCreateRequest, admin.getDepartment());
+        connectCameraToPatient(cameraSelectRequest, patient);
+    }
+
+    private void connectCameraAndNurseToPatient(
+            CameraSelectRequest cameraSelectRequest, Patient patient, Nurse nurse) {
+        Camera camera = cameraService.getCamera(cameraSelectRequest.getId());
+        cameraService.connectPatient(camera, patient);
+        nurseService.connectPatient(nurse, patient);
+    }
+
+    private void connectCameraToPatient(CameraSelectRequest cameraSelectRequest, Patient patient) {
+        Camera camera = cameraService.getCamera(cameraSelectRequest.getId());
+        cameraService.connectPatient(camera, patient);
+    }
+
+    private Patient createPatient(
+            PatientCreateRequest patientCreateRequest, Department department) {
         String patientCode = patientCreateRequest.getCode();
 
         if (patientRepository.existsByCode(patientCode)) {
             throw new PatientException(ErrorStatus.PATIENT_DUPLICATED);
         }
 
-        Patient patient = PatientConverter.toPatient(patientCreateRequest);
+        Patient patient = PatientConverter.toPatient(patientCreateRequest, department);
         return patientRepository.save(patient);
     }
 

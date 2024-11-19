@@ -62,13 +62,21 @@ public class Patient extends BaseEntity {
     private List<Video> videos;
 
     @Builder
-    public Patient(Long id, String name, String code, Nurse nurse, Bed bed, List<Video> videos) {
+    public Patient(
+            Long id,
+            String name,
+            String code,
+            Nurse nurse,
+            Bed bed,
+            List<Video> videos,
+            Department department) {
         this.id = id;
         this.name = name;
         this.code = code;
         this.nurse = nurse;
         this.bed = bed;
         this.videos = videos;
+        this.department = department;
     }
 
     public void registerNurse(Nurse nurse) {
