@@ -67,14 +67,14 @@ public class HospitalConverter {
 
     public static HospitalInfoResponse toHospitalInfoResponse(Admin admin) {
         return HospitalInfoResponse.builder()
-                .name(admin.getHospital().getName())
+                .name(admin.getDepartment().getHospital().getName())
                 .department(admin.getDepartment().getName())
                 .build();
     }
 
     public static HospitalInfoResponse toHospitalInfoResponse(Nurse nurse) {
         return HospitalInfoResponse.builder()
-                .name(nurse.getHospital().getName())
+                .name(nurse.getDepartment().getHospital().getName())
                 .department(nurse.getDepartment().getName())
                 .build();
     }

@@ -42,10 +42,6 @@ public class Patient extends BaseEntity {
     @JoinColumn(name = "nurse_id")
     private Nurse nurse;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hospital_id")
-    private Hospital hospital;
-
     @OneToOne(
             mappedBy = "patient",
             fetch = FetchType.LAZY,
@@ -70,7 +66,6 @@ public class Patient extends BaseEntity {
         this.nurse = nurse;
         this.bed = bed;
         this.videos = videos;
-        this.hospital = hospital;
     }
 
     public void registerNurse(Nurse nurse) {

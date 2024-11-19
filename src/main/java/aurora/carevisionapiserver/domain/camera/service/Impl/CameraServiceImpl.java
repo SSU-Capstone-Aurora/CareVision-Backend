@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.repository.CameraRepository;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
@@ -28,8 +29,9 @@ public class CameraServiceImpl implements CameraService {
 
     private final CameraRepository cameraRepository;
 
-    public List<Camera> getCameras() {
-        return cameraRepository.sortByBedInfo();
+    public List<Camera> getCameras(Admin admin) {
+        return cameraRepository.sortByBedInfo(
+                admin.getDepartment().getHospital().getId(), admin.getDepartment().getId());
     }
 
     @Override

@@ -22,7 +22,9 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
         QPatient patient = QPatient.patient;
         return queryFactory
                 .selectFrom(patient)
-                .where(patient.nurse.hospital.name.eq(admin.getHospital().getName()))
+                .where(
+                        patient.nurse.department.hospital.name.eq(
+                                admin.getDepartment().getHospital().getName()))
                 .fetch();
     }
 
@@ -32,7 +34,12 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
 
         return queryFactory
                 .selectFrom(patient)
-                .where(patient.hospital.eq(nurse.getHospital()).and(patient.nurse.isNull()))
+                .where(
+                        patient.nurse
+                                .department
+                                .hospital
+                                .eq(nurse.getDepartment().getHospital())
+                                .and(patient.nurse.isNull()))
                 .fetch();
     }
 }

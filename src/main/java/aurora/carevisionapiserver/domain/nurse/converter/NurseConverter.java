@@ -29,7 +29,7 @@ public class NurseConverter {
 
         return NurseProfileResponse.builder()
                 .name(nurse.getName())
-                .hospitalName(nurse.getHospital().getName())
+                .hospitalName(nurse.getDepartment().getHospital().getName())
                 .department(nurse.getDepartment().getName())
                 .registeredAt(registeredAt)
                 .build();

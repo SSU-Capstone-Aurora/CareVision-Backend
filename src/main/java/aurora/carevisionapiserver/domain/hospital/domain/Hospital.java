@@ -4,8 +4,6 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
-import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,12 +27,6 @@ public class Hospital extends BaseEntity {
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Department> departments;
-
-    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Admin> admins;
-
-    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Nurse> nurses;
 
     @Builder
     public Hospital(Long id, String name, String ykiho) {
