@@ -53,10 +53,6 @@ public class Nurse extends BaseEntity {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hospital_id", nullable = false)
-    private Hospital hospital;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
@@ -81,7 +77,6 @@ public class Nurse extends BaseEntity {
         this.requestedAt = requestedAt;
         this.isActivated = isActivated;
         this.role = role;
-        this.hospital = hospital;
         this.department = department;
         this.patients = patients;
     }

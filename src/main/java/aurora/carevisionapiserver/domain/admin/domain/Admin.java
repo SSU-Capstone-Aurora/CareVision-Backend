@@ -31,10 +31,6 @@ public class Admin extends BaseEntity {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hospital_id", nullable = false)
-    private Hospital hospital;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
@@ -50,7 +46,6 @@ public class Admin extends BaseEntity {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.hospital = hospital;
         this.department = department;
     }
 

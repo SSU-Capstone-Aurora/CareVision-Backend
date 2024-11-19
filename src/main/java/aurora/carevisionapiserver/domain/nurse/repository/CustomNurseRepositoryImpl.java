@@ -23,9 +23,10 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
         return queryFactory
                 .selectFrom(nurse)
                 .where(
-                        nurse.hospital
+                        nurse.department
+                                .hospital
                                 .name
-                                .eq(admin.getHospital().getName())
+                                .eq(admin.getDepartment().getHospital().getName())
                                 .and(nurse.isActivated.isTrue()))
                 .orderBy(nurse.registeredAt.desc())
                 .fetch();
@@ -37,9 +38,10 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
         return queryFactory
                 .selectFrom(nurse)
                 .where(
-                        nurse.hospital
+                        nurse.department
+                                .hospital
                                 .name
-                                .eq(admin.getHospital().getName())
+                                .eq(admin.getDepartment().getHospital().getName())
                                 .and(nurse.isActivated.isFalse()))
                 .orderBy(nurse.requestedAt.desc())
                 .fetch();
@@ -53,9 +55,10 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
                                 .select(nurse.count())
                                 .from(nurse)
                                 .where(
-                                        nurse.hospital
+                                        nurse.department
+                                                .hospital
                                                 .name
-                                                .eq(admin.getHospital().getName())
+                                                .eq(admin.getDepartment().getHospital().getName())
                                                 .and(nurse.isActivated.isFalse()))
                                 .fetchOne())
                 .orElse(0L);
