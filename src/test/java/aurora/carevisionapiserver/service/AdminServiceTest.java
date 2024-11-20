@@ -43,8 +43,7 @@ public class AdminServiceTest {
         Hospital hospital = Hospital.builder().id(1L).name("오로라 병원").build();
         Department department = Department.builder().id(1L).name("정형외과").build();
         String encryptedPassword = "encryptedPassword123";
-        Admin admin =
-                AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, hospital, department);
+        Admin admin = AdminConverter.toAdmin(adminCreateRequest, encryptedPassword, department);
 
         // When
         when(bCryptPasswordEncoder.encode(adminCreateRequest.getPassword()))
@@ -56,7 +55,7 @@ public class AdminServiceTest {
         // Then
         assertEquals(admin.getUsername(), resultAdmin.getUsername());
         assertEquals(encryptedPassword, resultAdmin.getPassword());
-        assertEquals(hospital, resultAdmin.getHospital());
+        assertEquals(hospital, resultAdmin.getDepartment());
     }
 
     @Test

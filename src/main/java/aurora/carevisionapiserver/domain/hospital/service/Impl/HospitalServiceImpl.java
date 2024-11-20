@@ -143,6 +143,13 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
+    public Department getDepartment(Hospital hospital) {
+        return departmentRepository
+                .findByHospital(hospital)
+                .orElseThrow(() -> new DepartmentException(ErrorStatus.DEPARTMENT_NOT_FOUND));
+    }
+
+    @Override
     public List<Hospital> getHospitals() {
         return hospitalRepository.findAll();
     }

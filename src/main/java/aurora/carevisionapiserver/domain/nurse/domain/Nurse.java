@@ -9,7 +9,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
@@ -66,7 +65,6 @@ public class Nurse extends BaseEntity {
             LocalDateTime requestedAt,
             boolean isActivated,
             Role role,
-            Hospital hospital,
             Department department,
             List<Patient> patients) {
         this.id = id;

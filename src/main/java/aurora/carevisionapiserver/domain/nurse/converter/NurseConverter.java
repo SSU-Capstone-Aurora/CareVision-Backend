@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestInfoResponse;
@@ -70,16 +69,12 @@ public class NurseConverter {
     }
 
     public static Nurse toNurse(
-            NurseCreateRequest nurseCreateRequest,
-            String password,
-            Hospital hospital,
-            Department department) {
+            NurseCreateRequest nurseCreateRequest, String password, Department department) {
         return Nurse.builder()
                 .username(nurseCreateRequest.getUsername())
                 .name(nurseCreateRequest.getName())
                 .password(password)
                 .role(Role.NURSE)
-                .hospital(hospital)
                 .department(department)
                 .requestedAt(LocalDateTime.now())
                 .isActivated(false)

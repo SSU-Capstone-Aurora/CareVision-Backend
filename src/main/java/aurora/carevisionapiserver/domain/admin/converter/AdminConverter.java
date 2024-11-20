@@ -7,22 +7,17 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.hospital.converter.HospitalConverter;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalInfoResponse;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 
 public class AdminConverter {
 
     public static Admin toAdmin(
-            AdminCreateRequest adminCreateRequest,
-            String password,
-            Hospital hospital,
-            Department department) {
+            AdminCreateRequest adminCreateRequest, String password, Department department) {
         return Admin.builder()
                 .username(adminCreateRequest.getUsername())
                 .password(password)
                 .role(Role.ADMIN)
-                .hospital(hospital)
                 .department(department)
                 .build();
     }

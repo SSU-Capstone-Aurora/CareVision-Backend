@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
@@ -48,7 +47,6 @@ import lombok.RequiredArgsConstructor;
 public class NurseController {
     private final PatientService patientService;
     private final NurseService nurseService;
-    private final CameraService cameraService;
     private final FcmService fcmService;
 
     @Operation(summary = "간호사 마이페이지 API", description = "간호사 마이페이지를 조회합니다._숙희")
@@ -98,7 +96,6 @@ public class NurseController {
             description = "연결할 환자명이 없을 때, 환자명을 입력하고, 카메라를 선택하여 새로운 환자를 등록합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON201", description = "OK, 요청 성공 및 리소스 생성됨."),
-        @ApiResponse(responseCode = "BED400", description = "BAD REQUEST, 잘못된 형식의 베드 정보입니다."),
     })
     @RefreshTokenApiResponse
     @PostMapping("/patients")
@@ -108,10 +105,8 @@ public class NurseController {
         PatientCreateRequest patientCreateRequest = patientRegisterRequest.getPatient();
         CameraSelectRequest cameraSelectRequest = patientRegisterRequest.getCamera();
 
-        Patient patient = patientService.createPatient(patientCreateRequest);
-        Camera camera = cameraService.getCamera(cameraSelectRequest.getId());
-        cameraService.connectPatient(camera, patient);
-        nurseService.connectPatient(nurse, patient);
+        patientService.createAndConnectPatient(patientCreateRequest, cameraSelectRequest, nurse);
+
         return BaseResponse.of(SuccessStatus._CREATED, null);
     }
 
