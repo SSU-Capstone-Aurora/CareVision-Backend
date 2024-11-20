@@ -47,7 +47,6 @@ import lombok.RequiredArgsConstructor;
 public class NurseController {
     private final PatientService patientService;
     private final NurseService nurseService;
-    private final CameraService cameraService;
     private final FcmService fcmService;
 
     @Operation(summary = "간호사 마이페이지 API", description = "간호사 마이페이지를 조회합니다._숙희")

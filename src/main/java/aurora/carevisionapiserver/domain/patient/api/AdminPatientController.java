@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
-import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
@@ -35,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin/patients")
 public class AdminPatientController {
     private final PatientService patientService;
-    private final CameraService cameraService;
 
     @Operation(summary = "환자 검색 API", description = "입력받은 환자명으로 환자를 검색합니다._숙희")
     @ApiResponses({
