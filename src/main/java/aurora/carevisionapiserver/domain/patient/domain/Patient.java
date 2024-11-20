@@ -43,14 +43,8 @@ public class Patient extends BaseEntity {
     private Nurse nurse;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", insertable = false, updatable = false)
+    @JoinColumn(name = "department_id")
     private Department department;
-
-    @PrePersist
-    @PreUpdate
-    private void syncDepartment() {
-        this.department = this.nurse.getDepartment();
-    }
 
     @OneToOne(
             mappedBy = "patient",
