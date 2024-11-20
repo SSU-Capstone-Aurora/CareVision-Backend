@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
@@ -76,11 +75,9 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     @Transactional
-    public Nurse createNurse(
-            NurseCreateRequest nurseCreateRequest, Hospital hospital, Department department) {
+    public Nurse createNurse(NurseCreateRequest nurseCreateRequest, Department department) {
         String encryptedPassword = bCryptPasswordEncoder.encode(nurseCreateRequest.getPassword());
-        Nurse nurse =
-                NurseConverter.toNurse(nurseCreateRequest, encryptedPassword, hospital, department);
+        Nurse nurse = NurseConverter.toNurse(nurseCreateRequest, encryptedPassword, department);
         return nurseRepository.save(nurse);
     }
 
