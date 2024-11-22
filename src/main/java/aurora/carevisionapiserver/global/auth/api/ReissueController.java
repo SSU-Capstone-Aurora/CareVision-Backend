@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
-import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
-import aurora.carevisionapiserver.global.util.validation.annotation.RefreshTokenApiResponse;
+import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
+import aurora.carevisionapiserver.global.security.handler.annotation.ExtractToken;
+import aurora.carevisionapiserver.global.security.handler.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -57,12 +57,9 @@ public class ReissueController {
     @RefreshTokenApiResponse
     @PostMapping("/api/reissue")
     public BaseResponse<LoginResponse> reissueForNurse(
-            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            HttpServletRequest request) {
-        System.out.println("여기까지도 안 온거니?");
-        String role = authService.getCurrentUserRole();
-        String refreshToken = request.getHeader(AUTHORIZATION_HEADER);
-        LoginResponse loginResponse = authService.handleReissue(role, refreshToken);
+            @Parameter(hidden = true) @ExtractToken String refreshToken) {
+        //        String role = authService.getCurrentUserRole();
+        LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
 }
