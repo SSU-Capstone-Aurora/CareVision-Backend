@@ -37,17 +37,16 @@ public class SecurityConfig {
         "/swagger-ui/**",
         "/swagger-resources/**",
         "/v3/api-docs/**",
-        "/api/fcm/alarm/*",
     };
 
     private final String[] nurseUrls = {
         "/api/patients",
         "/api/profile",
-        "/api/reissue",
         "/api/patients/**",
         "/api/streaming/**",
+        "/api/reissue/**",
         "/api/fcm/**",
-        "api/alarm"
+        "api/alarm",
     };
 
     @Bean
@@ -81,8 +80,6 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers(allowedUrls)
                                 .permitAll()
-                                .requestMatchers("/api/reissue")
-                                .hasAnyRole("ADMIN", "NURSE")
                                 .requestMatchers("/api/admin/**")
                                 .hasRole("ADMIN")
                                 .requestMatchers(nurseUrls)

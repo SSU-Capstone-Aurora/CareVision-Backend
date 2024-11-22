@@ -78,4 +78,11 @@ public class JWTUtil {
                 .signWith(secretKey)
                 .compact();
     }
+
+    public String parseToken(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return authHeader;
+    }
 }

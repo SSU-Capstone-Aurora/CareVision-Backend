@@ -44,7 +44,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = parseAccessToken(authHeader);
+        String accessToken = jwtUtil.parseToken(authHeader);
 
         try {
             jwtUtil.isExpired(accessToken);
@@ -100,12 +100,5 @@ public class JWTFilter extends OncePerRequestFilter {
         PrintWriter writer = response.getWriter();
         writer.print(jsonResponse);
         writer.flush();
-    }
-
-    public String parseAccessToken(String header) {
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-        return header;
     }
 }
