@@ -49,9 +49,10 @@ public class FcmController {
     @PostMapping("/alarm/{patientId}")
     public BaseResponse<Void> sendAlarm(@PathVariable(name = "patientId") Long patientId) {
         Patient patient = patientService.getPatient(patientId);
-        String token = fcmService.findClientToken(patient.getNurse());
+        //TODO
+        //String token = fcmService.findClientToken(patient.getNurse());
 
-        fcmService.abnormalBehaviorAlarm(patient, token);
+        fcmService.abnormalBehaviorAlarm(patient, "refresh");
 
         return BaseResponse.of(SuccessStatus.ALARM_SUCCESS, null);
     }
