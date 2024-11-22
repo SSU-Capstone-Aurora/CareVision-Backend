@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
-import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseAcceptanceRetryRequest;
@@ -30,8 +29,8 @@ import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
-import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
-import aurora.carevisionapiserver.global.util.validation.annotation.RefreshTokenApiResponse;
+import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
+import aurora.carevisionapiserver.global.security.handler.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

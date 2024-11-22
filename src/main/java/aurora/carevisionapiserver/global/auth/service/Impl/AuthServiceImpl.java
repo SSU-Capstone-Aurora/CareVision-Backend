@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Optional;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
+import aurora.carevisionapiserver.global.auth.converter.AuthConverter;
 import aurora.carevisionapiserver.global.auth.domain.RefreshToken;
 import aurora.carevisionapiserver.global.auth.domain.Role;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.exception.AuthException;
 import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
@@ -58,14 +59,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public String createAccessToken(String username, String role) {
-        return jwtUtil.createJwt("access", username, role, accessExpirationTime);
+        return jwtUtil.createJwt("access", username, accessExpirationTime);
     }
 
     @Override
     @Transactional
     public String createRefreshToken(String username, String role) {
-        String refreshToken =
-                jwtUtil.createJwt("refreshToken", username, role, refreshExpirationTime);
+        String refreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
         saveRefreshToken(username, refreshToken, refreshExpirationTime);
         return refreshToken;
     }
@@ -81,15 +81,6 @@ public class AuthServiceImpl implements AuthService {
                         .expiration(expiration.toString())
                         .build();
         refreshTokenRepository.save(newRefreshToken);
-    }
-
-    @Override
-    @Transactional
-    public Cookie createRefreshTokenCookie(String refreshToken) {
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge(24 * 60 * 60);
-        cookie.setHttpOnly(true);
-        return cookie;
     }
 
     @Override
@@ -128,5 +119,44 @@ public class AuthServiceImpl implements AuthService {
                     .findByUsername(username)
                     .orElseThrow(() -> new AuthException(ErrorStatus.USER_NOT_FOUND));
         }
+    }
+
+    @Override
+    public LoginResponse handleReissue(String refreshToken) {
+        if (refreshToken == null) {
+            throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
+        }
+        String username = jwtUtil.getId(refreshToken);
+
+        try {
+            refreshTokenRepository
+                    .findByUsername(username)
+                    .orElseThrow(() -> new AuthException(ErrorStatus.INVALID_REFRESH_TOKEN));
+        } catch (AuthException e) {
+            throw new AuthException(ErrorStatus.INVALID_CREDENTIALS);
+        }
+
+        // 이전 refresh token 삭제
+        refreshTokenRepository.deleteByUsername(username);
+
+        String newRefreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
+
+        String newAccessToken = jwtUtil.createJwt("access", username, refreshExpirationTime);
+
+        // refresh token 업데이트
+        addRefreshToken(username, newRefreshToken, refreshExpirationTime);
+
+        return AuthConverter.toLoginResponse(newAccessToken, newRefreshToken);
+    }
+
+    public void addRefreshToken(String username, String refreshToken, long expiredMs) {
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+        RefreshToken newRefreshToken =
+                RefreshToken.builder()
+                        .username(username)
+                        .refreshToken(refreshToken)
+                        .expiration(date.toString())
+                        .build();
+        refreshTokenRepository.save(newRefreshToken);
     }
 }

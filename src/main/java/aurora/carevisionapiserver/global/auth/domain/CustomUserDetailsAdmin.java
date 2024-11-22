@@ -6,26 +6,26 @@ import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
-    private final Nurse nurse;
+public class CustomUserDetailsAdmin implements UserDetails {
+    private final Admin admin;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(() -> "ROLE_" + nurse.getRole().getRole());
+        return Collections.singletonList(() -> "ROLE_" + admin.getRole().getRole());
     }
 
     @Override
     public String getPassword() {
-        return nurse.getPassword();
+        return admin.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return nurse.getUsername();
+        return admin.getUsername();
     }
 
     @Override
