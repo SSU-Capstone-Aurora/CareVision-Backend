@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.util.validation.resolver;
+package aurora.carevisionapiserver.global.security.handler.resolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +16,7 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.exception.GeneralException;
-import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
+import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
 import lombok.RequiredArgsConstructor;
 
 @Component
