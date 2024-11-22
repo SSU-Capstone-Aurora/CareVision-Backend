@@ -37,6 +37,7 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "AUTH406", "해당하는 유저를 찾을 수 없습니다."),
     USER_NOT_ACTIVATED(HttpStatus.FORBIDDEN, "AUTH407", "승인되지 않은 유저입니다."),
     INVALID_ROLE(HttpStatus.FORBIDDEN, "AUTH408", "유효하지 않은 권한입니다."),
+    UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "AUTH409", "인증되지 않은 요청입니다."),
 
     // Admin
     ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "관리자를 찾을 수 없습니다."),
@@ -52,6 +53,11 @@ public enum ErrorStatus implements BaseErrorCode {
     CLIENT_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "FCM400", "token이 만료되었습니다."),
     CLIENT_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "FCM401", "token을 찾을 수 없습니다."),
     EXECUTION_FAILED(HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
+    AUTH_EXPIRED_TOKEN(
+            HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
+    AUTH_INVALID_TOKEN(
+            HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
+    UNSUPPORTED_TOKEN(HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
     ;
     private final HttpStatus httpStatus;
     private final String code;
