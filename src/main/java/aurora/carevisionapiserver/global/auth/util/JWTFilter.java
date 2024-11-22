@@ -28,8 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
-    private final JWTUtil jwtUtil;
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    private final JWTUtil jwtUtil;
     private final NurseRepository nurseRepository;
     private final AdminRepository adminRepository;
 
