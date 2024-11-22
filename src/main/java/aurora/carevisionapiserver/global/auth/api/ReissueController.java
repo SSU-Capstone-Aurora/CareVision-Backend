@@ -44,7 +44,7 @@ public class ReissueController {
         String role = authService.getCurrentUserRole();
         String refreshToken = request.getHeader(AUTHORIZATION_HEADER);
         System.out.println("눈물 차올라~" + role + refreshToken);
-        LoginResponse loginResponse = authService.handleReissue(role, refreshToken);
+        LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
 

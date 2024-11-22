@@ -60,13 +60,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public String createAccessToken(String username, String role) {
-        return jwtUtil.createJwt("access", username, role, accessExpirationTime);
+        return jwtUtil.createJwt("access", username, accessExpirationTime);
     }
 
     @Override
     @Transactional
     public String createRefreshToken(String username, String role) {
-        String refreshToken = jwtUtil.createJwt("refresh", username, role, refreshExpirationTime);
+        String refreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
         saveRefreshToken(username, refreshToken, refreshExpirationTime);
         return refreshToken;
     }
@@ -123,10 +123,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse handleReissue(String role, String unparsedRefreshToken) {
-
-        String refreshToken = jwtUtil.parseToken(unparsedRefreshToken);
-
+    public LoginResponse handleReissue(String refreshToken) {
         if (refreshToken == null) {
             throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
         }
@@ -160,10 +157,9 @@ public class AuthServiceImpl implements AuthService {
         // 이전 refresh token 삭제
         refreshTokenRepository.deleteByUsername(username);
 
-        String newRefreshToken =
-                jwtUtil.createJwt("refresh", username, role, refreshExpirationTime);
+        String newRefreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
 
-        String newAccessToken = jwtUtil.createJwt("access", username, role, refreshExpirationTime);
+        String newAccessToken = jwtUtil.createJwt("access", username, refreshExpirationTime);
 
         // refresh token 업데이트
         addRefreshToken(username, newRefreshToken, refreshExpirationTime);

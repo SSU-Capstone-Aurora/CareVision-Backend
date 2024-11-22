@@ -24,5 +24,5 @@ public interface AuthService {
 
     void validateUsername(String username, Role role);
 
-    LoginResponse handleReissue(String role, String refreshToken);
+    LoginResponse handleReissue(String refreshToken);
 }
