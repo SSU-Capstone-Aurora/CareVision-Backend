@@ -27,7 +27,6 @@ import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.auth.util.JWTUtil;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -127,24 +126,7 @@ public class AuthServiceImpl implements AuthService {
         if (refreshToken == null) {
             throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
         }
-
-        // 토큰이 만료되었는지 검사
-        try {
-            jwtUtil.isExpired(refreshToken);
-        } catch (ExpiredJwtException e) {
-            throw new AuthException(ErrorStatus.REFRESH_TOKEN_EXPIRED);
-        }
-
-        // 토큰이 refresh인지 검사
-        String category = jwtUtil.getCategory(refreshToken);
-
-        System.out.println("category : " + category);
-
-        if (!category.equals("refresh")) {
-            throw new AuthException(ErrorStatus.INVALID_REFRESH_TOKEN);
-        }
-
-        String username = jwtUtil.getUsername(refreshToken);
+        String username = jwtUtil.getId(refreshToken);
 
         try {
             refreshTokenRepository
