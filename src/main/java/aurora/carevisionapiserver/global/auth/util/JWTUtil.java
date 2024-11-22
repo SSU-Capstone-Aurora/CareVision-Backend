@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.global.auth.util;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -10,79 +11,66 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.error.exception.GeneralException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTUtil {
 
-    private SecretKey secretKey;
-
     @Value("${jwt.secret}")
-    String secret;
+    private String secretKey;
 
     @PostConstruct
-    public void init() {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String getCategory(String token) {
-
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("category", String.class);
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes); // HMAC-SHA 키 생성
     }
 
-    public String getUsername(String token) {
-
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("username", String.class);
+    public boolean isValidToken(String token) {
+        try {
+            Jws<Claims> claims = getClaims(token);
+            Date now = new Date();
+            Date expiredDate = claims.getBody().getExpiration();
+            return expiredDate.after(now);
+        } catch (ExpiredJwtException e) {
+            throw new GeneralException(ErrorStatus.AUTH_EXPIRED_TOKEN);
+        } catch (SecurityException | MalformedJwtException | IllegalArgumentException e) {
+            throw new GeneralException(ErrorStatus.AUTH_INVALID_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            throw new GeneralException(ErrorStatus.UNSUPPORTED_TOKEN);
+        }
     }
 
-    public String getRole(String token) {
-
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("role", String.class);
+    public Jws<Claims> getClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
     }
 
-    public Boolean isExpired(String token) {
-
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
+    public String getId(String token) {
+        return getClaims(token).getBody().get("username", String.class);
     }
 
-    public String createJwt(String category, String username, String role, Long expiredMs) {
+    public String createJwt(String category, String username, Long expiredMs) {
+        Claims claims = Jwts.claims();
+        claims.put("username", username);
+        claims.put("category", category);
 
         return Jwts.builder()
-                .claim("category", category)
-                .claim("username", username)
-                .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(secretKey)
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(this.getSigningKey())
                 .compact();
-    }
-
-    public String parseToken(String authHeader) {
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return authHeader;
     }
 }
