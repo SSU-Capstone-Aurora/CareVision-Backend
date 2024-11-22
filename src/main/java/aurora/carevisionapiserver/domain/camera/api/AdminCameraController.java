@@ -13,7 +13,7 @@ import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.Came
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
-import aurora.carevisionapiserver.global.util.validation.annotation.AuthUser;
+import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
