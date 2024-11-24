@@ -48,7 +48,7 @@ public class ReissueController {
     }
 
     @Operation(
-            summary = "간호사 refresh 토큰 재발급 API",
+            summary = "간호사 refresh 및 access 토큰 재발급 API",
             description = "refresh 토큰이 만료된 경우 refresh 토큰과 access 토큰을 body에 재발급합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
