@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -122,11 +124,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse handleReissue(String refreshToken) {
-        if (refreshToken == null) {
+    public LoginResponse handleReissue(String authorizationHeader) {
+        if (authorizationHeader == null) {
             throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
         }
-        String username = jwtUtil.getId(refreshToken);
+
+        String parsedToken = parseBearerToken(authorizationHeader);
+
+        String username = jwtUtil.getId(parsedToken);
 
         try {
             refreshTokenRepository
@@ -140,7 +145,6 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.deleteByUsername(username);
 
         String newRefreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
-
         String newAccessToken = jwtUtil.createJwt("access", username, refreshExpirationTime);
 
         // refresh token 업데이트
@@ -158,5 +162,12 @@ public class AuthServiceImpl implements AuthService {
                         .expiration(date.toString())
                         .build();
         refreshTokenRepository.save(newRefreshToken);
+    }
+
+    public String parseBearerToken(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
+            throw new AuthException(ErrorStatus.AUTH_HEADER_MISSING_OR_INVALID);
+        }
+        return authorizationHeader.substring(BEARER_PREFIX.length());
     }
 }

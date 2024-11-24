@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
-import aurora.carevisionapiserver.global.security.handler.annotation.ExtractToken;
 import aurora.carevisionapiserver.global.security.handler.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,8 +31,9 @@ public class ReissueController {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Operation(
-            summary = "관리자 refresh 토큰 재발급 API",
-            description = "refresh 토큰이 만료된 경우 refresh 토큰과 access 토큰을 body에 재발급합니다_예림")
+            summary = "관리자 refresh 및 access 토큰 재발급 API",
+            description =
+                    "access token이 만료되면 Authoriazation 헤더에 refresh token을 넣어 요청하여 access 토큰을 body에 재발급합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
@@ -41,10 +42,8 @@ public class ReissueController {
     public BaseResponse<LoginResponse> reissueForAdmin(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             HttpServletRequest request) {
-        String role = authService.getCurrentUserRole();
-        String refreshToken = request.getHeader(AUTHORIZATION_HEADER);
-        System.out.println("눈물 차올라~" + role + refreshToken);
-        LoginResponse loginResponse = authService.handleReissue(refreshToken);
+        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
+        LoginResponse loginResponse = authService.handleReissue(authorizationHeader);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
 
@@ -57,8 +56,10 @@ public class ReissueController {
     @RefreshTokenApiResponse
     @PostMapping("/api/reissue")
     public BaseResponse<LoginResponse> reissueForNurse(
-            @Parameter(hidden = true) @ExtractToken String refreshToken) {
-        //        String role = authService.getCurrentUserRole();
+            @Parameter(name = "admin", hidden = true) @AuthUser Nurse nurse,
+            HttpServletRequest request) {
+        String refreshToken = request.getHeader(AUTHORIZATION_HEADER);
+        System.out.println(refreshToken);
         LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
