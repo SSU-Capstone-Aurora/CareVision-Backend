@@ -59,7 +59,6 @@ public class ReissueController {
             @Parameter(name = "admin", hidden = true) @AuthUser Nurse nurse,
             HttpServletRequest request) {
         String refreshToken = request.getHeader(AUTHORIZATION_HEADER);
-        System.out.println(refreshToken);
         LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
