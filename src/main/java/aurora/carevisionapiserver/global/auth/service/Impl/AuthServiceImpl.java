@@ -124,14 +124,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse handleReissue(String authorizationHeader) {
-        if (authorizationHeader == null) {
+    public LoginResponse handleReissue(String refreshToken) {
+        if (refreshToken == null) {
             throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
         }
 
-        String parsedToken = parseBearerToken(authorizationHeader);
-
-        String username = jwtUtil.getId(parsedToken);
+        String username = jwtUtil.getId(refreshToken);
 
         try {
             refreshTokenRepository
@@ -162,12 +160,5 @@ public class AuthServiceImpl implements AuthService {
                         .expiration(date.toString())
                         .build();
         refreshTokenRepository.save(newRefreshToken);
-    }
-
-    public String parseBearerToken(String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
-            throw new AuthException(ErrorStatus.AUTH_HEADER_MISSING_OR_INVALID);
-        }
-        return authorizationHeader.substring(BEARER_PREFIX.length());
     }
 }

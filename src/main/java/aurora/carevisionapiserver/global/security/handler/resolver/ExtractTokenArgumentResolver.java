@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JWTUtil jwtTokenProvider;
+    private final JWTUtil jwtUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -38,7 +38,7 @@ public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolv
         }
 
         String token = authorizationHeader.substring(7);
-        jwtTokenProvider.isValidToken(token);
+        jwtUtil.isValidToken(token);
         return token;
     }
 }
