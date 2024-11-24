@@ -18,8 +18,8 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
-import aurora.carevisionapiserver.global.auth.domain.CustomUserDetails;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetailsAdmin;
+import aurora.carevisionapiserver.global.auth.domain.CustomUserDetailsNurse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 UserDetails userDetails = null;
                 if (nurseRepository.existsByUsername(username)) {
                     Optional<Nurse> nurse = nurseRepository.findByUsername(username);
-                    userDetails = new CustomUserDetails(nurse.get());
+                    userDetails = new CustomUserDetailsNurse(nurse.get());
                 }
                 if (adminRepository.existsByUsername(username)) {
                     Optional<Admin> admin = adminRepository.findByUsername(username);
