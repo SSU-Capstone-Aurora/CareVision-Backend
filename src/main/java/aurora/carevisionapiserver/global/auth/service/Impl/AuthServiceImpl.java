@@ -33,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -126,6 +128,7 @@ public class AuthServiceImpl implements AuthService {
         if (refreshToken == null) {
             throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
         }
+
         String username = jwtUtil.getId(refreshToken);
 
         try {
@@ -140,7 +143,6 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.deleteByUsername(username);
 
         String newRefreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
-
         String newAccessToken = jwtUtil.createJwt("access", username, refreshExpirationTime);
 
         // refresh token 업데이트

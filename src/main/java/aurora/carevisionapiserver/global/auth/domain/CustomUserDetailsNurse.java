@@ -10,7 +10,7 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetailsNurse implements UserDetails {
     private final Nurse nurse;
 
     @Override
