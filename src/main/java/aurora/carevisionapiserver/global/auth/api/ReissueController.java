@@ -29,8 +29,7 @@ public class ReissueController {
 
     @Operation(
             summary = "관리자 refresh 및 access 토큰 재발급 API",
-            description =
-                    "refresh token과 access 토큰을 body에 재발급합니다_예림")
+            description = "refresh token과 access 토큰을 body에 재발급합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
