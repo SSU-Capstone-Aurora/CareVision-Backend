@@ -98,8 +98,7 @@ public class AdminAuthController {
         String password = adminLoginRequest.getPassword();
         return authService
                 .authenticate(username, password)
-                .map(
-                        authentication -> BaseResponse.onSuccess(authService.generateTokens(username)))
+                .map(authentication -> BaseResponse.onSuccess(authService.generateTokens(username)))
                 .orElse(
                         BaseResponse.onFailure(
                                 ErrorStatus.INVALID_CREDENTIALS.getCode(),
