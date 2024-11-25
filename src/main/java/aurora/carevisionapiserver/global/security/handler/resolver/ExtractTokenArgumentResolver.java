@@ -38,7 +38,6 @@ public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolv
         }
 
         String token = authorizationHeader.substring(7);
-        jwtUtil.isValidToken(token);
         return token;
     }
 }

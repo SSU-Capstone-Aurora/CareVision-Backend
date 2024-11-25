@@ -17,10 +17,9 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCre
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseSignUpRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
-import aurora.carevisionapiserver.global.auth.converter.AuthConverter;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
-import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
@@ -92,7 +91,7 @@ public class NurseAuthController {
         @ApiResponse(responseCode = "AUTH407", description = "승인되지 않은 유저입니다."),
     })
     @PostMapping("/login")
-    public BaseResponse<LoginResponse> login(
+    public BaseResponse<TokenResponse> login(
             @RequestBody @IsActivateNurse LoginRequest loginRequest) {
 
         String username = loginRequest.getUsername();
@@ -104,11 +103,7 @@ public class NurseAuthController {
                 .authenticate(username, password)
                 .map(
                         authentication -> {
-                            String accessToken = authService.createAccessToken(username, "NURSE");
-                            String refreshToken = authService.createRefreshToken(username, "NURSE");
-
-                            return BaseResponse.onSuccess(
-                                    AuthConverter.toLoginResponse(accessToken, refreshToken));
+                            return BaseResponse.onSuccess(authService.generateTokens(username));
                         })
                 .orElse(
                         BaseResponse.onFailure(

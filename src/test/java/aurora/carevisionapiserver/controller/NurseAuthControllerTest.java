@@ -189,8 +189,8 @@ public class NurseAuthControllerTest {
 
         when(nurseRepository.findByUsername(username)).thenReturn(Optional.of(activeNurse));
 
-        when(authService.createAccessToken(username, role)).thenReturn(accessToken);
-        when(authService.createRefreshToken(username, role)).thenReturn(refreshToken);
+        when(authService.createAccessToken(username)).thenReturn(accessToken);
+        when(authService.createRefreshToken(username)).thenReturn(refreshToken);
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         when(authService.createRefreshTokenCookie(refreshToken)).thenReturn(refreshTokenCookie);
 
