@@ -18,9 +18,9 @@ import aurora.carevisionapiserver.global.auth.exception.AuthException;
 import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.auth.util.JWTUtil;
+import aurora.carevisionapiserver.global.auth.util.RefreshTokenValidator;
 import aurora.carevisionapiserver.global.auth.util.TokenGenerator;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
-import aurora.carevisionapiserver.global.util.validation.validator.RefreshTokenValidator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -82,7 +82,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public TokenResponse handleReissue(String refreshToken) {
-        refreshTokenValidator.checkIfTokenNull(refreshToken);
         refreshTokenValidator.validateToken(refreshToken);
         refreshTokenValidator.validateTokenOwnerId(refreshToken);
 
@@ -96,7 +95,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(Long id, String refreshToken) {
-        refreshTokenValidator.checkIfTokenNull(refreshToken);
         refreshTokenValidator.validateToken(refreshToken);
         refreshTokenValidator.validateTokenOwnerId(refreshToken);
 
