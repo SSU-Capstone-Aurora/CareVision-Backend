@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository
-public class CameraRepositoryCustomImpl implements CameraRepositoryCustom {
+public class CustomCameraRepositoryImpl implements CustomCameraRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override

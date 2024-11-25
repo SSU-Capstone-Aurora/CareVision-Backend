@@ -4,6 +4,6 @@ import java.util.List;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 
-public interface CameraRepositoryCustom {
+public interface CustomCameraRepository {
     List<Camera> sortByBedInfo(long adminId, long departmentId);
 }
