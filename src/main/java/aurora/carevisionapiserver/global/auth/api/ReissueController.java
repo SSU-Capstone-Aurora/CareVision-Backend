@@ -37,7 +37,7 @@ public class ReissueController {
     @GetMapping("/api/admin/reissue")
     public BaseResponse<LoginResponse> reissueForAdmin(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @ExtractToken String refreshToken) {
+            @Parameter(hidden = true) @ExtractToken String refreshToken) {
         LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
@@ -52,7 +52,7 @@ public class ReissueController {
     @GetMapping("/api/reissue")
     public BaseResponse<LoginResponse> reissueForNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Nurse nurse,
-            @ExtractToken String refreshToken) {
+            @Parameter(hidden = true) @ExtractToken String refreshToken) {
         LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
