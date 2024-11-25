@@ -95,5 +95,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logout(Long id, String refreshToken) {}
+    public void logout(Long id, String refreshToken) {
+        refreshTokenValidator.checkIfTokenNull(refreshToken);
+        refreshTokenValidator.validateToken(refreshToken);
+        refreshTokenValidator.validateTokenOwnerId(refreshToken);
+
+        // 이전 refresh token 삭제
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+
+        // TODO : 블랙 리스트 구현
+    }
 }

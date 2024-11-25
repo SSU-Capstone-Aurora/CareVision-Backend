@@ -21,5 +21,4 @@ public interface AuthService {
     TokenResponse handleReissue(String authorizationHeader);
 
     void logout(Long id, String refreshToken);
-
 }
