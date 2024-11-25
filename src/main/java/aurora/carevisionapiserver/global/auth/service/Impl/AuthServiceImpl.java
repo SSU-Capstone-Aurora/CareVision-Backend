@@ -1,31 +1,25 @@
 package aurora.carevisionapiserver.global.auth.service.Impl;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
-import aurora.carevisionapiserver.global.auth.converter.AuthConverter;
-import aurora.carevisionapiserver.global.auth.domain.RefreshToken;
 import aurora.carevisionapiserver.global.auth.domain.Role;
-import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
 import aurora.carevisionapiserver.global.auth.exception.AuthException;
 import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.auth.util.JWTUtil;
+import aurora.carevisionapiserver.global.auth.util.RefreshTokenValidator;
+import aurora.carevisionapiserver.global.auth.util.TokenGenerator;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -33,19 +27,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private static final String BEARER_PREFIX = "Bearer ";
-
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AdminRepository adminRepository;
     private final NurseRepository nurseRepository;
-
-    @Value("${jwt.refresh-expiration-time}")
-    private long refreshExpirationTime;
-
-    @Value("${jwt.access-expiration-time}")
-    private long accessExpirationTime;
+    private final RefreshTokenValidator refreshTokenValidator;
+    private final TokenGenerator tokenGenerator;
 
     @Override
     public Optional<Authentication> authenticate(String username, String password) {
@@ -59,40 +47,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional
-    public String createAccessToken(String username, String role) {
-        return jwtUtil.createJwt("access", username, accessExpirationTime);
-    }
-
-    @Override
-    @Transactional
-    public String createRefreshToken(String username, String role) {
-        String refreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
-        saveRefreshToken(username, refreshToken, refreshExpirationTime);
-        return refreshToken;
-    }
-
-    @Override
-    @Transactional
-    public void saveRefreshToken(String username, String refreshToken, long expiredMs) {
-        Date expiration = new Date(System.currentTimeMillis() + expiredMs);
-        RefreshToken newRefreshToken =
-                RefreshToken.builder()
-                        .username(username)
-                        .refreshToken(refreshToken)
-                        .expiration(expiration.toString())
-                        .build();
-        refreshTokenRepository.save(newRefreshToken);
-    }
-
-    @Override
-    public String getCurrentUserRole() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        return auth.getAuthority();
+    public TokenResponse generateTokens(String username) {
+        return tokenGenerator.generate(username);
     }
 
     @Override
@@ -124,41 +80,27 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponse handleReissue(String refreshToken) {
-        if (refreshToken == null) {
-            throw new AuthException(ErrorStatus.REFRESH_TOKEN_NULL);
-        }
+    @Transactional
+    public TokenResponse handleReissue(String refreshToken) {
+        refreshTokenValidator.validateToken(refreshToken);
+        refreshTokenValidator.validateTokenOwnerId(refreshToken);
+
+        // 이전 refresh token 삭제
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
 
         String username = jwtUtil.getId(refreshToken);
 
-        try {
-            refreshTokenRepository
-                    .findByUsername(username)
-                    .orElseThrow(() -> new AuthException(ErrorStatus.INVALID_REFRESH_TOKEN));
-        } catch (AuthException e) {
-            throw new AuthException(ErrorStatus.INVALID_CREDENTIALS);
-        }
-
-        // 이전 refresh token 삭제
-        refreshTokenRepository.deleteByUsername(username);
-
-        String newRefreshToken = jwtUtil.createJwt("refresh", username, refreshExpirationTime);
-        String newAccessToken = jwtUtil.createJwt("access", username, refreshExpirationTime);
-
-        // refresh token 업데이트
-        addRefreshToken(username, newRefreshToken, refreshExpirationTime);
-
-        return AuthConverter.toLoginResponse(newAccessToken, newRefreshToken);
+        return tokenGenerator.generate(username);
     }
 
-    public void addRefreshToken(String username, String refreshToken, long expiredMs) {
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-        RefreshToken newRefreshToken =
-                RefreshToken.builder()
-                        .username(username)
-                        .refreshToken(refreshToken)
-                        .expiration(date.toString())
-                        .build();
-        refreshTokenRepository.save(newRefreshToken);
+    @Override
+    public void logout(Long id, String refreshToken) {
+        refreshTokenValidator.validateToken(refreshToken);
+        refreshTokenValidator.validateTokenOwnerId(refreshToken);
+
+        // 이전 refresh token 삭제
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+
+        // TODO : 블랙 리스트 구현
     }
 }

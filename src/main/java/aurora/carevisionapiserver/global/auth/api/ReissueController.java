@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
@@ -35,11 +35,11 @@ public class ReissueController {
     })
     @RefreshTokenApiResponse
     @GetMapping("/api/admin/reissue")
-    public BaseResponse<LoginResponse> reissueForAdmin(
+    public BaseResponse<TokenResponse> reissueForAdmin(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @ExtractToken String refreshToken) {
-        LoginResponse loginResponse = authService.handleReissue(refreshToken);
-        return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
+            @Parameter(hidden = true) @ExtractToken String refreshToken) {
+        TokenResponse tokenResponse = authService.handleReissue(refreshToken);
+        return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, tokenResponse);
     }
 
     @Operation(
@@ -50,10 +50,10 @@ public class ReissueController {
     })
     @RefreshTokenApiResponse
     @GetMapping("/api/reissue")
-    public BaseResponse<LoginResponse> reissueForNurse(
+    public BaseResponse<TokenResponse> reissueForNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Nurse nurse,
-            @ExtractToken String refreshToken) {
-        LoginResponse loginResponse = authService.handleReissue(refreshToken);
-        return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
+            @Parameter(hidden = true) @ExtractToken String refreshToken) {
+        TokenResponse tokenResponse = authService.handleReissue(refreshToken);
+        return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, tokenResponse);
     }
 }

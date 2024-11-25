@@ -5,18 +5,12 @@ import java.util.Optional;
 import org.springframework.security.core.Authentication;
 
 import aurora.carevisionapiserver.global.auth.domain.Role;
-import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
 
 public interface AuthService {
     Optional<Authentication> authenticate(String username, String password);
 
-    String createAccessToken(String username, String role);
-
-    String createRefreshToken(String username, String role);
-
-    void saveRefreshToken(String username, String refreshToken, long expiredMs);
-
-    String getCurrentUserRole();
+    TokenResponse generateTokens(String username);
 
     void validateUsername(String username);
 
@@ -24,5 +18,7 @@ public interface AuthService {
 
     void validateUsername(String username, Role role);
 
-    LoginResponse handleReissue(String authorizationHeader);
+    TokenResponse handleReissue(String authorizationHeader);
+
+    void logout(Long id, String refreshToken);
 }

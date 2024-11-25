@@ -1,9 +1,9 @@
 package aurora.carevisionapiserver.global.auth.converter;
 
-import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
 
 public class AuthConverter {
-    public static LoginResponse toLoginResponse(String accessToken, String refreshToken) {
-        return LoginResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    public static TokenResponse toTokenResponse(String accessToken, String refreshToken) {
+        return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 }

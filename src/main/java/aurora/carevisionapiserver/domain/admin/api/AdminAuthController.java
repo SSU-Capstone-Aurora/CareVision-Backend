@@ -1,10 +1,9 @@
 package aurora.carevisionapiserver.domain.admin.api;
 
-import static aurora.carevisionapiserver.global.auth.converter.AuthConverter.toLoginResponse;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +21,15 @@ import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.Ho
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
-import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
+import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
+import aurora.carevisionapiserver.global.security.handler.annotation.ExtractToken;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -87,7 +89,7 @@ public class AdminAuthController {
         @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
     })
     @PostMapping("/login")
-    public BaseResponse<LoginResponse> login(@RequestBody LoginRequest adminLoginRequest) {
+    public BaseResponse<TokenResponse> login(@RequestBody LoginRequest adminLoginRequest) {
 
         String username = adminLoginRequest.getUsername();
 
@@ -96,18 +98,26 @@ public class AdminAuthController {
         String password = adminLoginRequest.getPassword();
         return authService
                 .authenticate(username, password)
-                .map(
-                        authentication -> {
-                            String accessToken = authService.createAccessToken(username, "ADMIN");
-                            String refreshToken = authService.createRefreshToken(username, "ADMIN");
-
-                            return BaseResponse.onSuccess(
-                                    toLoginResponse(accessToken, refreshToken));
-                        })
+                .map(authentication -> BaseResponse.onSuccess(authService.generateTokens(username)))
                 .orElse(
                         BaseResponse.onFailure(
                                 ErrorStatus.INVALID_CREDENTIALS.getCode(),
                                 ErrorStatus.INVALID_CREDENTIALS.getMessage(),
                                 null));
+    }
+
+    @Operation(
+            summary = "관리자 로그아웃 API",
+            description = "관리자가 서비스에 로그아웃합니다. DB에 있는 리프레시 토큰 삭제를 위해 refresh 토큰을 받습니다._예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
+        @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
+    })
+    @PostMapping("/logout")
+    public BaseResponse<TokenResponse> logout(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @RequestHeader("refreshToken") @ExtractToken String refreshToken) {
+        authService.logout(admin.getId(), refreshToken);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 }
