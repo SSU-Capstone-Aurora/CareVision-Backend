@@ -4,6 +4,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,11 @@ import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
+import aurora.carevisionapiserver.global.security.handler.annotation.ExtractToken;
 import aurora.carevisionapiserver.global.util.validation.annotation.IsActivateNurse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -110,5 +114,20 @@ public class NurseAuthController {
                                 ErrorStatus.INVALID_CREDENTIALS.getCode(),
                                 ErrorStatus.INVALID_CREDENTIALS.getMessage(),
                                 null));
+    }
+
+    @Operation(
+            summary = "간호사 로그아웃 API",
+            description = "간호사가 서비스에 로그아웃합니다. DB에 있는 리프레시 토큰 삭제를 위해 refresh 토큰을 받습니다._예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
+        @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
+    })
+    @PostMapping("/logout")
+    public BaseResponse<TokenResponse> logout(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestHeader("refreshToken") @ExtractToken String refreshToken) {
+        authService.logout(nurse.getId(), refreshToken);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
     }
 }
