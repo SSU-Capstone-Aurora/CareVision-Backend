@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.validation.annotation.IsActivateNurse;
 import lombok.RequiredArgsConstructor;
 

@@ -15,8 +15,8 @@ import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalIdentifierResponse;
 import aurora.carevisionapiserver.domain.hospital.dto.response.HospitalResponse.HospitalListResponse;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
-import aurora.carevisionapiserver.global.error.BaseResponse;
-import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.response.BaseResponse;
+import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

@@ -1,9 +1,9 @@
-package aurora.carevisionapiserver.global.error.code.status;
+package aurora.carevisionapiserver.global.response.code.status;
 
 import org.springframework.http.HttpStatus;
 
-import aurora.carevisionapiserver.global.error.code.BaseCode;
-import aurora.carevisionapiserver.global.error.code.ReasonDTO;
+import aurora.carevisionapiserver.global.response.code.BaseCode;
+import aurora.carevisionapiserver.global.response.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

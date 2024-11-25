@@ -12,7 +12,7 @@ import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetailsAdmin;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetailsNurse;
 import aurora.carevisionapiserver.global.auth.exception.AuthException;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
