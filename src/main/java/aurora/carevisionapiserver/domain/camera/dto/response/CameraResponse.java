@@ -33,8 +33,17 @@ public class CameraResponse {
 
     @Getter
     @Builder
-    public static class StreamingInfoListResponse {
-        List<StreamingInfoResponse> streamingInfoList;
+    public static class StreamingResponse {
+        long patientId;
+        String thumbnail;
+        String patientName;
+        BedInfoResponse bedInfo;
+    }
+
+    @Getter
+    @Builder
+    public static class StreamingListResponse {
+        List<StreamingResponse> streamingResponse;
         Long totalCount;
     }
 }
