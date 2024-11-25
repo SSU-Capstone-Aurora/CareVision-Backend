@@ -23,7 +23,6 @@ import com.google.firebase.messaging.Message;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.fcm.converter.AlarmConverter;
 import aurora.carevisionapiserver.global.fcm.converter.ClientTokenConverter;
 import aurora.carevisionapiserver.global.fcm.domain.ClientToken;
@@ -34,6 +33,7 @@ import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
 import aurora.carevisionapiserver.global.fcm.exception.FcmException;
 import aurora.carevisionapiserver.global.fcm.repository.ClientTokenRepository;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.TimeAgoUtil;
 import aurora.carevisionapiserver.global.util.TimeConverter;
 import lombok.RequiredArgsConstructor;
