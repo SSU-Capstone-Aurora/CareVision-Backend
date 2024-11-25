@@ -18,6 +18,7 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseSig
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.auth.converter.AuthConverter;
+import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
 import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
@@ -96,6 +97,8 @@ public class NurseAuthController {
 
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
+
+        authService.validateUsername(username, Role.NURSE);
 
         return authService
                 .authenticate(username, password)

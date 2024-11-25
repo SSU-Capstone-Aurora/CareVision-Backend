@@ -1,12 +1,11 @@
 package aurora.carevisionapiserver.global.auth.api;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.LoginResponse;
 import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.error.BaseResponse;
@@ -28,37 +27,32 @@ import lombok.RequiredArgsConstructor;
 public class ReissueController {
     private final AuthService authService;
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
     @Operation(
-            summary = "관리자 refresh 토큰 재발급 API",
-            description = "refresh 토큰이 만료된 경우 refresh 토큰과 access 토큰을 body에 재발급합니다_예림")
+            summary = "관리자 refresh 및 access 토큰 재발급 API",
+            description = "refresh token과 access 토큰을 body에 재발급합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @RefreshTokenApiResponse
-    @PostMapping("/api/admin/reissue")
+    @GetMapping("/api/admin/reissue")
     public BaseResponse<LoginResponse> reissueForAdmin(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            HttpServletRequest request) {
-        String role = authService.getCurrentUserRole();
-        String refreshToken = request.getHeader(AUTHORIZATION_HEADER);
-        System.out.println("눈물 차올라~" + role + refreshToken);
+            @ExtractToken String refreshToken) {
         LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
 
     @Operation(
-            summary = "간호사 refresh 토큰 재발급 API",
-            description = "refresh 토큰이 만료된 경우 refresh 토큰과 access 토큰을 body에 재발급합니다_예림")
+            summary = "간호사 refresh 및 access 토큰 재발급 API",
+            description = "refresh token과 access 토큰을 body에 재발급합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @RefreshTokenApiResponse
-    @PostMapping("/api/reissue")
+    @GetMapping("/api/reissue")
     public BaseResponse<LoginResponse> reissueForNurse(
-            @Parameter(hidden = true) @ExtractToken String refreshToken) {
-        //        String role = authService.getCurrentUserRole();
+            @Parameter(name = "admin", hidden = true) @AuthUser Nurse nurse,
+            @ExtractToken String refreshToken) {
         LoginResponse loginResponse = authService.handleReissue(refreshToken);
         return BaseResponse.of(SuccessStatus.REFRESH_TOKEN_ISSUED, loginResponse);
     }
