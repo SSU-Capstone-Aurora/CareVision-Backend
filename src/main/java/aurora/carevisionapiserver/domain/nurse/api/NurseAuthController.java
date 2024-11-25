@@ -106,9 +106,7 @@ public class NurseAuthController {
         return authService
                 .authenticate(username, password)
                 .map(
-                        authentication -> {
-                            return BaseResponse.onSuccess(authService.generateTokens(username));
-                        })
+                        authentication -> BaseResponse.onSuccess(authService.generateTokens(username)))
                 .orElse(
                         BaseResponse.onFailure(
                                 ErrorStatus.INVALID_CREDENTIALS.getCode(),
