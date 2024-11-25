@@ -8,7 +8,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import aurora.carevisionapiserver.global.auth.exception.AuthException;
-import aurora.carevisionapiserver.global.auth.util.JWTUtil;
 import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.ExtractToken;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final JWTUtil jwtUtil;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -37,7 +34,6 @@ public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolv
             throw new AuthException(ErrorStatus.UNAUTHORIZED_REQUEST);
         }
 
-        String token = authorizationHeader.substring(7);
-        return token;
+        return authorizationHeader.substring(7);
     }
 }
