@@ -42,7 +42,7 @@ public class CameraController {
     public BaseResponse<StreamingInfoResponse> getStreamingInfo(
             @PathVariable(name = "patientId") Long patientId) {
         Patient patient = patientService.getPatient(patientId);
-        String cameraUrl = cameraService.getStreamingUrl(patientId);
+        String cameraUrl = cameraService.getStreamingUrl(patient);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toStreamingInfoResponse(cameraUrl, patient));
     }
