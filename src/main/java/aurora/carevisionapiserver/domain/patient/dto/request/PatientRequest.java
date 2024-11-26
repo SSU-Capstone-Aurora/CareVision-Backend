@@ -35,4 +35,12 @@ public class PatientRequest {
     public static class PatientSelectRequest {
         private Long patientId;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PatientCodeRequest {
+        private String code;
+    }
 }

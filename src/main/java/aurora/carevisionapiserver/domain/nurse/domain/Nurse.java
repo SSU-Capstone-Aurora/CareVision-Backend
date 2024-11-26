@@ -11,6 +11,7 @@ import org.hibernate.annotations.SQLRestriction;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.auth.domain.Role;
+import aurora.carevisionapiserver.global.auth.domain.User;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE nurse SET deleted_at = NOW() WHERE nurse_id = ?")
-public class Nurse extends BaseEntity {
+public class Nurse extends BaseEntity implements User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

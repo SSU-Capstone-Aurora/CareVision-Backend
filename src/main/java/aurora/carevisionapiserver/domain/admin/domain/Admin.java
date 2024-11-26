@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.global.auth.domain.Role;
+import aurora.carevisionapiserver.global.auth.domain.User;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "admin")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Admin extends BaseEntity {
+public class Admin extends BaseEntity implements User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -30,4 +30,6 @@ public interface PatientService {
             Admin admin);
 
     List<Patient> getUnlinkedPatients(Nurse nurse);
+
+    String getPatientNameByCode(String patientCode);
 }

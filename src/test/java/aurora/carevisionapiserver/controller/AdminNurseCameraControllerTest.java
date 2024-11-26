@@ -24,7 +24,7 @@ import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 @WebMvcTest(AdminCameraController.class)
-class AdminCameraControllerTest {
+class AdminNurseCameraControllerTest {
 
     @MockBean private CameraService cameraService;
     @Autowired private MockMvc mockMvc;

@@ -42,4 +42,10 @@ public class PatientResponse {
         private List<PatientProfileResponse> patients;
         private int count;
     }
+
+    @Builder
+    @Getter
+    public static class PatientNameResponse {
+        private String name;
+    }
 }

@@ -9,6 +9,7 @@ import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientNameResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
@@ -65,5 +66,9 @@ public class PatientConverter {
                         .build();
         bed.registerPatient(patient);
         return patient;
+    }
+
+    public static PatientNameResponse toPatientNameResponse(String name) {
+        return PatientNameResponse.builder().name(name).build();
     }
 }
