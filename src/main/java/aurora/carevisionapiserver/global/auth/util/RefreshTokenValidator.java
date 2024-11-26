@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import aurora.carevisionapiserver.global.auth.exception.AuthException;
 import aurora.carevisionapiserver.global.auth.repository.RefreshTokenRepository;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

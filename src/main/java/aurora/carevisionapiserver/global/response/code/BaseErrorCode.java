@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.error.code;
+package aurora.carevisionapiserver.global.response.code;
 
 public interface BaseErrorCode {
 

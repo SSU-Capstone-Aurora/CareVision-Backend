@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.error.exception;
+package aurora.carevisionapiserver.global.response.exception;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,9 +18,9 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import aurora.carevisionapiserver.global.error.BaseResponse;
-import aurora.carevisionapiserver.global.error.code.ErrorReasonDTO;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.BaseResponse;
+import aurora.carevisionapiserver.global.response.code.ErrorReasonDTO;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

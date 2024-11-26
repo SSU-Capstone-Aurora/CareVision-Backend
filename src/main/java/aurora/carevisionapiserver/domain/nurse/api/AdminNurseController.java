@@ -19,8 +19,8 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseReg
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
-import aurora.carevisionapiserver.global.error.BaseResponse;
-import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.response.BaseResponse;
+import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
 import aurora.carevisionapiserver.global.security.handler.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

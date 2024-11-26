@@ -20,8 +20,8 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetailsAdmin;
 import aurora.carevisionapiserver.global.auth.domain.CustomUserDetailsNurse;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
-import aurora.carevisionapiserver.global.error.exception.GeneralException;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 
 @Component

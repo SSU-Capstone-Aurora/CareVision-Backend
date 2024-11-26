@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingListResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
-import aurora.carevisionapiserver.global.error.BaseResponse;
-import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.response.BaseResponse;
+import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,11 +55,11 @@ public class CameraController {
         @ApiResponse(responseCode = "CAMERA400", description = "NOT FOUND, 카메라를 찾을 수 없습니다.")
     })
     @GetMapping("/streaming")
-    public BaseResponse<StreamingInfoListResponse> getStreamingInfoList(
+    public BaseResponse<StreamingListResponse> getStreamingInfoList(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
         List<Patient> patients = patientService.getPatients(nurse);
         Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients);
         return BaseResponse.of(
-                SuccessStatus._OK, CameraConverter.toStreamingInfoListResponse(streamingInfo));
+                SuccessStatus._OK, CameraConverter.toStreamingListResponse(streamingInfo));
     }
 }

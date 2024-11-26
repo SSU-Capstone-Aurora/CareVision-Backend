@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoResponse;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingResponse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 public class CameraConverter {
@@ -40,18 +41,26 @@ public class CameraConverter {
                 .build();
     }
 
-    public static StreamingInfoListResponse toStreamingInfoListResponse(
-            Map<Patient, String> streamingInfos) {
-        return StreamingInfoListResponse.builder()
-                .streamingInfoList(
-                        streamingInfos.entrySet().stream()
-                                .map(
-                                        streamingInfo ->
-                                                toStreamingInfoResponse(
-                                                        streamingInfo.getValue(),
-                                                        streamingInfo.getKey()))
-                                .collect(Collectors.toList()))
-                .totalCount((long) streamingInfos.size())
+    public static StreamingListResponse toStreamingListResponse(
+            Map<Patient, String> streamingInfo) {
+
+        List<StreamingResponse> responses =
+                streamingInfo.entrySet().stream()
+                        .map(entry -> toStreamingResponse(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.toList());
+
+        return StreamingListResponse.builder()
+                .streamingResponse(responses)
+                .totalCount((long) responses.size())
+                .build();
+    }
+
+    private static StreamingResponse toStreamingResponse(Patient patient, String thumbnail) {
+        return StreamingResponse.builder()
+                .patientId(patient.getId())
+                .patientName(patient.getName())
+                .thumbnail(thumbnail)
+                .bedInfo(toBedInfoResponse(patient.getBed()))
                 .build();
     }
 }
