@@ -69,15 +69,12 @@ public class CameraServiceImpl implements CameraService {
 
     @Override
     public Map<Patient, String> getStreamingInfo(List<Patient> patients) {
-        return patients.stream()
-                .collect(
-                        Collectors.toMap(
-                                patient -> patient, patient -> getThumbnail(patient.getId())));
+        return patients.stream().collect(Collectors.toMap(patient -> patient, this::getThumbnail));
     }
 
-    private String getThumbnail(Long patientId) {
-        String rtspUrl = getStreamingUrl(patientId);
-
+    private String getThumbnail(Patient patient) {
+        String rtspUrl = getStreamingUrl(patient);
+        Long patientId = patient.getId();
         URI requestUrl = UriFormatter.getThumbnailUrl(rtspUrl, patientId.toString());
         if (requestUrl == null) {
             return s3Service.getRecentImage(patientId);

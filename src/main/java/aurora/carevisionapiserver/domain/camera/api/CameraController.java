@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingListResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
