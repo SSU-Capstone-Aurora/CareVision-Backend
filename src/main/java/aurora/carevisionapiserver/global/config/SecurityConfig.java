@@ -80,7 +80,7 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers(allowedUrls)
                                 .permitAll()
-                                .requestMatchers("/api/cameras/unlinked")
+                                .requestMatchers("/api/cameras/unlinked", "/api/patients/name")
                                 .hasAnyRole("ADMIN", "NURSE")
                                 .requestMatchers("/api/admin/**")
                                 .hasRole("ADMIN")

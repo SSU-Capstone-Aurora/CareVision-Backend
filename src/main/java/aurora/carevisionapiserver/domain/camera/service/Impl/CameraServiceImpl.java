@@ -17,9 +17,9 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.repository.CameraRepository;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.exception.CameraException;
+import aurora.carevisionapiserver.global.auth.domain.User;
 import aurora.carevisionapiserver.global.auth.service.S3Service;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.UriFormatter;
@@ -42,9 +42,9 @@ public class CameraServiceImpl implements CameraService {
         return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment().getId());
     }
 
-    public List<Camera> getCameraInfoUnlinkedToPatient(Nurse nurse) {
+    public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
         return cameraRepository.findCamerasUnlinkedToPatientSortedByBed(
-                nurse.getDepartment().getId());
+                user.getDepartment().getId());
     }
 
     @Override

@@ -21,6 +21,7 @@ import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.util.PatientNameUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -111,6 +112,11 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<Patient> getUnlinkedPatients(Nurse nurse) {
         return patientRepository.findUnlinkedPatientsByNurse(nurse);
+    }
+
+    @Override
+    public String getPatientNameByCode(String patientCode) {
+        return PatientNameUtil.generateRandomName(patientCode);
     }
 
     public Patient getPatient(Long patientId) {
