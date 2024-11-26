@@ -67,6 +67,14 @@ dependencies {
 
     //firebase
     implementation 'com.google.firebase:firebase-admin:9.1.0'
+
+    //aws
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'org.apache.commons:commons-io:2.11.0'
+
+    //json
+    implementation 'org.json:json:20230227'
+
 }
 
 def querydslSrcDir = 'src/main/generated'

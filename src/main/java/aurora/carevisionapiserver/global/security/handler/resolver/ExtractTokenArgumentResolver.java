@@ -8,7 +8,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import aurora.carevisionapiserver.global.auth.exception.AuthException;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.ExtractToken;
 import lombok.RequiredArgsConstructor;
 

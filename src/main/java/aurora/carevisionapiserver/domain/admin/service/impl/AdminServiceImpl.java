@@ -12,7 +12,7 @@ import aurora.carevisionapiserver.domain.admin.exception.AdminException;
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service

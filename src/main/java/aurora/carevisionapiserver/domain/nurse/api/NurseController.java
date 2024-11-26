@@ -25,10 +25,10 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientSelectRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
-import aurora.carevisionapiserver.global.error.BaseResponse;
-import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
+import aurora.carevisionapiserver.global.response.BaseResponse;
+import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
 import aurora.carevisionapiserver.global.security.handler.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

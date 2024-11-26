@@ -20,7 +20,7 @@ import aurora.carevisionapiserver.global.auth.service.AuthService;
 import aurora.carevisionapiserver.global.auth.util.JWTUtil;
 import aurora.carevisionapiserver.global.auth.util.RefreshTokenValidator;
 import aurora.carevisionapiserver.global.auth.util.TokenGenerator;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service

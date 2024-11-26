@@ -23,7 +23,7 @@ import aurora.carevisionapiserver.domain.hospital.exception.HospitalException;
 import aurora.carevisionapiserver.domain.hospital.repository.DepartmentRepository;
 import aurora.carevisionapiserver.domain.hospital.repository.HospitalRepository;
 import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
-import aurora.carevisionapiserver.global.error.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.ApiExplorer;
 import lombok.RequiredArgsConstructor;
 

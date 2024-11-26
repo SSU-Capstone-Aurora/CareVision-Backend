@@ -1,11 +1,11 @@
-package aurora.carevisionapiserver.global.error;
+package aurora.carevisionapiserver.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import aurora.carevisionapiserver.global.error.code.BaseCode;
-import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.response.code.BaseCode;
+import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

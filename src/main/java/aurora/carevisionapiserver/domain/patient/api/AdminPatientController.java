@@ -17,8 +17,8 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
-import aurora.carevisionapiserver.global.error.BaseResponse;
-import aurora.carevisionapiserver.global.error.code.status.SuccessStatus;
+import aurora.carevisionapiserver.global.response.BaseResponse;
+import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
 import aurora.carevisionapiserver.global.security.handler.annotation.RefreshTokenApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

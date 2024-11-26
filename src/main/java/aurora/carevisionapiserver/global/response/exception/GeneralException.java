@@ -1,7 +1,7 @@
-package aurora.carevisionapiserver.global.error.exception;
+package aurora.carevisionapiserver.global.response.exception;
 
-import aurora.carevisionapiserver.global.error.code.BaseErrorCode;
-import aurora.carevisionapiserver.global.error.code.ErrorReasonDTO;
+import aurora.carevisionapiserver.global.response.code.BaseErrorCode;
+import aurora.carevisionapiserver.global.response.code.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
