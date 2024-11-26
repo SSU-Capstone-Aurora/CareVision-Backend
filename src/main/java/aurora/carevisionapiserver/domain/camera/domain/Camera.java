@@ -21,8 +21,7 @@ public class Camera extends BaseEntity {
     private String ip;
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bed_id")
+    @OneToOne(mappedBy = "camera", cascade = CascadeType.ALL, orphanRemoval = true)
     private Bed bed;
 
     @Builder

@@ -30,7 +30,8 @@ public class Bed extends BaseEntity {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-    @OneToOne(mappedBy = "bed", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "camera_id")
     private Camera camera;
 
     @ManyToOne(fetch = FetchType.LAZY)
