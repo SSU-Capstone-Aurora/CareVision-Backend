@@ -32,6 +32,7 @@ public class SecurityConfig {
         "/api/admin/departments",
         "/api/admin/hospitals",
         "/api/login",
+        "api/fcm/alarm/**",
         "/health",
         "/error",
         "/swagger-ui/**",
