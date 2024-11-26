@@ -27,9 +27,9 @@ public class CameraConverter {
     public static CameraInfoResponse toCameraInfoResponse(Camera camera) {
         return CameraInfoResponse.builder()
                 .cameraId(camera.getId())
-                .inpatientWardNumber(camera.getPatient().getBed().getInpatientWardNumber())
-                .patientRoomNumber(camera.getPatient().getBed().getPatientRoomNumber())
-                .bedNumber(camera.getPatient().getBed().getBedNumber())
+                .inpatientWardNumber(camera.getBed().getInpatientWardNumber())
+                .patientRoomNumber(camera.getBed().getPatientRoomNumber())
+                .bedNumber(camera.getBed().getBedNumber())
                 .build();
     }
 

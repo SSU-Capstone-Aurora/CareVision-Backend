@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
+import aurora.carevisionapiserver.domain.camera.domain.Camera;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingListResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
@@ -42,7 +44,7 @@ public class CameraController {
     public BaseResponse<StreamingInfoResponse> getStreamingInfo(
             @PathVariable(name = "patientId") Long patientId) {
         Patient patient = patientService.getPatient(patientId);
-        String cameraUrl = cameraService.getStreamingUrl(patientId);
+        String cameraUrl = cameraService.getStreamingUrl(patient);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toStreamingInfoResponse(cameraUrl, patient));
     }
@@ -61,5 +63,17 @@ public class CameraController {
         Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toStreamingListResponse(streamingInfo));
+    }
+
+    @Operation(summary = "환자와 연결되지 않은 카메라 목록 조회 API", description = "환자와 연결되지 않은 카메라 목록 조회합니다_예림")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
+    })
+    @GetMapping("/unlinked")
+    public BaseResponse<CameraResponse.CameraInfoListResponse> getUnlinkedCameras(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
+        List<Camera> cameras = cameraService.getCameraInfoUnlinkedToPatient(nurse);
+        return BaseResponse.of(
+                SuccessStatus._OK, CameraConverter.toCameraInfoListResponse(cameras));
     }
 }

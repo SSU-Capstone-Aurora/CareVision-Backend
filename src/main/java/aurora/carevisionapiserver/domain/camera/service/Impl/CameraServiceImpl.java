@@ -17,6 +17,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.repository.CameraRepository;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
+import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.exception.CameraException;
 import aurora.carevisionapiserver.global.auth.service.S3Service;
@@ -37,15 +38,19 @@ public class CameraServiceImpl implements CameraService {
 
     private final CameraRepository cameraRepository;
 
-    public List<Camera> getCameras(Admin admin) {
-        return cameraRepository.sortByBedInfo(
-                admin.getDepartment().getHospital().getId(), admin.getDepartment().getId());
+    public List<Camera> getAllCameraInfo(Admin admin) {
+        return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment().getId());
+    }
+
+    public List<Camera> getCameraInfoUnlinkedToPatient(Nurse nurse) {
+        return cameraRepository.findCamerasUnlinkedToPatientSortedByBed(
+                nurse.getDepartment().getId());
     }
 
     @Override
     @Transactional
     public void connectPatient(Camera camera, Patient patient) {
-        camera.registerPatient(patient);
+        camera.getBed().registerPatient(patient);
     }
 
     @Override
@@ -56,23 +61,20 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public String getStreamingUrl(Long patientId) {
-        List<String> cameraInfo = getCameraInfo(patientId);
+    public String getStreamingUrl(Patient patient) {
+        List<String> cameraInfo = getCameraInfoLinkedToPatient(patient);
         return String.format(
                 urlFormat, cameraInfo.get(CAMERA_IP_INDEX), cameraInfo.get(CAMERA_PW_INDEX));
     }
 
     @Override
     public Map<Patient, String> getStreamingInfo(List<Patient> patients) {
-        return patients.stream()
-                .collect(
-                        Collectors.toMap(
-                                patient -> patient, patient -> getThumbnail(patient.getId())));
+        return patients.stream().collect(Collectors.toMap(patient -> patient, this::getThumbnail));
     }
 
-    private String getThumbnail(Long patientId) {
-        String rtspUrl = getStreamingUrl(patientId);
-
+    private String getThumbnail(Patient patient) {
+        String rtspUrl = getStreamingUrl(patient);
+        Long patientId = patient.getId();
         URI requestUrl = UriFormatter.getThumbnailUrl(rtspUrl, patientId.toString());
         if (requestUrl == null) {
             return s3Service.getRecentImage(patientId);
@@ -89,10 +91,10 @@ public class CameraServiceImpl implements CameraService {
         }
     }
 
-    private List<String> getCameraInfo(Long patientId) {
+    private List<String> getCameraInfoLinkedToPatient(Patient patient) {
         Camera camera =
                 cameraRepository
-                        .findByPatient_Id(patientId)
+                        .findByPatient(patient)
                         .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
         return List.of(camera.getIp(), camera.getPassword());
     }

@@ -2,6 +2,8 @@ package aurora.carevisionapiserver.domain.bed.domain;
 
 import jakarta.persistence.*;
 
+import aurora.carevisionapiserver.domain.camera.domain.Camera;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -28,18 +30,30 @@ public class Bed extends BaseEntity {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "camera_id")
+    private Camera camera;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
     @Builder
     public Bed(
             Long id,
             Long inpatientWardNumber,
             Long patientRoomNumber,
             Long bedNumber,
-            Patient patient) {
+            Patient patient,
+            Camera camera,
+            Department department) {
         this.id = id;
         this.inpatientWardNumber = inpatientWardNumber;
         this.patientRoomNumber = patientRoomNumber;
         this.bedNumber = bedNumber;
         this.patient = patient;
+        this.camera = camera;
+        this.department = department;
     }
 
     public void registerPatient(Patient patient) {

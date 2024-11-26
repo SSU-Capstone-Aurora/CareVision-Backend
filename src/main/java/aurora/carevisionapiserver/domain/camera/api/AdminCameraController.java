@@ -35,7 +35,7 @@ public class AdminCameraController {
     @GetMapping("")
     public BaseResponse<CameraInfoListResponse> getCameras(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
-        List<Camera> cameras = cameraService.getCameras(admin);
+        List<Camera> cameras = cameraService.getAllCameraInfo(admin);
         return BaseResponse.of(
                 SuccessStatus._OK, CameraConverter.toCameraInfoListResponse(cameras));
     }
