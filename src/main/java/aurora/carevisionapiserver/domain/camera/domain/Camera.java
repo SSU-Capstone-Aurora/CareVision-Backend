@@ -2,7 +2,7 @@ package aurora.carevisionapiserver.domain.camera.domain;
 
 import jakarta.persistence.*;
 
-import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,16 +22,14 @@ public class Camera extends BaseEntity {
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
+    @JoinColumn(name = "bed_id")
+    private Bed bed;
 
     @Builder
-    public Camera(String id, Patient patient) {
+    public Camera(String id, String ip, String password, Bed bed) {
         this.id = id;
-        this.patient = patient;
-    }
-
-    public void registerPatient(Patient patient) {
-        this.patient = patient;
+        this.ip = ip;
+        this.password = password;
+        this.bed = bed;
     }
 }
