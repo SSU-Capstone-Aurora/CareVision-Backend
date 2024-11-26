@@ -14,6 +14,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.auth.domain.User;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.response.exception.GeneralException;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
@@ -29,7 +30,8 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return (parameter.getParameterType().equals(Admin.class)
-                        || parameter.getParameterType().equals(Nurse.class))
+                        || parameter.getParameterType().equals(Nurse.class)
+                        || parameter.getParameterType().equals(User.class))
                 && parameter.hasParameterAnnotation(AuthUser.class);
     }
 
