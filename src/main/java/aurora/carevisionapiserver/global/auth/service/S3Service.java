@@ -45,9 +45,6 @@ public class S3Service {
         Date thresholdDate =
                 new Date(System.currentTimeMillis() - (daysOld * 24L * 60 * 60 * 1000));
 
-        if (objectSummaries.size() <= 1) {
-            return;
-        }
         for (S3ObjectSummary summary : objectSummaries) {
             if (summary.getLastModified().before(thresholdDate)) {
                 String objectKey = summary.getKey();
