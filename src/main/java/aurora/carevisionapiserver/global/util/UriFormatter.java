@@ -12,7 +12,7 @@ public class UriFormatter {
     @Value("${camera.thumbnail.url}")
     private String thumbnailUrl;
 
-    public URI getThumbnailUrl(String rtspUrl, String patientId) {
+    public URI requestThumbnailUrl(String rtspUrl, String patientId) {
         String encodedRtspUrl = URLEncoder.encode(rtspUrl, StandardCharsets.UTF_8);
         try {
             return new URI(thumbnailUrl + "?url=" + encodedRtspUrl + "&patient_id=" + patientId);
