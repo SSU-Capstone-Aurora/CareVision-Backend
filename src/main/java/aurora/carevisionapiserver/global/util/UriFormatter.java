@@ -5,12 +5,14 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UriFormatter {
     @Value("${camera.thumbnail.url}")
-    static String thumbnailUrl;
+    private String thumbnailUrl;
 
-    public static URI getThumbnailUrl(String rtspUrl, String patientId) {
+    public URI getThumbnailUrl(String rtspUrl, String patientId) {
         String encodedRtspUrl = URLEncoder.encode(rtspUrl, StandardCharsets.UTF_8);
         try {
             return new URI(thumbnailUrl + "?url=" + encodedRtspUrl + "&patient_id=" + patientId);

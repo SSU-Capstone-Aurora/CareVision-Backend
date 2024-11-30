@@ -32,6 +32,7 @@ public class CameraServiceImpl implements CameraService {
     private static final int CAMERA_PW_INDEX = 1;
     private static final String S3_KEY = "s3_url";
     private final S3Service s3Service;
+    private final UriFormatter uriFormatter;
 
     @Value("${camera.streaming.url}")
     String urlFormat;
@@ -75,7 +76,7 @@ public class CameraServiceImpl implements CameraService {
     private String getThumbnail(Patient patient) {
         String rtspUrl = getStreamingUrl(patient);
         Long patientId = patient.getId();
-        URI requestUrl = UriFormatter.getThumbnailUrl(rtspUrl, patientId.toString());
+        URI requestUrl = uriFormatter.getThumbnailUrl(rtspUrl, patientId.toString());
         if (requestUrl == null) {
             return s3Service.getRecentImage(patientId);
         }
