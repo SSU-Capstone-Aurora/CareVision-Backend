@@ -20,4 +20,8 @@ public class UriFormatter {
             return null;
         }
     }
+
+    public String getThumbnailUrl(String bucket, String key) {
+        return String.format("https://%s.s3.amazonaws.com/%s", bucket, key);
+    }
 }
