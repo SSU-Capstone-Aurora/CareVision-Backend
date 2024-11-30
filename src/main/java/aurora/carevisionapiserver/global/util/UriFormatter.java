@@ -12,12 +12,16 @@ public class UriFormatter {
     @Value("${camera.thumbnail.url}")
     private String thumbnailUrl;
 
-    public URI getThumbnailUrl(String rtspUrl, String patientId) {
+    public URI requestThumbnailUrl(String rtspUrl, String patientId) {
         String encodedRtspUrl = URLEncoder.encode(rtspUrl, StandardCharsets.UTF_8);
         try {
             return new URI(thumbnailUrl + "?url=" + encodedRtspUrl + "&patient_id=" + patientId);
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String getThumbnailUrl(String bucket, String key) {
+        return String.format("https://%s.s3.amazonaws.com/%s", bucket, key);
     }
 }
