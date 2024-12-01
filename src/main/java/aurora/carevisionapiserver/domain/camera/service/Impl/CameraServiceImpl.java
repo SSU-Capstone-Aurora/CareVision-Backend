@@ -44,7 +44,7 @@ public class CameraServiceImpl implements CameraService {
     @Override
     @Transactional
     public void connectPatient(Camera camera, Patient patient) {
-        camera.getBed().registerPatient(patient);
+        patient.getBed().registerCamera(camera);
     }
 
     @Override

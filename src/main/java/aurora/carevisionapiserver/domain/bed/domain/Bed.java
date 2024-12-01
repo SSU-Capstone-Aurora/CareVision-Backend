@@ -59,4 +59,8 @@ public class Bed extends BaseEntity {
     public void registerPatient(Patient patient) {
         this.patient = patient;
     }
+
+    public void registerCamera(Camera camera) {
+        this.camera = camera;
+    }
 }
