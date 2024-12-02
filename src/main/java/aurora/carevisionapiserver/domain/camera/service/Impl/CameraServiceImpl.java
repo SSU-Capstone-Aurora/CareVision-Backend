@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -39,19 +37,6 @@ public class CameraServiceImpl implements CameraService {
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
         return cameraRepository.findCamerasUnlinkedToPatientSortedByBed(
                 user.getDepartment().getId());
-    }
-
-    @Override
-    @Transactional
-    public void connectPatient(Camera camera, Patient patient) {
-        patient.getBed().registerCamera(camera);
-    }
-
-    @Override
-    public Camera getCamera(String cameraId) {
-        return cameraRepository
-                .findById(cameraId)
-                .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
     }
 
     @Override
