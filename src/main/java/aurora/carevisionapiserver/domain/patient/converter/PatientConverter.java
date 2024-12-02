@@ -55,8 +55,10 @@ public class PatientConverter {
     }
 
     public static Patient toPatient(
-            PatientCreateRequest patientCreateRequest, Department department) {
-        Bed bed = BedConverter.toBed(patientCreateRequest.getBed(), department);
+            PatientCreateRequest patientCreateRequest, Bed bed, Department department) {
+        if (bed == null) {
+            bed = BedConverter.toBed(patientCreateRequest.getBed(), department);
+        }
         Patient patient =
                 Patient.builder()
                         .name(patientCreateRequest.getName())
