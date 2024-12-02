@@ -53,7 +53,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // Bed
     INVALID_BED_INFO(
             HttpStatus.BAD_REQUEST, "BED400", "잘못된 형식의 베드 정보입니다. '동 호 번' 또는 '호 번' 순서로 작성해 주세요."),
-
+    BED_NOT_FOUND(HttpStatus.NOT_FOUND, "BED401", "베드를 찾을 수 없습니다."),
     // fcm
     CLIENT_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "FCM400", "token이 만료되었습니다."),
     CLIENT_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "FCM401", "token을 찾을 수 없습니다."),
