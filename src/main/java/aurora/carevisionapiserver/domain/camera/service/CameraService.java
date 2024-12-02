@@ -9,13 +9,9 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.auth.domain.User;
 
 public interface CameraService {
-    Camera getCamera(String cameraId);
-
     List<Camera> getAllCameraInfo(Admin admin);
 
     List<Camera> getCameraInfoUnlinkedToPatient(User user);
-
-    void connectPatient(Camera cameraSelectRequest, Patient patient);
 
     String getStreamingUrl(Patient patient);
 
