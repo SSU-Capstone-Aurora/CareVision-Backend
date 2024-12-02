@@ -99,7 +99,7 @@ public class PatientServiceImpl implements PatientService {
 
     private Patient createPatient(
             PatientCreateRequest patientCreateRequest, Department department) {
-        String patientCode = patientCreateRequest.getCode();
+        patientValidator.validatePatientCode(patientCreateRequest.getCode());
 
         if (patientRepository.existsByCode(patientCode)) {
             throw new PatientException(ErrorStatus.PATIENT_DUPLICATED);
