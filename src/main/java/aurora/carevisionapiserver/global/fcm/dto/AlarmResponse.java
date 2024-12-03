@@ -16,6 +16,7 @@ public class AlarmResponse {
         private long inpatientWardNumber;
         private long patientRoomNumber;
         private long bedNumber;
+        private boolean read;
     }
 
     @Getter
@@ -23,6 +24,7 @@ public class AlarmResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class AlarmInfoResponse {
+        private String documentId;
         private int inpatientWardNumber;
         private int patientRoomNumber;
         private int bedNumber;

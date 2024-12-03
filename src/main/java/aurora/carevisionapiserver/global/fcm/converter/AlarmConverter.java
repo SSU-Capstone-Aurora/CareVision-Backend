@@ -20,6 +20,7 @@ public class AlarmConverter {
                         .inpatientWardNumber(patient.getBed().getInpatientWardNumber())
                         .patientRoomNumber(patient.getBed().getPatientRoomNumber())
                         .bedNumber(patient.getBed().getBedNumber())
+                        .read(false)
                         .build();
         return toMap(alarmData);
     }
@@ -32,6 +33,7 @@ public class AlarmConverter {
     public static AlarmInfoResponse toAlarmInfoResponse(
             FireStoreResponse alarmInfo, String timeAgo) {
         return AlarmInfoResponse.builder()
+                .documentId(alarmInfo.getDocumentId())
                 .patientId(alarmInfo.getPatientId())
                 .patientName(alarmInfo.getPatientName())
                 .inpatientWardNumber(alarmInfo.getInpatientWardNumber())

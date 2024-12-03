@@ -89,6 +89,7 @@ public class FcmServiceImpl implements FcmService {
                         .putData("patientName", patient.getName())
                         .putData("patientId", patient.getId().toString())
                         .putData("time", time.toString())
+                        .putData("read", "false")
                         .setToken(registrationToken)
                         .build();
         try {
@@ -141,6 +142,7 @@ public class FcmServiceImpl implements FcmService {
 
         for (QueryDocumentSnapshot document : querySnapshot.getDocuments()) {
             FireStoreResponse fireStoreInfo = document.toObject(FireStoreResponse.class);
+            fireStoreInfo.setDocumentId(document.getId());
             responses.add(fireStoreInfo);
         }
 
