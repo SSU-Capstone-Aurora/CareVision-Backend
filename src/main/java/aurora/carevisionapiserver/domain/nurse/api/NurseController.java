@@ -1,5 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -84,12 +85,12 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @PatchMapping("/patients")
-    public BaseResponse<String> connectPatient(
+    public BaseResponse<Object> connectPatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestBody PatientSelectRequest patientSelectRequest) {
         Patient patient = patientService.getPatient(patientSelectRequest.getPatientId());
         nurseService.connectPatient(nurse, patient);
-        return BaseResponse.of(SuccessStatus._CREATED, null);
+        return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }
 
     @Operation(
@@ -100,7 +101,7 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @PostMapping("/patients")
-    public BaseResponse<Void> createPatient(
+    public BaseResponse<Object> createPatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestBody PatientRegisterRequest patientRegisterRequest) {
         PatientCreateRequest patientCreateRequest = patientRegisterRequest.getPatient();
@@ -108,7 +109,7 @@ public class NurseController {
 
         patientService.createAndConnectPatient(patientCreateRequest, cameraSelectRequest, nurse);
 
-        return BaseResponse.of(SuccessStatus._CREATED, null);
+        return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }
 
     @Operation(summary = "담당 환자 퇴원 API", description = "환자를 퇴원합니다_예림")
@@ -118,11 +119,11 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @DeleteMapping("patients/{patientId}")
-    public BaseResponse<Void> deletePatient(
+    public BaseResponse<Object> deletePatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @PathVariable Long patientId) {
         patientService.deletePatient(patientId);
-        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, new HashMap<>());
     }
 
     @Operation(
@@ -171,9 +172,9 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @PostMapping("/requests/retry")
-    public BaseResponse<Void> retryNurseAcceptanceRequest(
+    public BaseResponse<Object> retryNurseAcceptanceRequest(
             @RequestBody NurseAcceptanceRetryRequest nurseAcceptanceRetryRequest) {
         nurseService.retryAcceptanceRequest(nurseAcceptanceRetryRequest.getUsername());
-        return BaseResponse.of(SuccessStatus.NURSE_REQUEST_RETRIED, null);
+        return BaseResponse.of(SuccessStatus.NURSE_REQUEST_RETRIED, new HashMap<>());
     }
 }
