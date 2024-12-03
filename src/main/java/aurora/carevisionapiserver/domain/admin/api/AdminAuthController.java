@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.domain.admin.api;
 
+import java.util.HashMap;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -114,10 +116,10 @@ public class AdminAuthController {
         @ApiResponse(responseCode = "AUTH404", description = "인증에 실패했습니다.")
     })
     @PostMapping("/logout")
-    public BaseResponse<TokenResponse> logout(
+    public BaseResponse<Object> logout(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @RequestHeader("refreshToken") @ExtractToken String refreshToken) {
         authService.logout(admin.getId(), refreshToken);
-        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, new HashMap<>());
     }
 }

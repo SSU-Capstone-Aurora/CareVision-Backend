@@ -1,5 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseAcceptanceRetryRequest;
@@ -82,12 +85,12 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @PatchMapping("/patients")
-    public BaseResponse<String> connectPatient(
+    public BaseResponse<Object> connectPatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestBody PatientSelectRequest patientSelectRequest) {
         Patient patient = patientService.getPatient(patientSelectRequest.getPatientId());
         nurseService.connectPatient(nurse, patient);
-        return BaseResponse.of(SuccessStatus._CREATED, null);
+        return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }
 
     @Operation(
@@ -98,7 +101,7 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @PostMapping("/patients")
-    public BaseResponse<Void> createPatient(
+    public BaseResponse<Object> createPatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestBody PatientRegisterRequest patientRegisterRequest) {
         PatientCreateRequest patientCreateRequest = patientRegisterRequest.getPatient();
@@ -106,7 +109,7 @@ public class NurseController {
 
         patientService.createAndConnectPatient(patientCreateRequest, cameraSelectRequest, nurse);
 
-        return BaseResponse.of(SuccessStatus._CREATED, null);
+        return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }
 
     @Operation(summary = "담당 환자 퇴원 API", description = "환자를 퇴원합니다_예림")
@@ -116,11 +119,11 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @DeleteMapping("patients/{patientId}")
-    public BaseResponse<Void> deletePatient(
+    public BaseResponse<Object> deletePatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @PathVariable Long patientId) {
         patientService.deletePatient(patientId);
-        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, new HashMap<>());
     }
 
     @Operation(
@@ -152,6 +155,16 @@ public class NurseController {
         return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmsInfo(nurse));
     }
 
+    @Operation(summary = "간호사의 알람 상세 조회 API", description = "이상행동 감지 알람을 조회합니다._숙희")
+    @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
+    @RefreshTokenApiResponse
+    @GetMapping("/alarm")
+    public BaseResponse<StreamingInfoResponse> getAlarmsInfo(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestParam(name = "documentId") String documentId) {
+        return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmInfo(nurse, documentId));
+    }
+
     @Operation(summary = "간호사의 수락 재요청 API", description = "간호사가 수락을 재요청합니다_예림")
     @ApiResponses({
         @ApiResponse(responseCode = "NURSE200", description = "OK, 재요청이 정상적으로 처리되었습니다."),
@@ -159,9 +172,9 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @PostMapping("/requests/retry")
-    public BaseResponse<Void> retryNurseAcceptanceRequest(
+    public BaseResponse<Object> retryNurseAcceptanceRequest(
             @RequestBody NurseAcceptanceRetryRequest nurseAcceptanceRetryRequest) {
         nurseService.retryAcceptanceRequest(nurseAcceptanceRetryRequest.getUsername());
-        return BaseResponse.of(SuccessStatus.NURSE_REQUEST_RETRIED, null);
+        return BaseResponse.of(SuccessStatus.NURSE_REQUEST_RETRIED, new HashMap<>());
     }
 }

@@ -1,5 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -81,11 +82,11 @@ public class AdminNurseController {
     })
     @RefreshTokenApiResponse
     @PostMapping("/nurses/requests/{nurseId}")
-    public BaseResponse<Void> acceptNurseRegisterRequest(
+    public BaseResponse<Object> acceptNurseRegisterRequest(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
         nurseService.activateNurse(nurseId);
-        return BaseResponse.of(SuccessStatus.ACCEPTED, null);
+        return BaseResponse.of(SuccessStatus.ACCEPTED, new HashMap<>());
     }
 
     @Operation(summary = "간호사 요청 거부 API", description = "간호사 등록 요청을 거부합니다_예림")
@@ -96,11 +97,11 @@ public class AdminNurseController {
     @RefreshTokenApiResponse
     @DeleteMapping("/nurses/requests/{nurseId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public BaseResponse<Void> deleteInactiveNurse(
+    public BaseResponse<Object> deleteInactiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
         nurseService.deleteInactiveNurse(nurseId);
-        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, new HashMap<>());
     }
 
     @Operation(summary = "간호사 등록 요청 수 조회 API", description = "간호사 등록 요청 수를 조회합니다_예림")
@@ -122,10 +123,10 @@ public class AdminNurseController {
     })
     @RefreshTokenApiResponse
     @DeleteMapping("/nurses/{nurseId}")
-    public BaseResponse<Void> deleteActiveNurse(
+    public BaseResponse<Object> deleteActiveNurse(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @PathVariable Long nurseId) {
         nurseService.deleteActiveNurse(nurseId);
-        return BaseResponse.of(SuccessStatus._NO_CONTENT, null);
+        return BaseResponse.of(SuccessStatus._NO_CONTENT, new HashMap<>());
     }
 }

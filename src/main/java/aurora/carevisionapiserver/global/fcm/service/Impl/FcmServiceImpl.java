@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -21,8 +22,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 
+import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
+import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.fcm.converter.AlarmConverter;
 import aurora.carevisionapiserver.global.fcm.converter.ClientTokenConverter;
 import aurora.carevisionapiserver.global.fcm.domain.ClientToken;
@@ -43,6 +48,8 @@ import lombok.RequiredArgsConstructor;
 public class FcmServiceImpl implements FcmService {
     private static final String TOKEN_ERROR_MESSAGE = "NotRegistered";
     private final ClientTokenRepository clientTokenRepository;
+    private final PatientService patientService;
+    private final CameraService cameraService;
 
     @Override
     @Transactional
@@ -76,6 +83,36 @@ public class FcmServiceImpl implements FcmService {
         return AlarmConverter.toAlarmInfoListResponse(alarmInfoList);
     }
 
+    @Override
+    public StreamingInfoResponse getAlarmInfo(Nurse nurse, String documentId) {
+        DocumentSnapshot alarm;
+        try {
+            alarm = getAlarmCollection(nurse.getId().toString()).document(documentId).get().get();
+        } catch (Exception e) {
+            throw new FcmException(ErrorStatus.EXECUTION_FAILED);
+        }
+
+        Map<String, Object> data = alarm.getData();
+        if (data.containsKey("read")) {
+            boolean isReadValue = (boolean) data.get("read");
+            if (!isReadValue) {
+                try {
+                    getAlarmCollection(nurse.getId().toString())
+                            .document(documentId)
+                            .update("read", true)
+                            .get();
+                } catch (Exception e) {
+                    throw new FcmException(ErrorStatus.EXECUTION_FAILED);
+                }
+            }
+        }
+        Long patientId = (Long) data.get("patientId");
+
+        Patient patient = patientService.getPatient(patientId);
+        String cameraUrl = cameraService.getStreamingUrl(patient);
+        return CameraConverter.toStreamingInfoResponse(cameraUrl, patient);
+    }
+
     private void sendMessageToFcm(Patient patient, String registrationToken, Timestamp time) {
         Message message =
                 Message.builder()
@@ -89,6 +126,7 @@ public class FcmServiceImpl implements FcmService {
                         .putData("patientName", patient.getName())
                         .putData("patientId", patient.getId().toString())
                         .putData("time", time.toString())
+                        .putData("read", "false")
                         .setToken(registrationToken)
                         .build();
         try {
@@ -141,6 +179,7 @@ public class FcmServiceImpl implements FcmService {
 
         for (QueryDocumentSnapshot document : querySnapshot.getDocuments()) {
             FireStoreResponse fireStoreInfo = document.toObject(FireStoreResponse.class);
+            fireStoreInfo.setDocumentId(document.getId());
             responses.add(fireStoreInfo);
         }
 
