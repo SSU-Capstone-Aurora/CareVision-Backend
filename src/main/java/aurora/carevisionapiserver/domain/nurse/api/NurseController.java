@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseAcceptanceRetryRequest;
@@ -150,6 +152,16 @@ public class NurseController {
     public BaseResponse<AlarmInfoListResponse> getAlarmsInfo(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
         return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmsInfo(nurse));
+    }
+
+    @Operation(summary = "간호사의 알람 상세 조회 API", description = "이상행동 감지 알람을 조회합니다._숙희")
+    @ApiResponses({@ApiResponse(responseCode = "COMMON200", description = "OK, 성공")})
+    @RefreshTokenApiResponse
+    @GetMapping("/alarm")
+    public BaseResponse<StreamingInfoResponse> getAlarmsInfo(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestParam(name = "documentId") String documentId) {
+        return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmInfo(nurse, documentId));
     }
 
     @Operation(summary = "간호사의 수락 재요청 API", description = "간호사가 수락을 재요청합니다_예림")
