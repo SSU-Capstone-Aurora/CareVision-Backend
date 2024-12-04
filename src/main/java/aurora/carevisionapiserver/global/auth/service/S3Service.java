@@ -46,7 +46,7 @@ public class S3Service {
                 new Date(System.currentTimeMillis() - (daysOld * 24L * 60 * 60 * 1000));
 
         for (S3ObjectSummary summary : objectSummaries) {
-            if (summary.getLastModified().before(thresholdDate)) {
+            if (summary.getSize() != 1 && summary.getLastModified().before(thresholdDate)) {
                 String objectKey = summary.getKey();
                 amazonS3.deleteObject(bucket, objectKey);
             }
