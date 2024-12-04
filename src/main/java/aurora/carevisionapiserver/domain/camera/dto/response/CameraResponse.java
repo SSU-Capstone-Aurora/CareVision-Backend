@@ -46,4 +46,26 @@ public class CameraResponse {
         List<StreamingResponse> streamingResponse;
         Long totalCount;
     }
+
+    @Getter
+    @Builder
+    public static class VideoInfoListResponse {
+        List<VideoInfoResponse> videoInfoList;
+        Long totalCount;
+    }
+
+    @Getter
+    @Builder
+    public static class VideoInfoResponse {
+        Long videoId;
+        String thumbnail;
+        String name;
+        String length;
+    }
+
+    @Getter
+    @Builder
+    public static class VideoLinkResponse {
+        String link;
+    }
 }

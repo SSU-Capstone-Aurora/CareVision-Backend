@@ -50,11 +50,12 @@ public enum ErrorStatus implements BaseErrorCode {
     FRAME_PROCESSING_ERROR(HttpStatus.BAD_REQUEST, "CAMERA402", "프레임 처리 중 오류가 발생하였습니다."),
     GRABBER_STOP_FAILED(HttpStatus.BAD_REQUEST, "CAMERA403", "스트리밍 중지에 실패하였습니다."),
     EMPTY_S3_IMAGE(HttpStatus.NOT_FOUND, "CAMERA404", "S3에 이미지가 없습니다."),
+    INVALID_S3_LINK(HttpStatus.INTERNAL_SERVER_ERROR, "CAMERA405", "저장된 영상 링크 파싱 중 오류가 발생하였습니다."),
     // Bed
     INVALID_BED_INFO(
             HttpStatus.BAD_REQUEST, "BED400", "잘못된 형식의 베드 정보입니다. '동 호 번' 또는 '호 번' 순서로 작성해 주세요."),
     BED_NOT_FOUND(HttpStatus.NOT_FOUND, "BED401", "베드를 찾을 수 없습니다."),
-    // fcm
+    // Fcm
     CLIENT_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "FCM400", "token이 만료되었습니다."),
     CLIENT_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "FCM401", "token을 찾을 수 없습니다."),
     EXECUTION_FAILED(HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
@@ -63,9 +64,12 @@ public enum ErrorStatus implements BaseErrorCode {
     AUTH_INVALID_TOKEN(
             HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
     UNSUPPORTED_TOKEN(HttpStatus.BAD_REQUEST, "FCM402", "FireStore에서 데이터를 불러오는 실행 도중 오류가 발생하였습니다."),
-    // FILE
+    // File
     FILE_CONVERT_FAIL(HttpStatus.BAD_REQUEST, "FILE400", "파일 변환에 실패하였습니다."),
-    ;
+
+    // Video
+    VIDEO_NOT_FOUND(HttpStatus.BAD_REQUEST, "VIDEO400", "영상을 찾을 수 없습니다.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
