@@ -2,16 +2,21 @@ package aurora.carevisionapiserver.domain.camera.converter;
 
 import static aurora.carevisionapiserver.domain.bed.converter.BedConverter.toBedInfoResponse;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
+import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoLinkResponse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 public class CameraConverter {
@@ -62,5 +67,28 @@ public class CameraConverter {
                 .thumbnail(thumbnail)
                 .bedInfo(toBedInfoResponse(patient.getBed()))
                 .build();
+    }
+
+    public static VideoInfoListResponse toVideoInfoListResponse(
+            List<VideoInfoResponse> videoInfoResponses) {
+        return VideoInfoListResponse.builder()
+                .videoInfoList(videoInfoResponses)
+                .totalCount((long) videoInfoResponses.size())
+                .build();
+    }
+
+    public static VideoInfoResponse toVideoInfoResponse(
+            Video video, String thumbnail, String duration) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return VideoInfoResponse.builder()
+                .videoId(video.getId())
+                .thumbnail(thumbnail)
+                .name(video.getCreatedAt().format(formatter))
+                .length(duration)
+                .build();
+    }
+
+    public static VideoLinkResponse toVideoLinkRespose(Video video) {
+        return VideoLinkResponse.builder().link(video.getLink()).build();
     }
 }

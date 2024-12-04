@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import aurora.carevisionapiserver.domain.camera.service.RtspService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
-import aurora.carevisionapiserver.global.auth.service.S3Service;
+import aurora.carevisionapiserver.global.infra.aws.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
