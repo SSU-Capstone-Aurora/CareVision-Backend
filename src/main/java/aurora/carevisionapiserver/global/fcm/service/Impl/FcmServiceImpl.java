@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,14 +30,11 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.fcm.converter.AlarmConverter;
-import aurora.carevisionapiserver.global.fcm.converter.ClientTokenConverter;
-import aurora.carevisionapiserver.global.fcm.domain.ClientToken;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmClientRequest;
+import aurora.carevisionapiserver.global.fcm.dto.FcmRequest.ClientInfo;
 import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
 import aurora.carevisionapiserver.global.fcm.exception.FcmException;
-import aurora.carevisionapiserver.global.fcm.repository.ClientTokenRepository;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.TimeAgoUtil;
@@ -47,22 +45,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FcmServiceImpl implements FcmService {
     private static final String TOKEN_ERROR_MESSAGE = "NotRegistered";
-    private final ClientTokenRepository clientTokenRepository;
+    private static final String CLIENT_TOKEN_KEY = "client";
     private final PatientService patientService;
     private final CameraService cameraService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Override
     @Transactional
-    public void saveClientToken(FcmClientRequest fcmClientRequest) {
-        ClientToken clientToken = ClientTokenConverter.toClientToken(fcmClientRequest);
-        clientTokenRepository.save(clientToken);
+    public void saveClientToken(ClientInfo clientInfo) {
+        redisTemplate
+                .opsForHash()
+                .put(CLIENT_TOKEN_KEY, clientInfo.getUsername(), clientInfo.getClientToken());
     }
 
     @Override
     public String findClientToken(Nurse nurse) {
-        return clientTokenRepository
-                .findClientTokenByUsername(nurse.getUsername())
-                .orElseThrow(() -> new FcmException(ErrorStatus.CLIENT_TOKEN_NOT_FOUND));
+        return (String) redisTemplate.opsForHash().get(CLIENT_TOKEN_KEY, nurse.getUsername());
     }
 
     @Override

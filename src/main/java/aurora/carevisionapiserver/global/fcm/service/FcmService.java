@@ -4,10 +4,10 @@ import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.Stre
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmClientRequest;
+import aurora.carevisionapiserver.global.fcm.dto.FcmRequest.ClientInfo;
 
 public interface FcmService {
-    void saveClientToken(FcmClientRequest fcmClientRequest);
+    void saveClientToken(ClientInfo clientInfo);
 
     String findClientToken(Nurse nurse);
 

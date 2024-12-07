@@ -32,7 +32,7 @@ public class SecurityConfig {
         "/api/admin/departments",
         "/api/admin/hospitals",
         "/api/login",
-        "api/fcm/alarm/**",
+        "/api/fcm/**",
         "/health",
         "/error",
         "/swagger-ui/**",
@@ -46,7 +46,6 @@ public class SecurityConfig {
         "/api/patients/**",
         "/api/streaming/**",
         "/api/reissue/**",
-        "/api/fcm/**",
         "api/alarm",
     };
 
