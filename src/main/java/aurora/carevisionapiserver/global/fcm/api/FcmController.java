@@ -49,12 +49,12 @@ public class FcmController {
         @ApiResponse(responseCode = "FCM400", description = "BAD_REQUEST, 토큰이 만료되었습니다"),
     })
     @PostMapping("/alarm/{patientId}")
-    public BaseResponse<Void> sendAlarm(@PathVariable(name = "patientId") Long patientId) {
+    public BaseResponse<Object> sendAlarm(@PathVariable(name = "patientId") Long patientId) {
         Patient patient = patientService.getPatient(patientId);
         String token = fcmService.findClientToken(patient.getNurse());
 
         fcmService.abnormalBehaviorAlarm(patient, token);
 
-        return BaseResponse.of(SuccessStatus.ALARM_SUCCESS, null);
+        return BaseResponse.of(SuccessStatus.ALARM_SUCCESS, new HashMap<>());
     }
 }
