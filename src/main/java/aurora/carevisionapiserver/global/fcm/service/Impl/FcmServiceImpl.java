@@ -19,6 +19,7 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -126,6 +127,10 @@ public class FcmServiceImpl implements FcmService {
                         .putData("time", time.toString())
                         .putData("read", "false")
                         .setToken(registrationToken)
+                        .setAndroidConfig(
+                                AndroidConfig.builder()
+                                        .setPriority(AndroidConfig.Priority.HIGH)
+                                        .build())
                         .build();
         try {
             FirebaseMessaging.getInstance().send(message);
