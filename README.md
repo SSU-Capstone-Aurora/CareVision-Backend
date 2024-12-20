@@ -9,13 +9,17 @@
 </div>
 
 <br>
+![표지]()
 
 ## 💉About CareVision 
-<img src="https://github.com/user-attachments/assets/5abc4083-cf7f-4f1a-9952-e73a6d6148f4" alt="소개" style="width: 70%; height: auto;">
+<img src="https://github.com/user-attachments/assets/ade19b79-3661-4a26-b270-ed1b2bece4c8" alt="표지" style="width: 70%; height: auto;">
+<img src="https://github.com/user-attachments/assets/55e4e244-8371-4bb7-b2b4-b9efe3a8da49" alt="소개" style="width: 70%; height: auto;">
 
 
 ## 💉System Architecture
-<img src="https://github.com/user-attachments/assets/1eb84c0b-3dec-4040-a685-bf5600910fa8" alt="시스템 아키텍쳐" style="width: 60%; height: auto;">
+
+<img src="https://github.com/user-attachments/assets/f6191199-2010-4ac7-bd8b-5a1168255b27" alt="시스템 아키텍쳐" style="width: 60%; height: auto;">
+<img src="https://github.com/user-attachments/assets/528059da-d067-4319-aeb4-c8c6a679a6d2" alt="영상 스트리밍 아키텍쳐" style="width: 60%; height: auto;">
 
 
 ## 💉 Backend Team Member
