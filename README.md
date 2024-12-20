@@ -9,7 +9,6 @@
 </div>
 
 <br>
-![표지]()
 
 ## 💉About CareVision 
 <img src="https://github.com/user-attachments/assets/ade19b79-3661-4a26-b270-ed1b2bece4c8" alt="표지" style="width: 70%; height: auto;">
