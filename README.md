@@ -17,7 +17,7 @@
 
 ## 💉System Architecture
 
-<img src="https://github.com/user-attachments/assets/f6191199-2010-4ac7-bd8b-5a1168255b27" alt="시스템 아키텍쳐" style="width: 60%; height: auto;">
+<img src="https://github.com/user-attachments/assets/30d9cf5c-9918-4394-9b42-3ba7fed9d7fb" alt="시스템 아키텍쳐" style="width: 60%; height: auto;">
 <img src="https://github.com/user-attachments/assets/528059da-d067-4319-aeb4-c8c6a679a6d2" alt="영상 스트리밍 아키텍쳐" style="width: 60%; height: auto;">
 
 
