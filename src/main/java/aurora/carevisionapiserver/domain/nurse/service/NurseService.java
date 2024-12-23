@@ -5,6 +5,7 @@ import java.util.List;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
@@ -23,7 +24,7 @@ public interface NurseService {
 
     List<Nurse> getInactiveNurses(Admin admin);
 
-    List<Nurse> searchNurse(String nurseName);
+    List<NurseDocument> searchNurse(String nurseName);
 
     Nurse createNurse(NurseCreateRequest nurseCreateRequest, Department department);
 

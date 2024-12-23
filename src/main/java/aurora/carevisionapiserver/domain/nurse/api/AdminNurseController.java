@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
@@ -58,8 +59,8 @@ public class AdminNurseController {
     @GetMapping("/nurses/search")
     public BaseResponse<NursePreviewListResponse> searchNurse(
             @RequestParam(name = "search") String nurseName) {
-        List<Nurse> nurses = nurseService.searchNurse(nurseName);
-        return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
+        List<NurseDocument> nurses = nurseService.searchNurse(nurseName);
+        return BaseResponse.onSuccess(NurseConverter.toNurseDocumentPreviewListResponse(nurses));
     }
 
     @Operation(summary = "간호사 요청 리스트 조회 API", description = "간호사 등록 요청 리스트를 조회합니다_예림")
