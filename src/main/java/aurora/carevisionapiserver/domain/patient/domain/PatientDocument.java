@@ -15,7 +15,7 @@ public class PatientDocument {
 
     @Id private String id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "my_ngram_analyzer")
     private String name;
 
     @Field(type = FieldType.Long)
