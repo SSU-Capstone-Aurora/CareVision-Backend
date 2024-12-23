@@ -1,6 +1,6 @@
 package aurora.carevisionapiserver.domain.patient.api;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
-import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
@@ -44,19 +45,7 @@ public class AdminPatientController {
     @GetMapping("/search")
     public BaseResponse<PatientSearchListResponse> searchPatient(
             @RequestParam(name = "search") String patientName) {
-        List<Patient> patients = patientService.searchPatient(patientName);
-        return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
-    }
-
-    @Operation(summary = "환자 조회 API", description = "환자 리스트를 조회합니다.(최신등록순)_숙희")
-    @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-    })
-    @RefreshTokenApiResponse
-    @GetMapping("")
-    public BaseResponse<PatientSearchListResponse> getPatients(
-            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
-        List<Patient> patients = patientService.getPatients(admin.getId());
+        Map<PatientDocument, Bed> patients = patientService.searchPatient(patientName);
         return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
     }
 
