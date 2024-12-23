@@ -11,6 +11,7 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
@@ -71,8 +72,8 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> searchNurse(String nurseName) {
-        return nurseRepository.searchByName(nurseName);
+    public List<NurseDocument> searchNurse(String nurseName) {
+        return nurseEsRepository.findAllByName(nurseName);
     }
 
     @Override
