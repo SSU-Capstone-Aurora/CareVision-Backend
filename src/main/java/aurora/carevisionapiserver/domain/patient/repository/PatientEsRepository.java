@@ -1,9 +1,13 @@
 package aurora.carevisionapiserver.domain.patient.repository;
 
+import java.util.List;
+
+import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.stereotype.Repository;
 
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 
-@Repository
-public interface PatientEsRepository extends ElasticsearchRepository<PatientDocument, String> {}
+public interface PatientEsRepository extends ElasticsearchRepository<PatientDocument, String> {
+    @Query("{\"match\": {\"name.ngram\": \"?0\"}}")
+    List<PatientDocument> searchByName(String name);
+}
