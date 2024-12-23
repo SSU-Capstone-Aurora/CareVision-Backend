@@ -3,11 +3,13 @@ package aurora.carevisionapiserver.domain.patient.converter;
 import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import aurora.carevisionapiserver.domain.bed.converter.BedConverter;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientNameResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
@@ -15,7 +17,7 @@ import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.Pa
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 
 public class PatientConverter {
-    public static PatientSearchResponse toPatientSearchResponse(Patient patient) {
+    private static PatientSearchResponse toPatientSearchResponse(Patient patient) {
         return PatientSearchResponse.builder()
                 .patientName(patient.getName())
                 .inpatientWardNumber(patient.getBed().getInpatientWardNumber())
@@ -29,6 +31,30 @@ public class PatientConverter {
         return PatientSearchListResponse.builder()
                 .patientList(
                         patients.stream().map(PatientConverter::toPatientSearchResponse).toList())
+                .count(patients.size())
+                .build();
+    }
+
+    private static PatientSearchResponse toPatientSearchResponse(PatientDocument patient, Bed bed) {
+        return PatientSearchResponse.builder()
+                .patientName(patient.getName())
+                .inpatientWardNumber(bed.getInpatientWardNumber())
+                .patientRoomNumber(bed.getPatientRoomNumber())
+                .bedNumber(bed.getBedNumber())
+                .code(patient.getCode())
+                .build();
+    }
+
+    public static PatientSearchListResponse toPatientSearchListResponse(
+            Map<PatientDocument, Bed> patients) {
+        return PatientSearchListResponse.builder()
+                .patientList(
+                        patients.entrySet().stream()
+                                .map(
+                                        entry ->
+                                                toPatientSearchResponse(
+                                                        entry.getKey(), entry.getValue()))
+                                .toList())
                 .count(patients.size())
                 .build();
     }
