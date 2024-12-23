@@ -1,6 +1,8 @@
 package aurora.carevisionapiserver.domain.patient.service.Impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.transaction.Transactional;
 
@@ -9,8 +11,6 @@ import org.springframework.stereotype.Service;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.bed.domain.BedDocument;
-import aurora.carevisionapiserver.domain.bed.repository.BedEsRepository;
 import aurora.carevisionapiserver.domain.bed.service.BedService;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
@@ -35,17 +35,24 @@ import lombok.RequiredArgsConstructor;
 public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientEsRepository patientEsRepository;
-    private final BedEsRepository bedEsRepository;
     private final BedService bedService;
     private final AdminService adminService;
     private final NurseService nurseService;
     private final PatientValidator patientValidator;
 
-    @Override
-    public List<Patient> searchPatient(String patientName) {
-        List<Patient> patients = patientRepository.searchByName(patientName);
+    public Map<PatientDocument, Bed> searchPatient(String patientName) {
+        List<PatientDocument> patients = patientEsRepository.searchByName(patientName);
         if (patients.size() == 0) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
-        return patients;
+
+        Map<PatientDocument, Bed> patientInfo = new HashMap<>();
+
+        for (PatientDocument patient : patients) {
+            Long bedId = patient.getBedId();
+            Bed bed = bedService.findById(bedId);
+            patientInfo.put(patient, bed);
+        }
+
+        return patientInfo;
     }
 
     @Override
