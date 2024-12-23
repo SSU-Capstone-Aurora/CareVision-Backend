@@ -21,3 +21,8 @@ spring:
     redis:
       host: ${LOCAL_REDIS_URL}
       port: 6379
+
+elasticsearch:
+  uris: ${LOCAL_ES_URIS}
+  username: ${LOCAL_ES_USERNAME}
+  password: ${LOCAL_ES_PASSWORD}
