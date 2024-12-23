@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
@@ -39,6 +40,18 @@ public class NurseConverter {
     }
 
     public static NursePreviewListResponse toNursePreviewListResponse(List<Nurse> nurses) {
+        return NursePreviewListResponse.builder()
+                .nurseList(nurses.stream().map(NurseConverter::toNursePreviewResponse).toList())
+                .count(nurses.size())
+                .build();
+    }
+
+    public static NursePreviewResponse toNursePreviewResponse(NurseDocument nurse) {
+        return NursePreviewResponse.builder().name(nurse.getName()).id(nurse.getUsername()).build();
+    }
+
+    public static NursePreviewListResponse toNurseDocumentPreviewListResponse(
+            List<NurseDocument> nurses) {
         return NursePreviewListResponse.builder()
                 .nurseList(nurses.stream().map(NurseConverter::toNursePreviewResponse).toList())
                 .count(nurses.size())
