@@ -24,4 +24,11 @@ public class BedServiceImpl implements BedService {
                         bed.getPatientRoomNumber())
                 .orElseThrow(() -> new BedException(ErrorStatus.BED_NOT_FOUND));
     }
+
+    @Override
+    public Bed findById(Long id) {
+        return bedRepository
+                .findById(id)
+                .orElseThrow(() -> new BedException(ErrorStatus.BED_NOT_FOUND));
+    }
 }
