@@ -1,6 +1,8 @@
 package aurora.carevisionapiserver.domain.patient.service.Impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.transaction.Transactional;
 
@@ -15,9 +17,12 @@ import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
+import aurora.carevisionapiserver.domain.patient.converter.PatientDocumentConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
+import aurora.carevisionapiserver.domain.patient.repository.PatientEsRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
@@ -29,16 +34,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
+    private final PatientEsRepository patientEsRepository;
     private final BedService bedService;
     private final AdminService adminService;
     private final NurseService nurseService;
     private final PatientValidator patientValidator;
 
-    @Override
-    public List<Patient> searchPatient(String patientName) {
-        List<Patient> patients = patientRepository.searchByName(patientName);
+    public Map<PatientDocument, Bed> searchPatient(String patientName) {
+        List<PatientDocument> patients = patientEsRepository.searchByName(patientName);
         if (patients.size() == 0) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
-        return patients;
+
+        Map<PatientDocument, Bed> patientInfo = new HashMap<>();
+
+        for (PatientDocument patient : patients) {
+            Long bedId = patient.getBedId();
+            Bed bed = bedService.findById(bedId);
+            patientInfo.put(patient, bed);
+        }
+
+        return patientInfo;
     }
 
     @Override
@@ -90,13 +104,22 @@ public class PatientServiceImpl implements PatientService {
         nurseService.connectPatient(nurse, patient);
     }
 
+    @Transactional
     private Patient createPatient(
             PatientCreateRequest patientCreateRequest, Department department) {
         patientValidator.validatePatientCode(patientCreateRequest.getCode());
 
         Bed bed = bedService.findBed(patientCreateRequest.getBed());
         Patient patient = PatientConverter.toPatient(patientCreateRequest, bed, department);
-        return patientRepository.save(patient);
+
+        patientRepository.save(patient);
+        saveInEs(patient);
+
+        return patient;
+    }
+
+    private void saveInEs(Patient patient) {
+        patientEsRepository.save(PatientDocumentConverter.toPatientDocument(patient));
     }
 
     @Override

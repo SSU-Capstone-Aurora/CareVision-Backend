@@ -11,8 +11,10 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
+import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
@@ -23,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NurseServiceImpl implements NurseService {
     private final NurseRepository nurseRepository;
+    private final NurseEsRepository nurseEsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -69,8 +72,8 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> searchNurse(String nurseName) {
-        return nurseRepository.searchByName(nurseName);
+    public List<NurseDocument> searchNurse(String nurseName) {
+        return nurseEsRepository.findAllByName(nurseName);
     }
 
     @Override
@@ -87,6 +90,7 @@ public class NurseServiceImpl implements NurseService {
         Nurse nurse = getInactiveNurse(nurseId);
         nurse.activateNurse();
         nurseRepository.save(nurse);
+        nurseEsRepository.save(NurseConverter.toNurseDocument(nurse));
     }
 
     @Override

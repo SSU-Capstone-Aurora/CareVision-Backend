@@ -5,4 +5,6 @@ import aurora.carevisionapiserver.domain.bed.dto.BedRequest.BedCreateRequest;
 
 public interface BedService {
     Bed findBed(BedCreateRequest bedCreateRequest);
+
+    Bed findById(Long id);
 }
