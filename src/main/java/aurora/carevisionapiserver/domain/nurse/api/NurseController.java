@@ -28,6 +28,7 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientSelectRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
@@ -163,6 +164,17 @@ public class NurseController {
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestParam(name = "documentId") String documentId) {
         return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmInfo(nurse, documentId));
+    }
+
+    @Operation(summary = "미확인 알림 개수 조회 API", description = "간호사의 미확인 이상행동 알림 개수를 조회합니다._숙희")
+    @ApiResponses({
+        @ApiResponse(responseCode = "COMMON200", description = "_OK,성공입니다."),
+        @ApiResponse(responseCode = "FCM400", description = "BAD_REQUEST, 토큰이 만료되었습니다"),
+    })
+    @GetMapping("/alarm-count")
+    public BaseResponse<AlarmPreviewResponse> getAlarmCount(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
+        return BaseResponse.of(SuccessStatus._OK, fcmService.getAlarmCount(nurse));
     }
 
     @Operation(summary = "간호사의 수락 재요청 API", description = "간호사가 수락을 재요청합니다_예림")
