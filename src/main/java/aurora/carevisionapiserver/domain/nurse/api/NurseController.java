@@ -169,7 +169,6 @@ public class NurseController {
     @Operation(summary = "미확인 알림 개수 조회 API", description = "간호사의 미확인 이상행동 알림 개수를 조회합니다._숙희")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "_OK,성공입니다."),
-        @ApiResponse(responseCode = "FCM400", description = "BAD_REQUEST, 토큰이 만료되었습니다"),
     })
     @GetMapping("/alarm-count")
     public BaseResponse<AlarmPreviewResponse> getAlarmCount(
