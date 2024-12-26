@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.Timestamp;
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.Message;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmData;
@@ -48,6 +51,25 @@ public class AlarmConverter {
         return AlarmInfoListResponse.builder()
                 .alarmInfoList(alarmInfoResponse)
                 .totalCount(alarmInfoResponse.size())
+                .build();
+    }
+
+    public static Message toMessage(Patient patient, Timestamp time, String registrationToken) {
+        return Message.builder()
+                .putData("bedNumber", String.valueOf(patient.getBed().getBedNumber()))
+                .putData(
+                        "inpatientWardNumber",
+                        String.valueOf(patient.getBed().getInpatientWardNumber()))
+                .putData(
+                        "patientRoomNumber",
+                        String.valueOf(patient.getBed().getPatientRoomNumber()))
+                .putData("patientName", patient.getName())
+                .putData("patientId", patient.getId().toString())
+                .putData("time", time.toString())
+                .putData("read", "false")
+                .setToken(registrationToken)
+                .setAndroidConfig(
+                        AndroidConfig.builder().setPriority(AndroidConfig.Priority.HIGH).build())
                 .build();
     }
 }

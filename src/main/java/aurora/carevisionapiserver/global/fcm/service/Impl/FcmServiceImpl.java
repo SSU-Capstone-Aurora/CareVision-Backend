@@ -19,7 +19,6 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -113,25 +112,7 @@ public class FcmServiceImpl implements FcmService {
     }
 
     private void sendMessageToFcm(Patient patient, String registrationToken, Timestamp time) {
-        Message message =
-                Message.builder()
-                        .putData("bedNumber", String.valueOf(patient.getBed().getBedNumber()))
-                        .putData(
-                                "inpatientWardNumber",
-                                String.valueOf(patient.getBed().getInpatientWardNumber()))
-                        .putData(
-                                "patientRoomNumber",
-                                String.valueOf(patient.getBed().getPatientRoomNumber()))
-                        .putData("patientName", patient.getName())
-                        .putData("patientId", patient.getId().toString())
-                        .putData("time", time.toString())
-                        .putData("read", "false")
-                        .setToken(registrationToken)
-                        .setAndroidConfig(
-                                AndroidConfig.builder()
-                                        .setPriority(AndroidConfig.Priority.HIGH)
-                                        .build())
-                        .build();
+        Message message = AlarmConverter.toMessage(patient, time, registrationToken);
         try {
             FirebaseMessaging.getInstance().send(message);
         } catch (FirebaseMessagingException e) {
