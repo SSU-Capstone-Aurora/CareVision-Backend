@@ -30,6 +30,7 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.fcm.converter.AlarmConverter;
+import aurora.carevisionapiserver.global.fcm.dto.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
 import aurora.carevisionapiserver.global.fcm.dto.FcmRequest.ClientInfo;
@@ -109,6 +110,26 @@ public class FcmServiceImpl implements FcmService {
         Patient patient = patientService.getPatient(patientId);
         String cameraUrl = cameraService.getStreamingUrl(patient);
         return CameraConverter.toStreamingInfoResponse(cameraUrl, patient);
+    }
+
+    @Override
+    public AlarmPreviewResponse getAlarmCount(Nurse nurse) {
+        CollectionReference alarmsCollection = getAlarmCollection(nurse.getId().toString());
+        long count = countFireStoreData(alarmsCollection);
+
+        return AlarmPreviewResponse.of(count);
+    }
+
+    private long countFireStoreData(CollectionReference alarmsCollection) {
+        Query query = alarmsCollection.whereEqualTo("read", false);
+
+        try {
+            QuerySnapshot querySnapshot = query.get().get();
+
+            return querySnapshot.size();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void sendMessageToFcm(Patient patient, String registrationToken, Timestamp time) {
