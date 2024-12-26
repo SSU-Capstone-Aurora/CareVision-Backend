@@ -9,10 +9,10 @@ import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.Message;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmData;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmData;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.FcmResponse.FireStoreResponse;
 
 public class AlarmConverter {
     public static Map<String, Object> toAlarmData(Patient patient) {

@@ -3,9 +3,9 @@ package aurora.carevisionapiserver.global.fcm.service;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmPreviewResponse;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmRequest.ClientInfo;
+import aurora.carevisionapiserver.global.fcm.dto.request.FcmRequest.ClientInfo;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
 
 public interface FcmService {
     void saveClientToken(ClientInfo clientInfo);
