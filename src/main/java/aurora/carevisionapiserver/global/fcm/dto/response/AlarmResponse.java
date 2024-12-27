@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.fcm.dto;
+package aurora.carevisionapiserver.global.fcm.dto.response;
 
 import java.util.List;
 

@@ -19,7 +19,6 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -31,10 +30,11 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.fcm.converter.AlarmConverter;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoListResponse;
-import aurora.carevisionapiserver.global.fcm.dto.AlarmResponse.AlarmInfoResponse;
-import aurora.carevisionapiserver.global.fcm.dto.FcmRequest.ClientInfo;
-import aurora.carevisionapiserver.global.fcm.dto.FcmResponse.FireStoreResponse;
+import aurora.carevisionapiserver.global.fcm.dto.request.FcmRequest.ClientInfo;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoResponse;
+import aurora.carevisionapiserver.global.fcm.dto.response.FcmResponse.FireStoreResponse;
 import aurora.carevisionapiserver.global.fcm.exception.FcmException;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
@@ -112,26 +112,28 @@ public class FcmServiceImpl implements FcmService {
         return CameraConverter.toStreamingInfoResponse(cameraUrl, patient);
     }
 
+    @Override
+    public AlarmPreviewResponse getAlarmCount(Nurse nurse) {
+        CollectionReference alarmsCollection = getAlarmCollection(nurse.getId().toString());
+        long count = countFireStoreData(alarmsCollection);
+
+        return AlarmPreviewResponse.of(count);
+    }
+
+    private long countFireStoreData(CollectionReference alarmsCollection) {
+        Query query = alarmsCollection.whereEqualTo("read", false);
+
+        try {
+            QuerySnapshot querySnapshot = query.get().get();
+
+            return querySnapshot.size();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void sendMessageToFcm(Patient patient, String registrationToken, Timestamp time) {
-        Message message =
-                Message.builder()
-                        .putData("bedNumber", String.valueOf(patient.getBed().getBedNumber()))
-                        .putData(
-                                "inpatientWardNumber",
-                                String.valueOf(patient.getBed().getInpatientWardNumber()))
-                        .putData(
-                                "patientRoomNumber",
-                                String.valueOf(patient.getBed().getPatientRoomNumber()))
-                        .putData("patientName", patient.getName())
-                        .putData("patientId", patient.getId().toString())
-                        .putData("time", time.toString())
-                        .putData("read", "false")
-                        .setToken(registrationToken)
-                        .setAndroidConfig(
-                                AndroidConfig.builder()
-                                        .setPriority(AndroidConfig.Priority.HIGH)
-                                        .build())
-                        .build();
+        Message message = AlarmConverter.toMessage(patient, time, registrationToken);
         try {
             FirebaseMessaging.getInstance().send(message);
         } catch (FirebaseMessagingException e) {

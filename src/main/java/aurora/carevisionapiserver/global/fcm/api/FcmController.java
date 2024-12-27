@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
-import aurora.carevisionapiserver.global.fcm.dto.FcmRequest.FcmClientRequest;
+import aurora.carevisionapiserver.global.fcm.dto.request.FcmRequest.FcmClientRequest;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
