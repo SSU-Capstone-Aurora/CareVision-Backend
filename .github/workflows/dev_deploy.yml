@@ -11,6 +11,8 @@ on:
 env:
   S3_BUCKET_NAME: carevision-bucket
   PROJECT_NAME: carevision
+  CODE_DEPLOY_APPLICATION_NAME: carevision-deploy
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: develop
 
 jobs:
   build:
@@ -83,4 +85,4 @@ jobs:
           utcOffset: "+09:00"
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name carevision-deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name develop --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APPLICATION_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODE_DEPLOY_DEPLOYMENT_GROUP_NAME --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
