@@ -77,7 +77,6 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    @Transactional
     public Nurse createNurse(NurseCreateRequest nurseCreateRequest, Department department) {
         String encryptedPassword = bCryptPasswordEncoder.encode(nurseCreateRequest.getPassword());
         Nurse nurse = NurseConverter.toNurse(nurseCreateRequest, encryptedPassword, department);
@@ -94,7 +93,6 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    @Transactional
     public void deleteInactiveNurse(Long nurseId) {
         Nurse nurse = getInactiveNurse(nurseId);
         nurseRepository.delete(nurse);
@@ -106,7 +104,6 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    @Transactional
     public void deleteActiveNurse(Long nurseId) {
         Nurse nurse = getActiveNurse(nurseId);
         nurseRepository.delete(nurse);

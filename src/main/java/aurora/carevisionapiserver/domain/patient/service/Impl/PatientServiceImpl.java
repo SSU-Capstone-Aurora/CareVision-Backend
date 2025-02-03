@@ -75,7 +75,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    @Transactional
     public void deletePatient(Long patientId) {
         Patient patient = getPatient(patientId);
         patientRepository.delete(patient);
@@ -104,7 +103,6 @@ public class PatientServiceImpl implements PatientService {
         nurseService.connectPatient(nurse, patient);
     }
 
-    @Transactional
     private Patient createPatient(
             PatientCreateRequest patientCreateRequest, Department department) {
         patientValidator.validatePatientCode(patientCreateRequest.getCode());
