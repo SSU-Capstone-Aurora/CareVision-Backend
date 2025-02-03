@@ -107,12 +107,20 @@ public class PatientServiceImpl implements PatientService {
             PatientCreateRequest patientCreateRequest, Department department) {
         patientValidator.validatePatientCode(patientCreateRequest.getCode());
 
-        Bed bed = bedService.findBed(patientCreateRequest.getBed());
-        Patient patient = PatientConverter.toPatient(patientCreateRequest, bed, department);
+        Patient patient = registerPatientToBed(patientCreateRequest, department);
 
         patientRepository.save(patient);
         saveInEs(patient);
 
+        return patient;
+    }
+
+    private Patient registerPatientToBed(
+            PatientCreateRequest patientCreateRequest, Department department) {
+        Bed bed = bedService.findBed(patientCreateRequest.getBed());
+
+        Patient patient = PatientConverter.toPatient(patientCreateRequest, bed, department);
+        bed.registerPatient(patient);
         return patient;
     }
 
