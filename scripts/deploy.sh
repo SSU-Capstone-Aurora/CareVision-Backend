@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 변수 설정
-COMPOSE_PATH="/home/ubuntu/docker-compose.yml"
+COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
 NGINX_CONF_DIR="/home/ubuntu/nginx"
 DELAY=5
 NGINX_CONTAINER="nginx"
