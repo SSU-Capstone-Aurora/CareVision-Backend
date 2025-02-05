@@ -1,7 +1,5 @@
 package aurora.carevisionapiserver.domain.admin.service.impl;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +21,6 @@ public class AdminServiceImpl implements AdminService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    @Transactional
     public Admin createAdmin(AdminCreateRequest adminCreateRequest, Department department) {
 
         String encryptedPassword = bCryptPasswordEncoder.encode(adminCreateRequest.getPassword());

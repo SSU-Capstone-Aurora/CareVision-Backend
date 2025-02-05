@@ -2,8 +2,6 @@ package aurora.carevisionapiserver.global.auth.util;
 
 import java.util.Date;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +23,6 @@ public class TokenGenerator {
     @Value("${jwt.refresh-expiration-time}")
     private long refreshExpirationTime;
 
-    @Transactional
     public TokenResponse generate(String username) {
         String refreshToken = jwtUtil.createJwt("refresh", username, accessExpirationTime);
         String accessToken = jwtUtil.createJwt("access", username, refreshExpirationTime);
