@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.admin.service.impl;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +51,11 @@ public class AdminServiceImpl implements AdminService {
     private Admin createAdmin(AdminCreateRequest request, Department department) {
         String encryptedPassword = bCryptPasswordEncoder.encode(request.getPassword());
         Admin admin = AdminConverter.toAdmin(request, encryptedPassword, department);
-        return adminRepository.save(admin);
+        try {
+            return adminRepository.save(admin);
+        } catch (DataIntegrityViolationException e) {
+            throw new AdminException(ErrorStatus.USERNAME_DUPLICATED);
+        }
     }
 
     @Override
