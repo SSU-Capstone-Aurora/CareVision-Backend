@@ -22,6 +22,7 @@ public class Admin extends BaseEntity implements User {
     @Column(name = "admin_id")
     private Long id;
 
+    @Column(unique = true)
     private String username;
 
     private String password;
