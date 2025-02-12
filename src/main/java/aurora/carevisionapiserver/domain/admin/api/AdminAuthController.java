@@ -12,15 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.converter.AdminConverter;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminCreateRequest;
 import aurora.carevisionapiserver.domain.admin.dto.request.AdminRequest.AdminSignUpRequest;
 import aurora.carevisionapiserver.domain.admin.dto.response.AdminResponse.AdminSignUpResponse;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
-import aurora.carevisionapiserver.domain.hospital.domain.Department;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
-import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.DepartmentCreateRequest;
-import aurora.carevisionapiserver.domain.hospital.dto.request.HospitalRequest.HospitalCreateRequest;
-import aurora.carevisionapiserver.domain.hospital.service.HospitalService;
 import aurora.carevisionapiserver.global.auth.domain.Role;
 import aurora.carevisionapiserver.global.auth.dto.request.AuthRequest.LoginRequest;
 import aurora.carevisionapiserver.global.auth.dto.response.AuthResponse.TokenResponse;
@@ -43,7 +37,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin")
 public class AdminAuthController {
     private final AdminService adminService;
-    private final HospitalService hospitalService;
     private final AuthService authService;
 
     @Operation(summary = "관리자 회원가입 API", description = "관리자가 회원가입합니다_예림")
@@ -51,17 +44,7 @@ public class AdminAuthController {
     @PostMapping("/sign-up")
     public BaseResponse<AdminSignUpResponse> createAdmin(
             @RequestBody AdminSignUpRequest adminSignUpRequest) {
-
-        String username = adminSignUpRequest.getAdmin().getUsername();
-        authService.validateUsername(username);
-
-        AdminCreateRequest adminCreateRequest = adminSignUpRequest.getAdmin();
-        HospitalCreateRequest hospitalCreateRequest = adminSignUpRequest.getHospital();
-        DepartmentCreateRequest departmentCreateRequest = adminSignUpRequest.getDepartment();
-
-        Hospital hospital = hospitalService.createHospital(hospitalCreateRequest);
-        Department department = hospitalService.createDepartment(departmentCreateRequest, hospital);
-        Admin admin = adminService.createAdmin(adminCreateRequest, department);
+        Admin admin = adminService.signup(adminSignUpRequest);
 
         return BaseResponse.onSuccess(AdminConverter.toAdminSignUpResponse(admin));
     }
