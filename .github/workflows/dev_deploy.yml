@@ -57,6 +57,9 @@ jobs:
           elasticsearch.uris: ${{ secrets.ES_URIS }}
           elasticsearch.username: ${{ secrets.ES_USERNAME }}
           elasticsearch.password : ${{ secrets.ES_PASSWORD }}
+          elasticsearch.connection.timeout: ${{ secrets.ES_CONNECTION_TIMEOUT }}
+          elasticsearch.socket.timeout: ${{ secrets.ES_SOCKET_TIMEOUT }}
+
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew

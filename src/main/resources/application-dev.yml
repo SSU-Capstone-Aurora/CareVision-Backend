@@ -29,3 +29,7 @@ elasticsearch:
   uris: ${ES_URIS}
   username: ${ES_USERNAME}
   password: ${ES_PASSWORD}
+  connection:
+    timeout: ${ES_CONNECTION_TIMEOUT}
+  socket:
+    timeout: ${ES_SOCKET_TIMEOUT}

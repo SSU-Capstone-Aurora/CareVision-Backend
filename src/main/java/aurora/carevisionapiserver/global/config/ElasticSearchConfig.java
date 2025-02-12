@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.global.config;
 
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
@@ -19,11 +21,19 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
     @Value("${elasticsearch.password}")
     private String password;
 
+    @Value("${elasticsearch.connection.timeout}")
+    private long connectionTimeout;
+
+    @Value("${elasticsearch.socket.timeout}")
+    private long socketTimeout;
+
     @Override
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
                 .connectedTo(esHost)
                 .withBasicAuth(userName, password)
+                .withConnectTimeout(Duration.ofSeconds(connectionTimeout))
+                .withSocketTimeout(Duration.ofSeconds(socketTimeout))
                 .build();
     }
 }

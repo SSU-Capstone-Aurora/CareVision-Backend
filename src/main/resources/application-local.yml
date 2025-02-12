@@ -26,3 +26,7 @@ elasticsearch:
   uris: ${LOCAL_ES_URIS}
   username: ${LOCAL_ES_USERNAME}
   password: ${LOCAL_ES_PASSWORD}
+  connection:
+    timeout: ${ES_CONNECTION_TIMEOUT}
+  socket:
+    timeout: ${ES_SOCKET_TIMEOUT}
