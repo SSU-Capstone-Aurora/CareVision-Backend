@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 변수 설정
-OVERRIDE_COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
+COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
 NGINX_CONF_DIR="/home/ubuntu/nginx"
 DELAY=10
 NGINX_CONTAINER="nginx"
@@ -36,7 +36,7 @@ fi
 echo
 echo "-----------------------------"
 echo "새로운 환경 이미지 빌드 중: $NEW_API_ENV (캐시 무시)"
-sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" build --no-cache $NEW_API_ENV || { echo "❌ 이미지 빌드 실패"; exit 1; }
+sudo docker-compose -f "$COMPOSE_PATH" build --no-cache $NEW_API_ENV || { echo "❌ 이미지 빌드 실패"; exit 1; }
 echo "✅ 이미지 빌드 완료"
 echo "-----------------------------"
 echo
@@ -45,7 +45,7 @@ echo
 echo
 echo "-----------------------------"
 echo "새로운 환경 시작 중: $NEW_API_ENV"
-sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" up -d --no-deps $NEW_API_ENV || { echo "❌ 새로운 환경 시작 실패"; exit 1; }
+sudo docker-compose -f "$COMPOSE_PATH" up -d --no-deps $NEW_API_ENV || { echo "❌ 새로운 환경 시작 실패"; exit 1; }
 echo "✅ 새로운 환경 시작 완료"
 echo "-----------------------------"
 echo
@@ -93,8 +93,8 @@ echo
 echo
 echo "-----------------------------"
 echo "이전 환경 중지 및 제거 중: $CURRENT_API_ENV"
-sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" stop "$CURRENT_API_ENV" || { echo "❌ 이전 환경 중지 실패"; exit 1; }
-sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" rm -f "$CURRENT_API_ENV" || { echo "❌ 이전 환경 제거 실패"; exit 1; }
+sudo docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_API_ENV" || { echo "❌ 이전 환경 중지 실패"; exit 1; }
+sudo docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_API_ENV" || { echo "❌ 이전 환경 제거 실패"; exit 1; }
 echo "✅ 이전 환경 중지 및 제거 완료"
 echo "-----------------------------"
 echo
