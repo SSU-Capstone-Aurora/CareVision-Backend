@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # 변수 설정
-COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
+BASE_COMPOSE_PATH="/home/ubuntu/docker-compose.base.yml"
+OVERRIDE_COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
 NGINX_CONF_DIR="/home/ubuntu/nginx"
 DELAY=10
 NGINX_CONTAINER="nginx"
@@ -36,7 +37,7 @@ fi
 echo
 echo "-----------------------------"
 echo "새로운 환경 이미지 빌드 중: $NEW_API_ENV (캐시 무시)"
-sudo docker-compose -f "$COMPOSE_PATH" build --no-cache $NEW_API_ENV || { echo "❌ 이미지 빌드 실패"; exit 1; }
+sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" build --no-cache $NEW_API_ENV || { echo "❌ 이미지 빌드 실패"; exit 1; }
 echo "✅ 이미지 빌드 완료"
 echo "-----------------------------"
 echo
@@ -45,7 +46,7 @@ echo
 echo
 echo "-----------------------------"
 echo "새로운 환경 시작 중: $NEW_API_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" up -d --no-deps $NEW_API_ENV || { echo "❌ 새로운 환경 시작 실패"; exit 1; }
+sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" up -d --no-deps $NEW_API_ENV || { echo "❌ 새로운 환경 시작 실패"; exit 1; }
 echo "✅ 새로운 환경 시작 완료"
 echo "-----------------------------"
 echo
@@ -84,7 +85,7 @@ docker exec "$NGINX_CONTAINER" nginx -t || { echo "❌ Nginx 설정 오류"; exi
 echo "✅ Nginx 설정 문제 없음"
 
 echo "Nginx 리로드 중..."
-sudo docker-compose -f "$COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload || { echo "❌ Nginx 리로드 실패"; exit 1; }
+sudo docker-compose -f "$BASE_COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload || { echo "❌ Nginx 리로드 실패"; exit 1; }
 echo "✅ Nginx 리로드 완료"
 echo "-----------------------------"
 echo
@@ -93,8 +94,8 @@ echo
 echo
 echo "-----------------------------"
 echo "이전 환경 중지 및 제거 중: $CURRENT_API_ENV"
-sudo docker-compose -f "$COMPOSE_PATH" stop "$CURRENT_API_ENV" || { echo "❌ 이전 환경 중지 실패"; exit 1; }
-sudo docker-compose -f "$COMPOSE_PATH" rm -f "$CURRENT_API_ENV" || { echo "❌ 이전 환경 제거 실패"; exit 1; }
+sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" stop "$CURRENT_API_ENV" || { echo "❌ 이전 환경 중지 실패"; exit 1; }
+sudo docker-compose -f "$OVERRIDE_COMPOSE_PATH" rm -f "$CURRENT_API_ENV" || { echo "❌ 이전 환경 제거 실패"; exit 1; }
 echo "✅ 이전 환경 중지 및 제거 완료"
 echo "-----------------------------"
 echo
