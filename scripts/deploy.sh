@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # 스크립트 실행 중 오류 발생 시 즉시 종료
+# set -e  # 스크립트 실행 중 오류 발생 시 즉시 종료
 
 # 변수 설정
 COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
