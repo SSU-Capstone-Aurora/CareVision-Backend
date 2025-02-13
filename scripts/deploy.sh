@@ -64,11 +64,16 @@ fi
 echo
 echo "-----------------------------"
 echo "Nginx 설정 파일 업데이트 중..."
-docker cp "$NGINX_CONF_DIR/$NEW_NGINX_CONF" "$NGINX_CONTAINER:/etc/nginx/conf.d/" || { echo "❌ Nginx 설정 복사 실패"; exit 1; }
-docker exec "$NGINX_CONTAINER" rm -f "/etc/nginx/conf.d/$CURRENT_NGINX_CONF" || { echo "❌ 기존 Nginx 설정 삭제 실패"; exit 1; }
-echo "✅ Nginx 설정 파일 업데이트 완료"
+docker cp "$NGINX_CONF_DIR/$NEW_NGINX_CONF" "$NGINX_CONTAINER:/etc/nginx/conf.d/"
+
+# 복사된 파일 확인
+docker exec "$NGINX_CONTAINER" ls -l /etc/nginx/conf.d/
+
+# 현재 설정 파일 삭제
+docker exec "$NGINX_CONTAINER" rm -f "/etc/nginx/conf.d/$CURRENT_NGINX_CONF"
 echo "-----------------------------"
 echo
+
 
 # Nginx 설정 테스트 및 리로드
 echo
