@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # 변수 설정
-BASE_COMPOSE_PATH="/home/ubuntu/docker-compose.base.yml"
 OVERRIDE_COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
 NGINX_CONF_DIR="/home/ubuntu/nginx"
 DELAY=10
@@ -85,7 +84,7 @@ docker exec "$NGINX_CONTAINER" nginx -t || { echo "❌ Nginx 설정 오류"; exi
 echo "✅ Nginx 설정 문제 없음"
 
 echo "Nginx 리로드 중..."
-sudo docker-compose -f "$BASE_COMPOSE_PATH" exec "$NGINX_CONTAINER" nginx -s reload || { echo "❌ Nginx 리로드 실패"; exit 1; }
+docker exec "$NGINX_CONTAINER" nginx -s reload || { echo "❌ Nginx 리로드 실패"; exit 1; }
 echo "✅ Nginx 리로드 완료"
 echo "-----------------------------"
 echo
