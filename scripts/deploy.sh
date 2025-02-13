@@ -1,5 +1,4 @@
 #!/bin/bash
-# set -e  # 스크립트 실행 중 오류 발생 시 즉시 종료
 
 # 변수 설정
 COMPOSE_PATH="/home/ubuntu/docker-compose.override.yml"
@@ -66,14 +65,16 @@ echo "-----------------------------"
 echo "Nginx 설정 파일 업데이트 중..."
 docker cp "$NGINX_CONF_DIR/$NEW_NGINX_CONF" "$NGINX_CONTAINER:/etc/nginx/conf.d/"
 
-# 복사된 파일 확인
+echo "복사된 파일 확인"
 docker exec "$NGINX_CONTAINER" ls -l /etc/nginx/conf.d/
 
-# 현재 설정 파일 삭제
+echo "현재 설정 파일 삭제"
 docker exec "$NGINX_CONTAINER" rm -f "/etc/nginx/conf.d/$CURRENT_NGINX_CONF"
 echo "-----------------------------"
 echo
 
+echo "남아있는 파일 확인"
+docker exec "$NGINX_CONTAINER" ls -l /etc/nginx/conf.d/
 
 # Nginx 설정 테스트 및 리로드
 echo
