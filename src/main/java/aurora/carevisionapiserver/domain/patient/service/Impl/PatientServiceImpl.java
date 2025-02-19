@@ -69,13 +69,6 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findPatientByNurse(nurse, lastIdx, size);
     }
 
-    public Patient getPatientsByPatientId(String patientCode) {
-        Patient patient = patientRepository.findPatientByCode(patientCode);
-        if (patient == null) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
-
-        return patientRepository.findPatientByCode(patientCode);
-    }
-
     @Override
     public void deletePatient(Long patientId) {
         Patient patient = getPatient(patientId);
