@@ -1,0 +1,31 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: ${TEST_USERNAME}
+    password: ${TEST_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: ${LOCAL_REDIS_URL}
+      port: 6379
+
+elasticsearch:
+  uris: ${LOCAL_ES_URIS}
+  username: ${LOCAL_ES_USERNAME}
+  password: ${LOCAL_ES_PASSWORD}
+  connection:
+    timeout: ${ES_CONNECTION_TIMEOUT}
+  socket:
+    timeout: ${ES_SOCKET_TIMEOUT}
