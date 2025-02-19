@@ -3,6 +3,8 @@ package aurora.carevisionapiserver.domain.patient.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Slice;
+
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
@@ -19,6 +21,8 @@ public interface PatientService {
     List<Patient> getPatients(Nurse nurse);
 
     List<Patient> getPatients(Long adminId);
+
+    Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size);
 
     void deletePatient(Long patientId);
 

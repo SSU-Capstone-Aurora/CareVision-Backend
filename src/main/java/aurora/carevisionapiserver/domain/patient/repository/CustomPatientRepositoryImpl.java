@@ -2,8 +2,12 @@ package aurora.carevisionapiserver.domain.patient.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -41,5 +45,33 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
                                 .eq(nurse.getDepartment().getHospital())
                                 .and(patient.nurse.isNull()))
                 .fetch();
+    }
+
+    @Override
+    public Slice<Patient> findPatientByNurse(Nurse nurse, Long lastIdx, int size) {
+        QPatient patient = QPatient.patient;
+
+        List<Patient> patients =
+                queryFactory
+                        .select(patient)
+                        .from(patient)
+                        .where(isGreaterThan(patient, lastIdx).and(isEqTo(patient, nurse)))
+                        .limit(size + 1)
+                        .fetch();
+
+        boolean hasNext = patients.size() > size;
+        if (hasNext) {
+            patients = patients.subList(0, Math.toIntExact(size));
+        }
+
+        return new SliceImpl<>(patients, Pageable.unpaged(), hasNext);
+    }
+
+    private static BooleanExpression isEqTo(QPatient patient, Nurse nurse) {
+        return patient.nurse.eq(nurse);
+    }
+
+    private static BooleanExpression isGreaterThan(QPatient patient, Long lastIdx) {
+        return patient.id.gt(lastIdx);
     }
 }

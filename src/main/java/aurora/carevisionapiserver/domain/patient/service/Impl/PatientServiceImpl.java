@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,11 +64,9 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository.findPatientByAdmin(admin);
     }
 
-    public Patient getPatientsByPatientId(String patientCode) {
-        Patient patient = patientRepository.findPatientByCode(patientCode);
-        if (patient == null) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
-
-        return patientRepository.findPatientByCode(patientCode);
+    @Override
+    public Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size) {
+        return patientRepository.findPatientByNurse(nurse, lastIdx, size);
     }
 
     @Override
