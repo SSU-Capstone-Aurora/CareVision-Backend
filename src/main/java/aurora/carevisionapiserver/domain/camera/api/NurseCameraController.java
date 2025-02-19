@@ -3,15 +3,18 @@ package aurora.carevisionapiserver.domain.camera.api;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoLinkResponse;
@@ -19,6 +22,7 @@ import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
@@ -36,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class NurseCameraController {
     private final CameraService cameraService;
     private final PatientService patientService;
+    private final PageService pageService;
 
     @Operation(summary = "특정 환자 실시간 영상 스트리밍 관련 정보 조회 API", description = "환자의 스트리밍 관련 정보를 조회합니다_숙희")
     @ApiResponses({
@@ -59,12 +64,19 @@ public class NurseCameraController {
         @ApiResponse(responseCode = "CAMERA400", description = "NOT FOUND, 카메라를 찾을 수 없습니다.")
     })
     @GetMapping("/streaming")
-    public BaseResponse<StreamingListResponse> getStreamingInfoList(
-            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
-        List<Patient> patients = patientService.getPatients(nurse);
-        Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients);
+    public BaseResponse<StreamingPageResponse> getStreamingInfoList(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<Patient> patients = patientService.getPatientSlice(nurse, lastIdx, size);
+        Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients.getContent());
+
         return BaseResponse.of(
-                SuccessStatus._OK, CameraConverter.toStreamingListResponse(streamingInfo));
+                SuccessStatus._OK,
+                CameraConverter.toStreamingPageResponse(
+                        streamingInfo,
+                        patients.hasNext(),
+                        pageService.getNextCursor(size, patients.getContent())));
     }
 
     @Operation(
