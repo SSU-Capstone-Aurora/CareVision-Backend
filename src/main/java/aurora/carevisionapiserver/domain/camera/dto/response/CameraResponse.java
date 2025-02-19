@@ -42,9 +42,10 @@ public class CameraResponse {
 
     @Getter
     @Builder
-    public static class StreamingListResponse {
+    public static class StreamingPageResponse {
         List<StreamingResponse> streamingResponse;
-        Long totalCount;
+        boolean hasNext;
+        Long nextCursor;
     }
 
     @Getter
