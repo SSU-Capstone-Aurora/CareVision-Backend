@@ -61,7 +61,7 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
 
         boolean hasNext = patients.size() > size;
         if (hasNext) {
-            patients = patients.subList(0, Math.toIntExact(size));
+            patients = patients.subList(0, size);
         }
 
         return new SliceImpl<>(patients, Pageable.unpaged(), hasNext);

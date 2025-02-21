@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoListResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
@@ -55,14 +55,14 @@ public class CameraConverter {
                 .build();
     }
 
-    public static CameraResponse.StreamingPageResponse toStreamingPageResponse(
+    public static StreamingPageResponse toStreamingPageResponse(
             Map<Patient, String> streamingInfo, boolean hasNext, Long nextCursor) {
         List<StreamingResponse> responses =
                 streamingInfo.entrySet().stream()
                         .map(entry -> toStreamingResponse(entry.getKey(), entry.getValue()))
                         .collect(Collectors.toList());
 
-        return CameraResponse.StreamingPageResponse.builder()
+        return StreamingPageResponse.builder()
                 .streamingResponse(responses)
                 .hasNext(hasNext)
                 .nextCursor(nextCursor)
