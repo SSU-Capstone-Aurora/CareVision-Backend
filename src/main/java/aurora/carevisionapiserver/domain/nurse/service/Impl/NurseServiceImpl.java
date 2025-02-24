@@ -2,6 +2,7 @@ package aurora.carevisionapiserver.domain.nurse.service.Impl;
 
 import java.util.List;
 
+import aurora.carevisionapiserver.domain.nurse.converter.NurseDocumentConverter;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -89,7 +90,7 @@ public class NurseServiceImpl implements NurseService {
         Nurse nurse = getInactiveNurse(nurseId);
         nurse.activateNurse();
         nurseRepository.save(nurse);
-        nurseEsRepository.save(NurseConverter.toNurseDocument(nurse));
+        nurseEsRepository.save(NurseDocumentConverter.toNurseDocument(nurse));
     }
 
     @Override
