@@ -7,8 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,8 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
-import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class NurseControllerTest extends ControllerTestSupport {
@@ -27,10 +25,11 @@ class NurseControllerTest extends ControllerTestSupport {
     @Test
     void searchUnlinkedPatientList() throws Exception {
         // given
-        Map<PatientDocument, Bed> patientDocumentBedMap = new HashMap<>();
+        PatientSearchListResponse patientSearchListResponse =
+                PatientSearchListResponse.builder().patientList(List.of()).build();
 
         // when
-        when(patientService.searchUnlinkedPatients(any())).thenReturn(patientDocumentBedMap);
+        when(patientService.searchUnlinkedPatients(any())).thenReturn(patientSearchListResponse);
 
         // then
         mockMvc.perform(
