@@ -15,9 +15,11 @@ import aurora.carevisionapiserver.domain.bed.service.BedService;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.exception.PatientException;
 import aurora.carevisionapiserver.domain.patient.repository.PatientEsRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
@@ -39,17 +41,7 @@ public class PatientServiceImpl implements PatientService {
 
     public Map<PatientDocument, Bed> searchPatient(String patientName) {
         List<PatientDocument> patients = patientEsRepository.searchByName(patientName);
-        if (patients.size() == 0) throw new PatientException(ErrorStatus.PATIENT_NOT_FOUND);
-
-        Map<PatientDocument, Bed> patientInfo = new HashMap<>();
-
-        for (PatientDocument patient : patients) {
-            Long bedId = patient.getBedId();
-            Bed bed = bedService.findById(bedId);
-            patientInfo.put(patient, bed);
-        }
-
-        return patientInfo;
+        return getPatientDocumentBedMap(patients);
     }
 
     @Override
@@ -95,13 +87,12 @@ public class PatientServiceImpl implements PatientService {
         patientRegistrationService.createPatient(patientCreateRequest, admin.getDepartment());
     }
 
-    private void connectNurseToPatient(Patient patient, Nurse nurse) {
-        nurseService.connectPatient(nurse, patient);
-    }
-
     @Override
-    public List<Patient> getUnlinkedPatients(Nurse nurse) {
-        return patientRepository.findUnlinkedPatientsByNurse(nurse);
+    public PatientSearchListResponse searchUnlinkedPatients(String patientName) {
+        List<PatientDocument> patients =
+                patientEsRepository.searchByNameAndNurseIsNull(patientName);
+        Map<PatientDocument, Bed> patientDocumentBedMap = getPatientDocumentBedMap(patients);
+        return PatientConverter.toPatientSearchListResponse(patientDocumentBedMap);
     }
 
     @Override
@@ -113,5 +104,21 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository
                 .findById(patientId)
                 .orElseThrow(() -> new PatientException(ErrorStatus.PATIENT_NOT_FOUND));
+    }
+
+    private void connectNurseToPatient(Patient patient, Nurse nurse) {
+        nurseService.connectPatient(nurse, patient);
+    }
+
+    private Map<PatientDocument, Bed> getPatientDocumentBedMap(List<PatientDocument> patients) {
+        Map<PatientDocument, Bed> patientInfo = new HashMap<>();
+
+        for (PatientDocument patient : patients) {
+            Long bedId = patient.getBedId();
+            Bed bed = bedService.findById(bedId);
+            patientInfo.put(patient, bed);
+        }
+
+        return patientInfo;
     }
 }

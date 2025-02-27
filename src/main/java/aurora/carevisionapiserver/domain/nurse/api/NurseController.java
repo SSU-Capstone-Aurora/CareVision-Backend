@@ -27,6 +27,7 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientSelectRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
@@ -128,18 +129,18 @@ public class NurseController {
     }
 
     @Operation(
-            summary = "아직 간호사와 연결되지 않은 환자 리스트 조회 API",
-            description = "등록되었지만 아직 간호사와 연결되지 않은 환자 리스트를 조회합니다._예림")
+            summary = "간호사와 연결되지 않은 환자 리스트 검색 API",
+            description = "간호사와 아직 연결되지 않은 등록된 환자 목록을 조회합니다. 검색어 없이 요청하면 전체 목록을 반환합니다._예림")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
     })
     @RefreshTokenApiResponse
-    @GetMapping("/patients/unlinked")
-    public BaseResponse<PatientProfileListResponse> getUnlinkedPatientList(
-            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
-        List<Patient> patients = patientService.getUnlinkedPatients(nurse);
-        return BaseResponse.of(
-                SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
+    @GetMapping("/patients/unlinked/search")
+    public BaseResponse<PatientSearchListResponse> searchUnlinkedPatientList(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestParam(name = "search") String patientName) {
+        PatientSearchListResponse response = patientService.searchUnlinkedPatients(patientName);
+        return BaseResponse.onSuccess(response);
     }
 
     @Operation(summary = "간호사의 알람 리스트 조회 API", description = "간호사의 이상행동 감지 알람 리스트를 조회합니다._숙희")

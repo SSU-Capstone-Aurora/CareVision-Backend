@@ -34,20 +34,6 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
     }
 
     @Override
-    public List<Patient> findUnlinkedPatientsByNurse(Nurse nurse) {
-        QPatient patient = QPatient.patient;
-
-        return queryFactory
-                .selectFrom(patient)
-                .where(
-                        patient.department
-                                .hospital
-                                .eq(nurse.getDepartment().getHospital())
-                                .and(patient.nurse.isNull()))
-                .fetch();
-    }
-
-    @Override
     public Slice<Patient> findPatientByNurse(Nurse nurse, Long lastIdx, int size) {
         QPatient patient = QPatient.patient;
 
