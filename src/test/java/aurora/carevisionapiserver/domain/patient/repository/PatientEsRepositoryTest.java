@@ -6,13 +6,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.elasticsearch.DataElasticsearchTest;
 
+import aurora.carevisionapiserver.IntegrationTestSupport;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
@@ -21,30 +20,18 @@ import aurora.carevisionapiserver.domain.patient.converter.PatientDocumentConver
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DataElasticsearchTest
-class PatientEsRepositoryTest {
+class PatientEsRepositoryTest extends IntegrationTestSupport {
     @Autowired PatientEsRepository patientEsRepository;
 
-    private List<Patient> patientList;
+    private Hospital hospital;
+    private Department department;
+    private Bed bed;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
-
-        Department department1 = createDepartment("오로라 과");
-        Bed bed1 = createBed(1L, 2L, 3L, department1);
-        Nurse nurse1 = createNurse(1L, "오로라", department1);
-
-        Patient patient1 = createPatient(1L, "patient0", department1, nurse1, bed1);
-        Patient patient2 = createPatient(2L, "patient1", department1, nurse1, bed1);
-        Patient patient3 = createPatient(3L, "patient2", department1, nurse1, bed1);
-
-        Patient unlinkedPatient1 = createPatient(4L, "patient3", department1, null, bed1);
-        Patient unlinkedPatient2 = createPatient(5L, "patient4", department1, null, bed1);
-
-        patientList = List.of(patient1, patient2, patient3, unlinkedPatient1, unlinkedPatient2);
-
-        patientEsRepository.saveAll(PatientDocumentConverter.toPatientDocumentList(patientList));
+        hospital = createHospital();
+        department = createDepartment("오로라 과", hospital);
+        bed = createBed(1L, 1L, 2L, 3L, department);
     }
 
     @AfterEach
@@ -56,6 +43,19 @@ class PatientEsRepositoryTest {
     @Test
     void searchByNameAndNurseIsNull() {
         // given
+        Patient linkedPatient1 = createPatient(1L, "patient1", "A10000", true);
+        Patient linkedPatient2 = createPatient(2L, "patient2", "B10000", true);
+        Patient unlinkedPatient1 = createPatient(3L, "patient3", "D10000", false);
+        Patient unlinkedPatient2 = createPatient(4L, "patient4", "E10000", false);
+
+        patientEsRepository.saveAll(
+                PatientDocumentConverter.toPatientDocumentList(
+                        List.of(
+                                linkedPatient1,
+                                linkedPatient2,
+                                unlinkedPatient1,
+                                unlinkedPatient2)));
+
         String patientName = "patient";
 
         // when
@@ -66,11 +66,10 @@ class PatientEsRepositoryTest {
         assertThat(response)
                 .hasSize(2)
                 .extracting("patientId", "name")
-                .contains(tuple(4L, "patient3"), tuple(5L, "patient4"));
+                .contains(tuple(3L, "patient3"), tuple(4L, "patient4"));
     }
 
-    private Department createDepartment(String name) {
-        Hospital hospital = createHospital();
+    private Department createDepartment(String name, Hospital hospital) {
         return Department.builder().hospital(hospital).name(name).build();
     }
 
@@ -79,30 +78,32 @@ class PatientEsRepositoryTest {
     }
 
     private Bed createBed(
+            Long id,
             Long inpatientWardNumber,
             Long patientRoomNumber,
             Long bedNumber,
             Department department) {
         return Bed.builder()
-                .bedNumber(inpatientWardNumber)
-                .patientRoomNumber(inpatientWardNumber)
+                .id(id)
                 .inpatientWardNumber(inpatientWardNumber)
+                .patientRoomNumber(patientRoomNumber)
+                .bedNumber(bedNumber)
                 .department(department)
+                .build();
+    }
+
+    private Patient createPatient(Long id, String name, String code, boolean linkedToNurse) {
+        return Patient.builder()
+                .id(id)
+                .name(name)
+                .code(code)
+                .department(department)
+                .bed(bed)
+                .nurse(linkedToNurse ? createNurse(id, "오로라", department) : null)
                 .build();
     }
 
     private Nurse createNurse(Long id, String name, Department department) {
         return Nurse.builder().id(id).name(name).department(department).build();
-    }
-
-    private Patient createPatient(
-            Long id, String name, Department department, Nurse nurse, Bed bed) {
-        return Patient.builder()
-                .id(id)
-                .name(name)
-                .department(department)
-                .nurse(nurse)
-                .bed(bed)
-                .build();
     }
 }
