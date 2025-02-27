@@ -22,7 +22,6 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.repository.PatientEsRepository;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // BeforeAll 메서드가 static이 아니어도 되도록 설정
 class PatientServiceTest extends IntegrationTestSupport {
 
     @Autowired PatientService patientService;
