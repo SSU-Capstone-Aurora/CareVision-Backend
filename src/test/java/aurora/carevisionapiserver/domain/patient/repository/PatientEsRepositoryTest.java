@@ -23,14 +23,12 @@ import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 class PatientEsRepositoryTest extends IntegrationTestSupport {
     @Autowired PatientEsRepository patientEsRepository;
 
-    private Hospital hospital;
     private Department department;
     private Bed bed;
 
     @BeforeEach
     void setup() {
-        hospital = createHospital();
-        department = createDepartment("오로라 과", hospital);
+        department = createDepartment("오로라 과");
         bed = createBed(1L, 1L, 2L, 3L, department);
     }
 
@@ -69,7 +67,8 @@ class PatientEsRepositoryTest extends IntegrationTestSupport {
                 .contains(tuple(3L, "patient3"), tuple(4L, "patient4"));
     }
 
-    private Department createDepartment(String name, Hospital hospital) {
+    private Department createDepartment(String name) {
+        Hospital hospital = createHospital();
         return Department.builder().hospital(hospital).name(name).build();
     }
 

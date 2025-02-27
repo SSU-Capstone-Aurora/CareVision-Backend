@@ -31,15 +31,12 @@ class PatientServiceTest extends IntegrationTestSupport {
     @Autowired BedRepository bedRepository;
     @Autowired NurseRepository nurseRepository;
     @Autowired PatientEsRepository patientEsRepository;
-
-    private Hospital hospital;
     private Department department;
     private Bed bed;
 
     @BeforeEach
     void setup() {
-        hospital = createHospital();
-        department = createDepartment("오로라 과", hospital);
+        department = createDepartment("오로라 과");
         bed = createBed(1L, 1L, 2L, 3L, department);
     }
 
@@ -86,7 +83,8 @@ class PatientServiceTest extends IntegrationTestSupport {
                         tuple("patient4", "E10000", 1L, 2L, 3L));
     }
 
-    private Department createDepartment(String name, Hospital hospital) {
+    private Department createDepartment(String name) {
+        Hospital hospital = createHospital();
         return departmentRepository.save(
                 Department.builder().hospital(hospital).name(name).build());
     }
