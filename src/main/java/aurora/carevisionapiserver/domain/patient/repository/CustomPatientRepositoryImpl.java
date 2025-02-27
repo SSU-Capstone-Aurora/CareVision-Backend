@@ -56,6 +56,7 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
                         .select(patient)
                         .from(patient)
                         .where(isGreaterThan(patient, lastIdx).and(isEqTo(patient, nurse)))
+                        .orderBy(patient.id.asc())
                         .limit(size + 1)
                         .fetch();
 
