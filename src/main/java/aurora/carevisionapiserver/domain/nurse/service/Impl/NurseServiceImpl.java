@@ -2,7 +2,6 @@ package aurora.carevisionapiserver.domain.nurse.service.Impl;
 
 import java.util.List;
 
-import aurora.carevisionapiserver.domain.nurse.converter.NurseDocumentConverter;
 import jakarta.transaction.Transactional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
+import aurora.carevisionapiserver.domain.nurse.converter.NurseDocumentConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
