@@ -98,8 +98,4 @@ public class NurseConverter {
             long count) {
         return NurseRegisterRequestCountResponse.from(count);
     }
-
-    public static NurseDocument toNurseDocument(Nurse nurse) {
-        return NurseDocument.builder().name(nurse.getName()).username(nurse.getUsername()).build();
-    }
 }

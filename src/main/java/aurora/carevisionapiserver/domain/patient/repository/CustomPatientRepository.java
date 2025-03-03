@@ -11,7 +11,5 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 public interface CustomPatientRepository {
     List<Patient> findPatientByAdmin(Admin admin);
 
-    List<Patient> findUnlinkedPatientsByNurse(Nurse nurse);
-
     Slice<Patient> findPatientByNurse(Nurse nurse, Long lastIdx, int size);
 }

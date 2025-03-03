@@ -26,4 +26,7 @@ public class PatientDocument {
 
     @Field(type = FieldType.Long)
     private Long bedId;
+
+    @Field(type = FieldType.Long)
+    private Long nurseId;
 }
