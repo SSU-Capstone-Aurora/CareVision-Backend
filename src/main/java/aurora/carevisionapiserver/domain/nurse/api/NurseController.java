@@ -138,7 +138,7 @@ public class NurseController {
     @GetMapping("/patients/unlinked/search")
     public BaseResponse<PatientSearchListResponse> searchUnlinkedPatientList(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            @RequestParam(name = "search") String patientName) {
+            @RequestParam(name = "search", required = false) String patientName) {
         PatientSearchListResponse response = patientService.searchUnlinkedPatients(patientName);
         return BaseResponse.onSuccess(response);
     }

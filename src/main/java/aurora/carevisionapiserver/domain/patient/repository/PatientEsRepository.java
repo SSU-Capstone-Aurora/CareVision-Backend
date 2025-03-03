@@ -11,7 +11,10 @@ public interface PatientEsRepository extends ElasticsearchRepository<PatientDocu
     @Query("{\"match\": {\"name.ngram\": \"?0\"}}")
     List<PatientDocument> searchByName(String name);
 
+    @Query("{\"bool\": {\"must\": [ {\"term\": {\"nurseId\": -1}} ] }}")
+    List<PatientDocument> findAllByNurseIdIsNull();
+
     @Query(
             "{\"bool\": {\"must\": [ {\"match\": {\"name.ngram\": \"?0\"}}, {\"term\": {\"nurseId\": -1}} ] }}")
-    List<PatientDocument> searchByNameAndNurseIsNull(String name);
+    List<PatientDocument> findByNameAndNurseIdIsNull(String name);
 }

@@ -58,7 +58,7 @@ class PatientEsRepositoryTest extends IntegrationTestSupport {
 
         // when
         List<PatientDocument> response =
-                patientEsRepository.searchByNameAndNurseIsNull(patientName);
+                patientEsRepository.findByNameAndNurseIdIsNull(patientName);
 
         // then
         assertThat(response)
