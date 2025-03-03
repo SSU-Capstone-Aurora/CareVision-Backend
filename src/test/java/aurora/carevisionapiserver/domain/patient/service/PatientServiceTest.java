@@ -52,10 +52,10 @@ class PatientServiceTest extends IntegrationTestSupport {
     @Test
     void searchUnlinkedPatients() {
         // given
-        Patient linkedPatient1 = createPatient(1L, "patient1", "A10000", true);
-        Patient linkedPatient2 = createPatient(2L, "patient2", "B10000", true);
-        Patient unlinkedPatient1 = createPatient(3L, "patient3", "D10000", false);
-        Patient unlinkedPatient2 = createPatient(4L, "patient4", "E10000", false);
+        Patient linkedPatient1 = createLinkedPatient(1L, "patient1", "A10000");
+        Patient linkedPatient2 = createLinkedPatient(2L, "patient2", "B10000");
+        Patient unlinkedPatient1 = createUnlinkedPatient(3L, "patient3", "D10000");
+        Patient unlinkedPatient2 = createUnlinkedPatient(4L, "patient4", "E10000");
 
         patientEsRepository.saveAll(
                 PatientDocumentConverter.toPatientDocumentList(
@@ -86,10 +86,10 @@ class PatientServiceTest extends IntegrationTestSupport {
     @Test
     void searchUnlinkedPatientsWhenPatientNameIsEmpty() {
         // given
-        Patient linkedPatient1 = createPatient(1L, "patient1", "A10000", true);
-        Patient linkedPatient2 = createPatient(2L, "patient2", "B10000", true);
-        Patient unlinkedPatient1 = createPatient(3L, "patient3", "D10000", false);
-        Patient unlinkedPatient2 = createPatient(4L, "patient4", "E10000", false);
+        Patient linkedPatient1 = createLinkedPatient(1L, "patient1", "A10000");
+        Patient linkedPatient2 = createLinkedPatient(2L, "patient2", "B10000");
+        Patient unlinkedPatient1 = createUnlinkedPatient(3L, "patient3", "D10000");
+        Patient unlinkedPatient2 = createUnlinkedPatient(4L, "patient4", "E10000");
 
         patientEsRepository.saveAll(
                 PatientDocumentConverter.toPatientDocumentList(
@@ -142,14 +142,25 @@ class PatientServiceTest extends IntegrationTestSupport {
                         .build());
     }
 
-    private Patient createPatient(Long id, String name, String code, boolean linkedToNurse) {
+    private Patient createLinkedPatient(Long id, String name, String code) {
         return Patient.builder()
                 .id(id)
                 .name(name)
                 .code(code)
                 .department(department)
                 .bed(bed)
-                .nurse(linkedToNurse ? createNurse(id, "오로라", department) : null)
+                .nurse(createNurse(id, "오로라", department))
+                .build();
+    }
+
+    private Patient createUnlinkedPatient(Long id, String name, String code) {
+        return Patient.builder()
+                .id(id)
+                .name(name)
+                .code(code)
+                .department(department)
+                .bed(bed)
+                .nurse(null)
                 .build();
     }
 
