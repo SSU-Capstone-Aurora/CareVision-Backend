@@ -48,7 +48,7 @@ class PatientServiceTest extends IntegrationTestSupport {
         hospitalRepository.deleteAllInBatch();
     }
 
-    @DisplayName("간호사와 연결되지 않은 환자만 필터링하여 검색한다.")
+    @DisplayName("환자명을 입력받아 간호사와 연결되지 않은 환자만 검색한다.")
     @Test
     void searchUnlinkedPatients() {
         // given
@@ -67,6 +67,40 @@ class PatientServiceTest extends IntegrationTestSupport {
 
         // when
         PatientSearchListResponse response = patientService.searchUnlinkedPatients("patient");
+
+        // then
+        assertThat(response.getPatientList())
+                .hasSize(2)
+                .extracting(
+                        "patientName",
+                        "code",
+                        "inpatientWardNumber",
+                        "patientRoomNumber",
+                        "bedNumber")
+                .containsExactlyInAnyOrder(
+                        tuple("patient3", "D10000", 1L, 2L, 3L),
+                        tuple("patient4", "E10000", 1L, 2L, 3L));
+    }
+
+    @DisplayName("검색어를 입력하지 않았을 때에는 간호사와 연결되지 않은 모든 환자가 검색된다.")
+    @Test
+    void searchUnlinkedPatientsWhenPatientNameIsEmpty() {
+        // given
+        Patient linkedPatient1 = createPatient(1L, "patient1", "A10000", true);
+        Patient linkedPatient2 = createPatient(2L, "patient2", "B10000", true);
+        Patient unlinkedPatient1 = createPatient(3L, "patient3", "D10000", false);
+        Patient unlinkedPatient2 = createPatient(4L, "patient4", "E10000", false);
+
+        patientEsRepository.saveAll(
+                PatientDocumentConverter.toPatientDocumentList(
+                        List.of(
+                                linkedPatient1,
+                                linkedPatient2,
+                                unlinkedPatient1,
+                                unlinkedPatient2)));
+
+        // when
+        PatientSearchListResponse response = patientService.searchUnlinkedPatients("");
 
         // then
         assertThat(response.getPatientList())
