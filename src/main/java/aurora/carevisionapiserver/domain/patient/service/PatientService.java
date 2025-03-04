@@ -19,8 +19,6 @@ public interface PatientService {
 
     Patient getPatient(Long patientId);
 
-    List<Patient> getPatients(Nurse nurse);
-
     List<Patient> getPatients(Long adminId);
 
     Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size);

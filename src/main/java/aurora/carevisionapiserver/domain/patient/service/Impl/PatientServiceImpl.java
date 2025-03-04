@@ -45,11 +45,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> getPatients(Nurse nurse) {
-        return patientRepository.findPatientByNurse(nurse);
-    }
-
-    @Override
     public List<Patient> getPatients(Long adminId) {
         Admin admin = adminService.getAdmin(adminId);
 
