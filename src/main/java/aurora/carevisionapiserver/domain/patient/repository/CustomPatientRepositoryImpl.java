@@ -55,7 +55,7 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
     }
 
     private static BooleanExpression isEqTo(QPatient patient, Nurse nurse) {
-        return patient.nurse.eq(nurse);
+        return nurse != null ? patient.nurse.eq(nurse) : patient.nurse.isNull();
     }
 
     private static BooleanExpression isGreaterThan(QPatient patient, Long lastIdx) {
