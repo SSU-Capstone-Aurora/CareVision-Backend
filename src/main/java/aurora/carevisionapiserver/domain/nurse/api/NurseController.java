@@ -1,8 +1,9 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
 import java.util.HashMap;
-import java.util.List;
 
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +27,10 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientSelectRequest;
-import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfilePageResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
@@ -52,6 +54,7 @@ public class NurseController {
     private final PatientService patientService;
     private final NurseService nurseService;
     private final FcmService fcmService;
+    private final PageService pageService;
 
     @Operation(summary = "간호사 마이페이지 API", description = "간호사 마이페이지를 조회합니다._숙희")
     @ApiResponses({
@@ -71,11 +74,16 @@ public class NurseController {
     })
     @RefreshTokenApiResponse
     @GetMapping("/patients")
-    public BaseResponse<PatientProfileListResponse> getPatientList(
-            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse) {
-        List<Patient> patients = patientService.getPatients(nurse);
+    public BaseResponse<PatientProfilePageResponse> getPatientList(
+            @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<Patient> patients = patientService.getPatientSlice(nurse, lastIdx, size);
+
         return BaseResponse.of(
-                SuccessStatus._OK, PatientConverter.toPatientProfileListResponse(patients));
+                SuccessStatus._OK,
+                PatientConverter.toPatientProfilePageResponse(
+                        patients, pageService.getNextCursor(size, patients.getContent())));
     }
 
     @Operation(
