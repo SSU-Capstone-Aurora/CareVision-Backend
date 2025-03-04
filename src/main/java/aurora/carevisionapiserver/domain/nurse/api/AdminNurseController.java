@@ -58,6 +58,7 @@ public class AdminNurseController {
     @RefreshTokenApiResponse
     @GetMapping("/nurses/search")
     public BaseResponse<NursePreviewListResponse> searchNurse(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @RequestParam(name = "search") String nurseName) {
         List<NurseDocument> nurses = nurseService.searchNurse(nurseName);
         return BaseResponse.onSuccess(NurseConverter.toNurseDocumentPreviewListResponse(nurses));

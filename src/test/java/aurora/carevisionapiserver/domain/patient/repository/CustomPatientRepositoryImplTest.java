@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.repository;
+package aurora.carevisionapiserver.domain.patient.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -23,8 +23,6 @@ import aurora.carevisionapiserver.domain.hospital.repository.HospitalRepository;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.repository.CustomPatientRepositoryImpl;
-import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

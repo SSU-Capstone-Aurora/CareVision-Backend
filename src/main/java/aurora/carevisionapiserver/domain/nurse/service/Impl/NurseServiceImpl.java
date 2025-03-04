@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
+import aurora.carevisionapiserver.domain.nurse.converter.NurseDocumentConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
@@ -89,7 +90,7 @@ public class NurseServiceImpl implements NurseService {
         Nurse nurse = getInactiveNurse(nurseId);
         nurse.activateNurse();
         nurseRepository.save(nurse);
-        nurseEsRepository.save(NurseConverter.toNurseDocument(nurse));
+        nurseEsRepository.save(NurseDocumentConverter.toNurseDocument(nurse));
     }
 
     @Override
