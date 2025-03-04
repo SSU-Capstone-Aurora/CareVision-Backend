@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,8 +64,8 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> getActiveNurses(Admin admin) {
-        return nurseRepository.findActiveNursesByAdmin(admin);
+    public Slice<Nurse> getActiveNurses(Admin admin, Long lastIdx, int size) {
+        return nurseRepository.findActiveNursesByAdmin(admin, lastIdx, size);
     }
 
     @Override

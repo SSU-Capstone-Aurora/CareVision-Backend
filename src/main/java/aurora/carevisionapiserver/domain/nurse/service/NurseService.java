@@ -2,6 +2,8 @@ package aurora.carevisionapiserver.domain.nurse.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Slice;
+
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -20,7 +22,7 @@ public interface NurseService {
 
     Nurse getInactiveNurse(String username);
 
-    List<Nurse> getActiveNurses(Admin admin);
+    Slice<Nurse> getActiveNurses(Admin admin, Long lastIdx, int size);
 
     List<Nurse> getInactiveNurses(Admin admin);
 

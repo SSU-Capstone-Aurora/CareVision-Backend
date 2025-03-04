@@ -3,6 +3,8 @@ package aurora.carevisionapiserver.domain.nurse.api;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,9 @@ import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
@@ -38,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin")
 public class AdminNurseController {
     private final NurseService nurseService;
+    private final PageService pageService;
 
     @Operation(summary = "간호사 리스트 조회 API", description = "전체 간호사 리스트를 조회합니다 (등록 최신순)_숙희")
     @ApiResponses({
@@ -45,10 +50,14 @@ public class AdminNurseController {
     })
     @RefreshTokenApiResponse
     @GetMapping("/nurses")
-    public BaseResponse<NursePreviewListResponse> getNurseList(
-            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
-        List<Nurse> nurses = nurseService.getActiveNurses(admin);
-        return BaseResponse.onSuccess(NurseConverter.toNursePreviewListResponse(nurses));
+    public BaseResponse<NursePreviewPageResponse> getNurseList(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<Nurse> nurses = nurseService.getActiveNurses(admin, lastIdx, size);
+        return BaseResponse.onSuccess(
+                NurseConverter.toNursePreviewPageResponse(
+                        nurses, pageService.getNextCursor(size, nurses.getContent())));
     }
 
     @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")
