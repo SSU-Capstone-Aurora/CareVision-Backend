@@ -45,6 +45,14 @@ public class PatientResponse {
 
     @Builder
     @Getter
+    public static class PatientProfilePageResponse {
+        private List<PatientProfileResponse> patients;
+        boolean hasNext;
+        Long nextCursor;
+    }
+
+    @Builder
+    @Getter
     public static class PatientNameResponse {
         private String name;
     }
