@@ -83,7 +83,7 @@ public class Nurse extends BaseEntity implements User, Identifiable {
 
     @Override
     public Long getId() {
-        return this.getId();
+        return this.id;
     }
 
     public void activateNurse() {

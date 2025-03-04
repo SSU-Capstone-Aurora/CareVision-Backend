@@ -76,7 +76,7 @@ public class Patient extends BaseEntity implements Identifiable {
 
     @Override
     public Long getId() {
-        return this.getId();
+        return this.id;
     }
 
     public void registerNurse(Nurse nurse) {
