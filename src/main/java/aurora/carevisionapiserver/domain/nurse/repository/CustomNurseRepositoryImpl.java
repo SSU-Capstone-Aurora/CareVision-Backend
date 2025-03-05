@@ -30,16 +30,27 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
                 queryFactory
                         .select(nurse)
                         .from(nurse)
-                        .where(isNurseActivate(nurse).and(isEqualToAdminDepartment(admin, nurse)))
+                        .where(combineConditions(admin, lastIdx, nurse))
                         .orderBy(nurse.id.asc())
                         .limit(size + 1)
                         .fetch();
+
         boolean hasNext = nurses.size() > size;
         if (hasNext) {
             nurses = nurses.subList(0, size);
         }
 
         return new SliceImpl<>(nurses, Pageable.unpaged(), hasNext);
+    }
+
+    private BooleanExpression combineConditions(Admin admin, Long lastIdx, QNurse nurse) {
+        return isNurseActivate(nurse)
+                .and(isEqualToAdminDepartment(admin, nurse))
+                .and(isGreaterThanLastIdx(lastIdx, nurse));
+    }
+
+    private static BooleanExpression isGreaterThanLastIdx(Long lastIdx, QNurse nurse) {
+        return nurse.id.gt(lastIdx);
     }
 
     private static BooleanPath isNurseActivate(QNurse nurse) {
