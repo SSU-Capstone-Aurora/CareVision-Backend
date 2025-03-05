@@ -28,22 +28,21 @@ class CustomNurseRepositoryImplTest extends IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
+        patientRepository.deleteAllInBatch();
         nurseRepository.deleteAllInBatch();
-        bedRepository.deleteAllInBatch();
         departmentRepository.deleteAllInBatch();
         hospitalRepository.deleteAllInBatch();
+        bedRepository.deleteAllInBatch();
     }
 
-    @DisplayName("관리자의 부서에 근무하는 활성화된 간호사를 조회한다.")
+    @DisplayName("관리자의 부서에 근무하는 활성화된 간호사를 처음 조회한다.")
     @Test
-    void findActiveNursesByAdmin() {
+    void findActiveNursesByAdminFirst() {
         // given
         Department department = createDepartment();
         Admin admin = createAdmin(department);
         Nurse nurse1 = createNurse("nurse1", department, true);
-        Nurse nurse2 = createNurse("nurse2", department, true);
-        createNurse("nurse3", department, true);
-        createNurse("nurse4", department, false);
+        Nurse nurse2 = createNurse("nurse2", department, false);
 
         Long lastIdx = -1L;
         int size = 2;
@@ -52,11 +51,34 @@ class CustomNurseRepositoryImplTest extends IntegrationTestSupport {
         Slice<Nurse> response = customNurseRepository.findActiveNursesByAdmin(admin, lastIdx, size);
 
         // then
-        assertThat(response).hasSize(size);
-        assertThat(response.hasNext()).isTrue();
+        assertThat(response).hasSize(1);
+        assertThat(response.hasNext()).isFalse();
+        assertThat(response).extracting("username").contains(nurse1.getUsername());
+    }
+
+    @DisplayName("관리자의 부서에 근무하는 활성화된 간호사를 조회한다. 요청된 마지막 커서 값이 1L이며 조회되는 개수는 2개이다.")
+    @Test
+    void findActiveNursesByAdmin() {
+        // given
+        Department department = createDepartment();
+        Admin admin = createAdmin(department);
+        Nurse nurse1 = createNurse("nurse1", department, true);
+        Nurse nurse2 = createNurse("nurse2", department, true);
+        Nurse nurse3 = createNurse("nurse3", department, true);
+        Nurse nurse4 = createNurse("nurse4", department, false);
+
+        Long lastIdx = 1L;
+        int size = 2;
+
+        // when
+        Slice<Nurse> response = customNurseRepository.findActiveNursesByAdmin(admin, lastIdx, size);
+
+        // then
+        assertThat(response).hasSize(2);
+        assertThat(response.hasNext()).isFalse();
         assertThat(response)
                 .extracting("username")
-                .contains(nurse1.getUsername(), nurse2.getUsername());
+                .contains(nurse2.getUsername(), nurse3.getUsername());
     }
 
     private static Admin createAdmin(Department department) {
