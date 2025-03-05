@@ -11,6 +11,7 @@ import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.camera.api.NurseCameraController;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
+import aurora.carevisionapiserver.domain.nurse.api.AdminNurseController;
 import aurora.carevisionapiserver.domain.nurse.api.NurseController;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
@@ -23,6 +24,8 @@ import aurora.carevisionapiserver.global.fcm.service.FcmService;
         controllers = {
             NurseCameraController.class,
             NurseController.class,
+            AdminNurseController.class,
+            NurseCameraController.class
         })
 public abstract class ControllerTestSupport {
     @Autowired protected MockMvc mockMvc;

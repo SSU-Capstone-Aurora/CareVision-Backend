@@ -21,6 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
@@ -49,6 +50,32 @@ class NurseCameraControllerTest extends ControllerTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.streamingResponse").isArray())
+                .andExpect(jsonPath("$.result.hasNext").value(false))
+                .andExpect(jsonPath("$.result.nextCursor").value(1L));
+    }
+
+    @WithMockUser
+    @DisplayName("환자의 비디오 정보를 조회한다.")
+    @Test
+    void getSavedVideoInfos() throws Exception {
+        // given
+        VideoInfoResponse response = VideoInfoResponse.builder().build();
+        Slice<VideoInfoResponse> videoInfo = new SliceImpl<>(List.of(response));
+
+        // when //then
+        when(cameraService.getSavedVideoInfos(anyLong(), anyLong(), anyInt()))
+                .thenReturn(videoInfo);
+        when(pageService.getNextCursor(anyInt(), any())).thenReturn(1L);
+
+        mockMvc.perform(
+                        get("/api/patients/{patientId}/videos", 1)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .with(csrf())
+                                .param("lastIdx", "0")
+                                .param("size", "8"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
+                .andExpect(jsonPath("$.result.videoInfoList").isArray())
                 .andExpect(jsonPath("$.result.hasNext").value(false))
                 .andExpect(jsonPath("$.result.nextCursor").value(1L));
     }
