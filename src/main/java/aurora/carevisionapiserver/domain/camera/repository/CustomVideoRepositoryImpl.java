@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import aurora.carevisionapiserver.domain.camera.domain.QVideo;
@@ -27,7 +28,7 @@ public class CustomVideoRepositoryImpl implements CustomVideoRepository {
                 queryFactory
                         .select(video)
                         .from(video)
-                        .where(video.patient.eq(patient).and(video.id.gt(lastIdx)))
+                        .where(getVideoConditions(video, patient, lastIdx))
                         .orderBy(video.id.asc())
                         .limit(size + 1)
                         .fetch();
@@ -38,5 +39,9 @@ public class CustomVideoRepositoryImpl implements CustomVideoRepository {
         }
 
         return new SliceImpl<>(videos, Pageable.unpaged(), hasNext);
+    }
+
+    private BooleanExpression getVideoConditions(QVideo video, Patient patient, Long lastIdx) {
+        return video.patient.eq(patient).and(video.id.gt(lastIdx));
     }
 }
