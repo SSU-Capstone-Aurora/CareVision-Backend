@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.bed.service.BedService;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
@@ -35,7 +34,6 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientEsRepository patientEsRepository;
     private final BedService bedService;
-    private final AdminService adminService;
     private final NurseService nurseService;
     private final PatientRegistrationService patientRegistrationService;
 
@@ -45,10 +43,8 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> getPatients(Long adminId) {
-        Admin admin = adminService.getAdmin(adminId);
-
-        return patientRepository.findPatientByAdmin(admin);
+    public Slice<Patient> getPatients(Admin admin, Long lastIdx, int size) {
+        return patientRepository.findPatientByAdmin(admin, lastIdx, size);
     }
 
     @Override

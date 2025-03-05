@@ -1,6 +1,5 @@
 package aurora.carevisionapiserver.domain.patient.service;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Slice;
@@ -19,7 +18,7 @@ public interface PatientService {
 
     Patient getPatient(Long patientId);
 
-    List<Patient> getPatients(Long adminId);
+    Slice<Patient> getPatients(Admin admin, Long lastIdx, int size);
 
     Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size);
 

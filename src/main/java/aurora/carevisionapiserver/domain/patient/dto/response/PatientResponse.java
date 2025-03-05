@@ -26,6 +26,14 @@ public class PatientResponse {
 
     @Builder
     @Getter
+    public static class PatientSearchPageResponse {
+        private List<PatientSearchResponse> patientList;
+        boolean hasNext;
+        Long nextCursor;
+    }
+
+    @Builder
+    @Getter
     public static class PatientProfileResponse {
         private Long id;
         private String name;

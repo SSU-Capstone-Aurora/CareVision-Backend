@@ -2,7 +2,6 @@ package aurora.carevisionapiserver.domain.patient.converter;
 
 import static aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchResponse;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Slice;
@@ -16,6 +15,7 @@ import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.Pa
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfilePageResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfileResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchPageResponse;
 
 public class PatientConverter {
     private static PatientSearchResponse toPatientSearchResponse(Patient patient) {
@@ -28,11 +28,15 @@ public class PatientConverter {
                 .build();
     }
 
-    public static PatientSearchListResponse toPatientSearchListResponse(List<Patient> patients) {
-        return PatientSearchListResponse.builder()
+    public static PatientSearchPageResponse toPatientSearchPageResponse(
+            Slice<Patient> patients, Long nextCursor) {
+        return PatientSearchPageResponse.builder()
                 .patientList(
-                        patients.stream().map(PatientConverter::toPatientSearchResponse).toList())
-                .count(patients.size())
+                        patients.getContent().stream()
+                                .map(PatientConverter::toPatientSearchResponse)
+                                .toList())
+                .hasNext(patients.hasNext())
+                .nextCursor(nextCursor)
                 .build();
     }
 
