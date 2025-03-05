@@ -1,6 +1,5 @@
 package aurora.carevisionapiserver.domain.camera.api;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Slice;
@@ -15,7 +14,7 @@ import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingPageResponse;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoLinkResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
@@ -87,12 +86,17 @@ public class NurseCameraController {
         @ApiResponse(responseCode = "PATIENT400", description = "NOT FOUND, 환자가 없습니다.")
     })
     @GetMapping("/patients/{patientId}/videos")
-    public BaseResponse<VideoInfoListResponse> getSavedVideoInfos(
+    public BaseResponse<VideoInfoPageResponse> getSavedVideoInfos(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            @PathVariable(name = "patientId") Long patientId) {
-        List<VideoInfoResponse> videoInfoResponses = cameraService.getSavedVideoInfos(patientId);
+            @PathVariable(name = "patientId") Long patientId,
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<VideoInfoResponse> videoInfo =
+                cameraService.getSavedVideoInfos(patientId, lastIdx, size);
         return BaseResponse.of(
-                SuccessStatus._OK, CameraConverter.toVideoInfoListResponse(videoInfoResponses));
+                SuccessStatus._OK,
+                CameraConverter.toVideoInfoPageResponse(
+                        videoInfo, pageService.getNextCursor(size, videoInfo.getContent())));
     }
 
     @Operation(summary = "특정 환자의 저장된 비디오 상세 조회 API", description = "특정 환자의 저장된 비디오 영상을 상세 조회합니다_예림")

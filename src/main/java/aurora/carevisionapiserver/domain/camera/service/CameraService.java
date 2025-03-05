@@ -3,6 +3,8 @@ package aurora.carevisionapiserver.domain.camera.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Slice;
+
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
@@ -19,7 +21,7 @@ public interface CameraService {
 
     Map<Patient, String> getStreamingInfo(List<Patient> patients);
 
-    List<VideoInfoResponse> getSavedVideoInfos(Long patientId);
+    Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, Long lastIdx, int size);
 
     Video getSavedVideo(Long videoId);
 

@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -60,10 +62,16 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public List<VideoInfoResponse> getSavedVideoInfos(Long patientId) {
+    public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, Long lastIdx, int size) {
         Patient patient = patientService.getPatient(patientId);
-        List<Video> videos = videoRepository.findByPatient(patient);
-        return videos.stream().map(this::createVideoInfoResponse).collect(Collectors.toList());
+        Slice<Video> videos = videoRepository.findByPatient(patient, lastIdx, size);
+
+        List<VideoInfoResponse> videoInfoResponses =
+                videos.getContent().stream()
+                        .map(this::createVideoInfoResponse)
+                        .collect(Collectors.toList());
+
+        return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
     }
 
     @Override

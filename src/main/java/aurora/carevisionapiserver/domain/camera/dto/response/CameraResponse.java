@@ -3,6 +3,7 @@ package aurora.carevisionapiserver.domain.camera.dto.response;
 import java.util.List;
 
 import aurora.carevisionapiserver.domain.bed.dto.BedResponse.BedInfoResponse;
+import aurora.carevisionapiserver.global.common.domain.Identifiable;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -57,11 +58,24 @@ public class CameraResponse {
 
     @Getter
     @Builder
-    public static class VideoInfoResponse {
-        Long videoId;
+    public static class VideoInfoPageResponse {
+        List<VideoInfoResponse> videoInfoList;
+        boolean hasNext;
+        Long nextCursor;
+    }
+
+    @Getter
+    @Builder
+    public static class VideoInfoResponse implements Identifiable {
+        Long id;
         String thumbnail;
         String name;
         String length;
+
+        @Override
+        public Long getId() {
+            return this.id;
+        }
     }
 
     @Getter
