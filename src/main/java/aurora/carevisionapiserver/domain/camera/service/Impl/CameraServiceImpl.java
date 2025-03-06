@@ -23,6 +23,7 @@ import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.auth.domain.User;
 import aurora.carevisionapiserver.global.infra.aws.S3Service;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.util.CameraIdUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -40,8 +41,12 @@ public class CameraServiceImpl implements CameraService {
     private final CameraRepository cameraRepository;
     private final VideoRepository videoRepository;
 
-    public List<Camera> getAllCameraInfo(Admin admin) {
-        return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment().getId());
+    @Override
+    public Slice<Camera> getAllCameraInfo(Admin admin, String cameraId, int size) {
+        Long lastIdx = CameraIdUtil.parseLongId(cameraId);
+
+        return cameraRepository.findAllCamerasSortedByBed(
+                admin.getDepartment().getHospital(), lastIdx, size);
     }
 
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
@@ -65,13 +70,14 @@ public class CameraServiceImpl implements CameraService {
     public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, Long lastIdx, int size) {
         Patient patient = patientService.getPatient(patientId);
         Slice<Video> videos = videoRepository.findByPatient(patient, lastIdx, size);
-
-        List<VideoInfoResponse> videoInfoResponses =
-                videos.getContent().stream()
-                        .map(this::createVideoInfoResponse)
-                        .collect(Collectors.toList());
-
+        List<VideoInfoResponse> videoInfoResponses = getVideoInfoListResponses(videos);
         return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
+    }
+
+    public List<VideoInfoResponse> getVideoInfoListResponses(Slice<Video> videos) {
+        return videos.getContent().stream()
+                .map(this::createVideoInfoResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

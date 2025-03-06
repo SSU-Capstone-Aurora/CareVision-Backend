@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.global.common.domain.Identifiable;
 import aurora.carevisionapiserver.global.common.service.PageService;
 
@@ -18,5 +19,10 @@ public class PageServiceImpl implements PageService {
             nextCursor = entities.get(size - 1).getId();
         }
         return nextCursor;
+    }
+
+    @Override
+    public String getNextCursorForCameras(int size, List<Camera> cameras) {
+        return null;
     }
 }

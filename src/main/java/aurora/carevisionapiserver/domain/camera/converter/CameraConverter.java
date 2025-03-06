@@ -12,6 +12,7 @@ import org.springframework.data.domain.Slice;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingPageResponse;
@@ -28,6 +29,17 @@ public class CameraConverter {
         return CameraInfoListResponse.builder()
                 .cameraInfoList(cameraInfoListResponse)
                 .totalCount((long) cameraInfoListResponse.size())
+                .build();
+    }
+
+    public static CameraInfoPageResponse toCameraInfoPageResponse(
+            Slice<Camera> cameras, String nextCursor) {
+        List<CameraInfoResponse> cameraInfoListResponse =
+                cameras.getContent().stream().map(CameraConverter::toCameraInfoResponse).toList();
+        return CameraInfoPageResponse.builder()
+                .cameraInfoList(cameraInfoListResponse)
+                .hasNext(cameras.hasNext())
+                .nextCursor(nextCursor)
                 .build();
     }
 

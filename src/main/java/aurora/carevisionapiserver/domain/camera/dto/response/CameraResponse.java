@@ -26,6 +26,14 @@ public class CameraResponse {
 
     @Getter
     @Builder
+    public static class CameraInfoPageResponse {
+        List<CameraInfoResponse> cameraInfoList;
+        boolean hasNext;
+        String nextCursor;
+    }
+
+    @Getter
+    @Builder
     public static class StreamingInfoResponse {
         String url;
         String patientName;

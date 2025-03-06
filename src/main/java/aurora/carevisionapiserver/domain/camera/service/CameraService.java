@@ -13,7 +13,7 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.auth.domain.User;
 
 public interface CameraService {
-    List<Camera> getAllCameraInfo(Admin admin);
+    Slice<Camera> getAllCameraInfo(Admin admin, String cameraId, int size);
 
     List<Camera> getCameraInfoUnlinkedToPatient(User user);
 
