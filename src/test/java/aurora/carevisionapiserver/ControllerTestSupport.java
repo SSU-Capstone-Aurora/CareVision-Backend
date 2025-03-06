@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import aurora.carevisionapiserver.domain.admin.repository.AdminRepository;
 import aurora.carevisionapiserver.domain.admin.service.AdminService;
+import aurora.carevisionapiserver.domain.camera.api.AdminCameraController;
 import aurora.carevisionapiserver.domain.camera.api.NurseCameraController;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.api.AdminNurseController;
@@ -28,6 +29,7 @@ import aurora.carevisionapiserver.global.fcm.service.FcmService;
             AdminNurseController.class,
             NurseCameraController.class,
             AdminPatientController.class,
+            AdminCameraController.class,
         })
 public abstract class ControllerTestSupport {
     @Autowired protected MockMvc mockMvc;
