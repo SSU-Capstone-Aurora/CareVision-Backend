@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,6 +24,7 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseReg
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
@@ -52,12 +53,11 @@ public class AdminNurseController {
     @GetMapping("/nurses")
     public BaseResponse<NursePreviewPageResponse> getNurseList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @RequestParam(value = "lastIdx") Long lastIdx,
-            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
-        Slice<Nurse> nurses = nurseService.getActiveNurses(admin, lastIdx, size);
+            @RequestBody PageRequest request) {
+        Slice<Nurse> nurses = nurseService.getActiveNurses(admin, request);
         return BaseResponse.onSuccess(
                 NurseConverter.toNursePreviewPageResponse(
-                        nurses, pageService.getNextCursor(size, nurses.getContent())));
+                        nurses, pageService.getNextCursor(request, nurses.getContent())));
     }
 
     @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")

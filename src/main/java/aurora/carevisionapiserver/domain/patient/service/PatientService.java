@@ -12,15 +12,16 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 public interface PatientService {
     Map<PatientDocument, Bed> searchPatient(String patientName);
 
     Patient getPatient(Long patientId);
 
-    Slice<Patient> getPatients(Admin admin, Long lastIdx, int size);
+    Slice<Patient> getPatients(Admin admin, PageRequest request);
 
-    Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size);
+    Slice<Patient> getPatientSlice(Nurse nurse, PageRequest request);
 
     void deletePatient(Long patientId);
 

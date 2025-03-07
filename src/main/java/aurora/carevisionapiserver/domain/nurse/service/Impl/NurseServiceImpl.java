@@ -20,6 +20,7 @@ import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -64,8 +65,8 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public Slice<Nurse> getActiveNurses(Admin admin, Long lastIdx, int size) {
-        return nurseRepository.findActiveNursesByAdmin(admin, lastIdx, size);
+    public Slice<Nurse> getActiveNurses(Admin admin, PageRequest request) {
+        return nurseRepository.findActiveNursesByAdmin(admin, request.lastIdx(), request.size());
     }
 
     @Override

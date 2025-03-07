@@ -3,7 +3,6 @@ package aurora.carevisionapiserver.domain.nurse.api;
 import java.util.HashMap;
 
 import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +29,7 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfilePageResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
@@ -76,14 +76,13 @@ public class NurseController {
     @GetMapping("/patients")
     public BaseResponse<PatientProfilePageResponse> getPatientList(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            @RequestParam(value = "lastIdx") Long lastIdx,
-            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
-        Slice<Patient> patients = patientService.getPatientSlice(nurse, lastIdx, size);
+            @RequestBody PageRequest request) {
+        Slice<Patient> patients = patientService.getPatientSlice(nurse, request);
 
         return BaseResponse.of(
                 SuccessStatus._OK,
                 PatientConverter.toPatientProfilePageResponse(
-                        patients, pageService.getNextCursor(size, patients.getContent())));
+                        patients, pageService.getNextCursor(request, patients.getContent())));
     }
 
     @Operation(

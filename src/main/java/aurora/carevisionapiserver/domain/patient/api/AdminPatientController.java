@@ -3,7 +3,6 @@ package aurora.carevisionapiserver.domain.patient.api;
 import java.util.Map;
 
 import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +21,7 @@ import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.Pati
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchPageResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
@@ -63,12 +63,11 @@ public class AdminPatientController {
     @GetMapping("")
     public BaseResponse<PatientSearchPageResponse> getPatients(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @RequestParam(value = "lastIdx") Long lastIdx,
-            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
-        Slice<Patient> patients = patientService.getPatients(admin, lastIdx, size);
+            @RequestBody PageRequest request) {
+        Slice<Patient> patients = patientService.getPatients(admin, request);
         return BaseResponse.onSuccess(
                 PatientConverter.toPatientSearchPageResponse(
-                        patients, pageService.getNextCursor(size, patients.getContent())));
+                        patients, pageService.getNextCursor(request, patients.getContent())));
     }
 
     @Operation(summary = "환자 등록 API", description = "환자명을 입력하고, 카메라를 선택하여 환자를 등록합니다_예림")

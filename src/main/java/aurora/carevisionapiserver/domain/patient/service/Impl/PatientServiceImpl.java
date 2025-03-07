@@ -24,6 +24,7 @@ import aurora.carevisionapiserver.domain.patient.repository.PatientEsRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientRegistrationService;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.PatientNameUtil;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +44,13 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Slice<Patient> getPatients(Admin admin, Long lastIdx, int size) {
-        return patientRepository.findPatientByAdmin(admin, lastIdx, size);
+    public Slice<Patient> getPatients(Admin admin, PageRequest request) {
+        return patientRepository.findPatientByAdmin(admin, request.lastIdx(), request.size());
     }
 
     @Override
-    public Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size) {
-        return patientRepository.findPatientByNurse(nurse, lastIdx, size);
+    public Slice<Patient> getPatientSlice(Nurse nurse, PageRequest request) {
+        return patientRepository.findPatientByNurse(nurse, request.lastIdx(), request.size());
     }
 
     @Override

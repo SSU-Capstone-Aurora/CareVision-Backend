@@ -1,10 +1,9 @@
 package aurora.carevisionapiserver.domain.camera.api;
 
 import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -12,6 +11,7 @@ import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoPageResponse;
 import aurora.carevisionapiserver.domain.camera.service.CameraService;
+import aurora.carevisionapiserver.global.common.dto.request.PageForCameraRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
@@ -38,12 +38,12 @@ public class AdminCameraController {
     @GetMapping("")
     public BaseResponse<CameraInfoPageResponse> getCameras(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @RequestParam(value = "cameraId") String cameraId,
-            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
-        Slice<Camera> cameras = cameraService.getAllCameraInfo(admin, cameraId, size);
+            @RequestBody PageForCameraRequest request) {
+        Slice<Camera> cameras = cameraService.getAllCameraInfo(admin, request);
         return BaseResponse.of(
                 SuccessStatus._OK,
                 CameraConverter.toCameraInfoPageResponse(
-                        cameras, pageService.getNextCursorForCameras(size, cameras.getContent())));
+                        cameras,
+                        pageService.getNextCursorForCameras(request, cameras.getContent())));
     }
 }

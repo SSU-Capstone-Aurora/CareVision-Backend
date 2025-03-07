@@ -21,6 +21,8 @@ import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.auth.domain.User;
+import aurora.carevisionapiserver.global.common.dto.request.PageForCameraRequest;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.infra.aws.S3Service;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.CameraIdUtil;
@@ -42,10 +44,11 @@ public class CameraServiceImpl implements CameraService {
     private final VideoRepository videoRepository;
 
     @Override
-    public Slice<Camera> getAllCameraInfo(Admin admin, String cameraId, int size) {
-        Long lastIdx = CameraIdUtil.parseLongId(cameraId);
+    public Slice<Camera> getAllCameraInfo(Admin admin, PageForCameraRequest request) {
+        Long lastIdx = CameraIdUtil.parseLongId(request.cameraId());
 
-        return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment(), lastIdx, size);
+        return cameraRepository.findAllCamerasSortedByBed(
+                admin.getDepartment(), lastIdx, request.size());
     }
 
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
@@ -66,9 +69,10 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, Long lastIdx, int size) {
+    public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, PageRequest request) {
         Patient patient = patientService.getPatient(patientId);
-        Slice<Video> videos = videoRepository.findByPatient(patient, lastIdx, size);
+        Slice<Video> videos =
+                videoRepository.findByPatient(patient, request.lastIdx(), request.size());
         List<VideoInfoResponse> videoInfoResponses = getVideoInfoListResponses(videos);
         return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
     }
