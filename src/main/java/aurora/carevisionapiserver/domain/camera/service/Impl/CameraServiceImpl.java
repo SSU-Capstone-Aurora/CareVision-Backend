@@ -45,8 +45,7 @@ public class CameraServiceImpl implements CameraService {
     public Slice<Camera> getAllCameraInfo(Admin admin, String cameraId, int size) {
         Long lastIdx = CameraIdUtil.parseLongId(cameraId);
 
-        return cameraRepository.findAllCamerasSortedByBed(
-                admin.getDepartment().getHospital(), lastIdx, size);
+        return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment(), lastIdx, size);
     }
 
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {

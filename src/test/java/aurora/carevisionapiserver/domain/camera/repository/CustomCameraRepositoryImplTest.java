@@ -46,7 +46,7 @@ class CustomCameraRepositoryImplTest extends IntegrationTestSupport {
 
         // when
         Slice<Camera> response =
-                customCameraRepository.findAllCamerasSortedByBed(hospital, lastIdx, size);
+                customCameraRepository.findAllCamerasSortedByBed(department, lastIdx, size);
 
         // then
         assertThat(response.getContent()).hasSize(2).extracting("id").contains("CAM1", "CAM2");
@@ -71,7 +71,7 @@ class CustomCameraRepositoryImplTest extends IntegrationTestSupport {
 
         // when
         Slice<Camera> response =
-                customCameraRepository.findAllCamerasSortedByBed(hospital, lastIdx, size);
+                customCameraRepository.findAllCamerasSortedByBed(department, lastIdx, size);
 
         // then
         assertThat(response.getContent()).hasSize(2).extracting("id").contains("CAM2", "CAM3");

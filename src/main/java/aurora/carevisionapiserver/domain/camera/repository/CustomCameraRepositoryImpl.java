@@ -14,9 +14,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import aurora.carevisionapiserver.domain.bed.domain.QBed;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.QCamera;
-import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.QDepartment;
-import aurora.carevisionapiserver.domain.hospital.domain.QHospital;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,10 +24,9 @@ public class CustomCameraRepositoryImpl implements CustomCameraRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<Camera> findAllCamerasSortedByBed(Hospital hospital, Long lastIdx, int size) {
+    public Slice<Camera> findAllCamerasSortedByBed(Department department, Long lastIdx, int size) {
         QCamera camera = QCamera.camera;
         QBed bed = QBed.bed;
-        QDepartment department = QDepartment.department;
 
         List<Camera> cameras =
                 queryFactory
@@ -36,10 +34,8 @@ public class CustomCameraRepositoryImpl implements CustomCameraRepository {
                         .from(camera)
                         .leftJoin(bed)
                         .on(bed.camera.eq(camera))
-                        .leftJoin(department)
+                        .leftJoin(QDepartment.department)
                         .on(bed.department.eq(department))
-                        .leftJoin(QHospital.hospital)
-                        .on(department.hospital.eq(hospital))
                         .where(
                                 Expressions.numberTemplate(
                                                 Long.class,
