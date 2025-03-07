@@ -43,7 +43,6 @@ public class AdminCameraController {
         return BaseResponse.of(
                 SuccessStatus._OK,
                 CameraConverter.toCameraInfoPageResponse(
-                        cameras,
-                        pageService.getNextCursorForCameras(request, cameras.getContent())));
+                        cameras, pageService.getNextCursorForCameras(cameras.getContent())));
     }
 }

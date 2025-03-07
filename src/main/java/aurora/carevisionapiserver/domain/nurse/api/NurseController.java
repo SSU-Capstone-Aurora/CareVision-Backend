@@ -82,7 +82,7 @@ public class NurseController {
         return BaseResponse.of(
                 SuccessStatus._OK,
                 PatientConverter.toPatientProfilePageResponse(
-                        patients, pageService.getNextCursor(request, patients.getContent())));
+                        patients, pageService.getNextCursor(patients.getContent())));
     }
 
     @Operation(

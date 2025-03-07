@@ -74,7 +74,7 @@ public class NurseCameraController {
                 CameraConverter.toStreamingPageResponse(
                         streamingInfo,
                         patients.hasNext(),
-                        pageService.getNextCursor(request, patients.getContent())));
+                        pageService.getNextCursor(patients.getContent())));
     }
 
     @Operation(
@@ -93,7 +93,7 @@ public class NurseCameraController {
         return BaseResponse.of(
                 SuccessStatus._OK,
                 CameraConverter.toVideoInfoPageResponse(
-                        videoInfo, pageService.getNextCursor(request, videoInfo.getContent())));
+                        videoInfo, pageService.getNextCursor(videoInfo.getContent())));
     }
 
     @Operation(summary = "특정 환자의 저장된 비디오 상세 조회 API", description = "특정 환자의 저장된 비디오 영상을 상세 조회합니다_예림")

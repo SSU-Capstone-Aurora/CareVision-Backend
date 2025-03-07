@@ -67,7 +67,7 @@ public class AdminPatientController {
         Slice<Patient> patients = patientService.getPatients(admin, request);
         return BaseResponse.onSuccess(
                 PatientConverter.toPatientSearchPageResponse(
-                        patients, pageService.getNextCursor(request, patients.getContent())));
+                        patients, pageService.getNextCursor(patients.getContent())));
     }
 
     @Operation(summary = "환자 등록 API", description = "환자명을 입력하고, 카메라를 선택하여 환자를 등록합니다_예림")

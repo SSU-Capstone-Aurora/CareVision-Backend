@@ -57,7 +57,7 @@ public class AdminNurseController {
         Slice<Nurse> nurses = nurseService.getActiveNurses(admin, request);
         return BaseResponse.onSuccess(
                 NurseConverter.toNursePreviewPageResponse(
-                        nurses, pageService.getNextCursor(request, nurses.getContent())));
+                        nurses, pageService.getNextCursor(nurses.getContent())));
     }
 
     @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")
