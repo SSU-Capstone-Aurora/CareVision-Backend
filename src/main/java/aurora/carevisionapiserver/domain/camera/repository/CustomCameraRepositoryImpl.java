@@ -36,12 +36,7 @@ public class CustomCameraRepositoryImpl implements CustomCameraRepository {
                         .on(bed.camera.eq(camera))
                         .leftJoin(QDepartment.department)
                         .on(bed.department.eq(department))
-                        .where(
-                                Expressions.numberTemplate(
-                                                Long.class,
-                                                "regexp_replace({0}, '^[^0-9]+', '')",
-                                                camera.id)
-                                        .gt(lastIdx))
+                        .where(extractNumericPart(lastIdx, camera))
                         .orderBy(
                                 bed.inpatientWardNumber.asc(),
                                 bed.patientRoomNumber.asc(),
@@ -55,6 +50,12 @@ public class CustomCameraRepositoryImpl implements CustomCameraRepository {
         }
 
         return new SliceImpl<>(cameras, Pageable.unpaged(), hasNext);
+    }
+
+    private static BooleanExpression extractNumericPart(Long lastIdx, QCamera camera) {
+        return Expressions.numberTemplate(
+                        Long.class, "regexp_replace({0}, '^[^0-9]+', '')", camera.id)
+                .gt(lastIdx);
     }
 
     private static BooleanExpression isEqualToDepartment(Long departmentId, QCamera camera) {

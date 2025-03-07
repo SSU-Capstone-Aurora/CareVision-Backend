@@ -42,14 +42,14 @@ public class CustomVideoRepositoryImpl implements CustomVideoRepository {
     }
 
     private BooleanExpression getVideoConditions(QVideo video, Patient patient, Long lastIdx) {
-        return isEqualToPatient(video, patient).and(isGreaterThanLastIdx(video, lastIdx));
+        return isPatientMatchingOrNull(video, patient).and(isGreaterThanLastIdx(video, lastIdx));
     }
 
     private static BooleanExpression isGreaterThanLastIdx(QVideo video, Long lastIdx) {
         return video.id.gt(lastIdx);
     }
 
-    private static BooleanExpression isEqualToPatient(QVideo video, Patient patient) {
+    private static BooleanExpression isPatientMatchingOrNull(QVideo video, Patient patient) {
         return patient != null ? video.patient.eq(patient) : video.patient.isNull();
     }
 }

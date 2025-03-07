@@ -30,7 +30,7 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
                 queryFactory
                         .select(nurse)
                         .from(nurse)
-                        .where(combineConditions(admin, lastIdx, nurse))
+                        .where(getCombinedConditions(admin, lastIdx, nurse))
                         .orderBy(nurse.id.asc())
                         .limit(size + 1)
                         .fetch();
@@ -43,7 +43,7 @@ public class CustomNurseRepositoryImpl implements CustomNurseRepository {
         return new SliceImpl<>(nurses, Pageable.unpaged(), hasNext);
     }
 
-    private BooleanExpression combineConditions(Admin admin, Long lastIdx, QNurse nurse) {
+    private BooleanExpression getCombinedConditions(Admin admin, Long lastIdx, QNurse nurse) {
         return isNurseActivate(nurse)
                 .and(isEqualToAdminDepartment(admin, nurse))
                 .and(isGreaterThanLastIdx(lastIdx, nurse));
