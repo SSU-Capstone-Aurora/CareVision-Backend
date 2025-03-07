@@ -20,7 +20,6 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.global.common.domain.Identifiable;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 
 class PageServiceImplTest extends IntegrationTestSupport {
@@ -43,7 +42,6 @@ class PageServiceImplTest extends IntegrationTestSupport {
     @Test
     void getNextCursor() {
         // given
-        PageRequest request = new PageRequest(-1L, 3);
         List<Identifiable> entities = new ArrayList<>();
         Department department = createDepartment();
         entities.add(createNurse(1L, "nurse1", department));
@@ -51,7 +49,7 @@ class PageServiceImplTest extends IntegrationTestSupport {
         entities.add(createNurse(3L, "nurse3", department));
 
         // when
-        Long nextCursor = pageService.getNextCursor(request, entities);
+        Long nextCursor = pageService.getNextCursor(entities);
 
         // then
         assertThat(nextCursor).isEqualTo(3L);

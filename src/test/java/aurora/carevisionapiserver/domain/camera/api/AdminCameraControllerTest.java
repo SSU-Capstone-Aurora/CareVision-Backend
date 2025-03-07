@@ -32,7 +32,7 @@ class AdminCameraControllerTest extends ControllerTestSupport {
 
         // when //then
         when(cameraService.getAllCameraInfo(any(), any())).thenReturn(cameras);
-        when(pageService.getNextCursorForCameras(any(), any())).thenReturn("CAM2");
+        when(pageService.getNextCursorForCameras(any())).thenReturn("CAM2");
 
         mockMvc.perform(
                         get("/api/admin/cameras")

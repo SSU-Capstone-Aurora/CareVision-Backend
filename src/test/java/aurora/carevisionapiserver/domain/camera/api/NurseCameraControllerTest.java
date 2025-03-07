@@ -41,7 +41,7 @@ class NurseCameraControllerTest extends ControllerTestSupport {
         when(patientService.getPatientSlice(any(), any())).thenReturn(patientSlice);
         when(cameraService.getStreamingInfo(any()))
                 .thenReturn(Collections.singletonMap(patientSlice.getContent().get(0), "info"));
-        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
+        when(pageService.getNextCursor(any())).thenReturn(1L);
 
         mockMvc.perform(
                         get("/api/streaming")
@@ -60,19 +60,20 @@ class NurseCameraControllerTest extends ControllerTestSupport {
     @Test
     void getSavedVideoInfos() throws Exception {
         // given
+        PageRequest request = new PageRequest(-1L, 2);
+
         VideoInfoResponse response = VideoInfoResponse.builder().build();
         Slice<VideoInfoResponse> videoInfo = new SliceImpl<>(List.of(response));
 
         // when //then
         when(cameraService.getSavedVideoInfos(anyLong(), any())).thenReturn(videoInfo);
-        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
+        when(pageService.getNextCursor(any())).thenReturn(1L);
 
         mockMvc.perform(
                         get("/api/patients/{patientId}/videos", 1)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .param("lastIdx", "0")
-                                .param("size", "8"))
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.videoInfoList").isArray())

@@ -32,15 +32,13 @@ class AdminPatientControllerTest extends ControllerTestSupport {
 
         // when //then
         when(patientService.getPatients(any(), any())).thenReturn(patientSlice);
-        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
+        when(pageService.getNextCursor(any())).thenReturn(1L);
 
         mockMvc.perform(
                         get("/api/admin/patients")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .content(
-                                        objectMapper.writeValueAsString(
-                                                request))) // request 객체를 JSON 문자열로 변환 후 추가
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.patientList").isArray())

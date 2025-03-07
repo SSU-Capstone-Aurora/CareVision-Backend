@@ -34,7 +34,7 @@ class AdminNurseControllerTest extends ControllerTestSupport {
 
         // when
         when(nurseService.getActiveNurses(any(), any())).thenReturn(nurses);
-        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
+        when(pageService.getNextCursor(any())).thenReturn(1L);
 
         // then
         mockMvc.perform(

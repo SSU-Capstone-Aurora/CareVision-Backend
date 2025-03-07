@@ -68,7 +68,7 @@ public class NurseControllerIntegrationTest extends IntegrationTestSupport {
 
         // when
         when(patientService.getPatientSlice(any(Nurse.class), any())).thenReturn(patientSlice);
-        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
+        when(pageService.getNextCursor(any())).thenReturn(1L);
 
         // then
         mockMvc.perform(
