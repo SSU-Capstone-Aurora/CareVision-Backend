@@ -1,7 +1,6 @@
 package aurora.carevisionapiserver.domain.camera.api;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -23,6 +22,7 @@ import aurora.carevisionapiserver.ControllerTestSupport;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class NurseCameraControllerTest extends ControllerTestSupport {
@@ -31,22 +31,23 @@ class NurseCameraControllerTest extends ControllerTestSupport {
     @Test
     void getStreamingInfoList() throws Exception {
         // given
+        PageRequest request = new PageRequest(-1L, 2);
+
         Bed bed = Bed.builder().bedNumber(1L).patientRoomNumber(2L).inpatientWardNumber(3L).build();
         Patient patient = Patient.builder().id(1L).bed(bed).build();
         Slice<Patient> patientSlice = new SliceImpl<>(List.of(patient));
 
         // when //then
-        when(patientService.getPatientSlice(any(), anyLong(), anyInt())).thenReturn(patientSlice);
+        when(patientService.getPatientSlice(any(), any())).thenReturn(patientSlice);
         when(cameraService.getStreamingInfo(any()))
                 .thenReturn(Collections.singletonMap(patientSlice.getContent().get(0), "info"));
-        when(pageService.getNextCursor(anyInt(), any())).thenReturn(1L);
+        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
 
         mockMvc.perform(
                         get("/api/streaming")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .param("lastIdx", "0")
-                                .param("size", "8"))
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.streamingResponse").isArray())
@@ -63,9 +64,8 @@ class NurseCameraControllerTest extends ControllerTestSupport {
         Slice<VideoInfoResponse> videoInfo = new SliceImpl<>(List.of(response));
 
         // when //then
-        when(cameraService.getSavedVideoInfos(anyLong(), anyLong(), anyInt()))
-                .thenReturn(videoInfo);
-        when(pageService.getNextCursor(anyInt(), any())).thenReturn(1L);
+        when(cameraService.getSavedVideoInfos(anyLong(), any())).thenReturn(videoInfo);
+        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
 
         mockMvc.perform(
                         get("/api/patients/{patientId}/videos", 1)

@@ -32,6 +32,7 @@ import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 class CameraServiceImplTest extends IntegrationTestSupport {
     @Autowired PatientRepository patientRepository;
@@ -57,8 +58,7 @@ class CameraServiceImplTest extends IntegrationTestSupport {
     @Test
     void getSavedVideoInfos() {
         // given
-        Long lastIdx = -1L;
-        int size = 2;
+        PageRequest request = new PageRequest(-1L, 2);
 
         Department department = createDepartment();
         Nurse nurse = createNurse(department);
@@ -80,7 +80,7 @@ class CameraServiceImplTest extends IntegrationTestSupport {
         when(customVideoRepository.findByPatient(any(Patient.class), anyLong(), anyInt()))
                 .thenReturn(new SliceImpl<>(videos));
         Slice<VideoInfoResponse> response =
-                cameraService.getSavedVideoInfos(patient.getId(), lastIdx, size);
+                cameraService.getSavedVideoInfos(patient.getId(), request);
 
         // then
         assertThat(response.getContent())

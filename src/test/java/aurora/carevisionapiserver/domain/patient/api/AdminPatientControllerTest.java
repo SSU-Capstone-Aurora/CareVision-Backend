@@ -1,8 +1,6 @@
 package aurora.carevisionapiserver.domain.patient.api;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,6 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class AdminPatientControllerTest extends ControllerTestSupport {
@@ -28,18 +27,20 @@ class AdminPatientControllerTest extends ControllerTestSupport {
     @Test
     void getPatients() throws Exception {
         // given
+        PageRequest request = new PageRequest(-1L, 2);
         Slice<Patient> patientSlice = new SliceImpl<>(List.of());
 
         // when //then
-        when(patientService.getPatients(any(), anyLong(), anyInt())).thenReturn(patientSlice);
-        when(pageService.getNextCursor(anyInt(), any())).thenReturn(1L);
+        when(patientService.getPatients(any(), any())).thenReturn(patientSlice);
+        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
 
         mockMvc.perform(
                         get("/api/admin/patients")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .param("lastIdx", "0")
-                                .param("size", "8"))
+                                .content(
+                                        objectMapper.writeValueAsString(
+                                                request))) // request 객체를 JSON 문자열로 변환 후 추가
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.patientList").isArray())

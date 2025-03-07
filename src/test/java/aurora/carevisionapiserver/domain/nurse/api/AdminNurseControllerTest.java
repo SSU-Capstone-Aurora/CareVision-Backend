@@ -1,8 +1,6 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,6 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class AdminNurseControllerTest extends ControllerTestSupport {
@@ -28,20 +27,21 @@ class AdminNurseControllerTest extends ControllerTestSupport {
     @Test
     void getNurseList() throws Exception {
         // given
+        PageRequest request = new PageRequest(-1L, 2);
+
         Nurse nurse = Nurse.builder().build();
         Slice<Nurse> nurses = new SliceImpl<>(List.of(nurse));
 
         // when
-        when(nurseService.getActiveNurses(any(), anyLong(), anyInt())).thenReturn(nurses);
-        when(pageService.getNextCursor(anyInt(), any())).thenReturn(1L);
+        when(nurseService.getActiveNurses(any(), any())).thenReturn(nurses);
+        when(pageService.getNextCursor(any(), any())).thenReturn(1L);
 
         // then
         mockMvc.perform(
                         get("/api/admin/nurses")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .param("lastIdx", "0")
-                                .param("size", "2"))
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.nurseList").isArray())
