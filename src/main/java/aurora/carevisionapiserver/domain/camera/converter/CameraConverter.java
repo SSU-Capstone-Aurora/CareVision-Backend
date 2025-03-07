@@ -7,14 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Slice;
+
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.CameraInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingResponse;
-import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoListResponse;
+import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoPageResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoInfoResponse;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.VideoLinkResponse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
@@ -26,6 +29,17 @@ public class CameraConverter {
         return CameraInfoListResponse.builder()
                 .cameraInfoList(cameraInfoListResponse)
                 .totalCount((long) cameraInfoListResponse.size())
+                .build();
+    }
+
+    public static CameraInfoPageResponse toCameraInfoPageResponse(
+            Slice<Camera> cameras, String nextCursor) {
+        List<CameraInfoResponse> cameraInfoListResponse =
+                cameras.getContent().stream().map(CameraConverter::toCameraInfoResponse).toList();
+        return CameraInfoPageResponse.builder()
+                .cameraInfoList(cameraInfoListResponse)
+                .hasNext(cameras.hasNext())
+                .nextCursor(nextCursor)
                 .build();
     }
 
@@ -69,11 +83,12 @@ public class CameraConverter {
                 .build();
     }
 
-    public static VideoInfoListResponse toVideoInfoListResponse(
-            List<VideoInfoResponse> videoInfoResponses) {
-        return VideoInfoListResponse.builder()
-                .videoInfoList(videoInfoResponses)
-                .totalCount((long) videoInfoResponses.size())
+    public static VideoInfoPageResponse toVideoInfoPageResponse(
+            Slice<VideoInfoResponse> videoInfo, Long nextCursor) {
+        return VideoInfoPageResponse.builder()
+                .videoInfoList(videoInfo.getContent())
+                .hasNext(videoInfo.hasNext())
+                .nextCursor(nextCursor)
                 .build();
     }
 
@@ -81,7 +96,7 @@ public class CameraConverter {
             Video video, String thumbnail, String duration) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         return VideoInfoResponse.builder()
-                .videoId(video.getId())
+                .id(video.getId())
                 .thumbnail(thumbnail)
                 .name(video.getCreatedAt().format(formatter))
                 .length(duration)

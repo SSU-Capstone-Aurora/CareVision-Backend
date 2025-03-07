@@ -1,8 +1,9 @@
 package aurora.carevisionapiserver.domain.patient.api;
 
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,9 @@ import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
+import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchPageResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
@@ -37,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin/patients")
 public class AdminPatientController {
     private final PatientService patientService;
+    private final PageService pageService;
 
     @Operation(summary = "환자 검색 API", description = "입력받은 환자명으로 환자를 검색합니다._숙희")
     @ApiResponses({
@@ -57,10 +61,14 @@ public class AdminPatientController {
     })
     @RefreshTokenApiResponse
     @GetMapping("")
-    public BaseResponse<PatientSearchListResponse> getPatients(
-            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin) {
-        List<Patient> patients = patientService.getPatients(admin.getId());
-        return BaseResponse.onSuccess(PatientConverter.toPatientSearchListResponse(patients));
+    public BaseResponse<PatientSearchPageResponse> getPatients(
+            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<Patient> patients = patientService.getPatients(admin, lastIdx, size);
+        return BaseResponse.onSuccess(
+                PatientConverter.toPatientSearchPageResponse(
+                        patients, pageService.getNextCursor(size, patients.getContent())));
     }
 
     @Operation(summary = "환자 등록 API", description = "환자명을 입력하고, 카메라를 선택하여 환자를 등록합니다_예림")

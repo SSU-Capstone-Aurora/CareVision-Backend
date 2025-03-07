@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
@@ -21,6 +23,7 @@ import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.auth.domain.User;
 import aurora.carevisionapiserver.global.infra.aws.S3Service;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
+import aurora.carevisionapiserver.global.util.CameraIdUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,8 +41,11 @@ public class CameraServiceImpl implements CameraService {
     private final CameraRepository cameraRepository;
     private final VideoRepository videoRepository;
 
-    public List<Camera> getAllCameraInfo(Admin admin) {
-        return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment().getId());
+    @Override
+    public Slice<Camera> getAllCameraInfo(Admin admin, String cameraId, int size) {
+        Long lastIdx = CameraIdUtil.parseLongId(cameraId);
+
+        return cameraRepository.findAllCamerasSortedByBed(admin.getDepartment(), lastIdx, size);
     }
 
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
@@ -60,10 +66,17 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public List<VideoInfoResponse> getSavedVideoInfos(Long patientId) {
+    public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, Long lastIdx, int size) {
         Patient patient = patientService.getPatient(patientId);
-        List<Video> videos = videoRepository.findByPatient(patient);
-        return videos.stream().map(this::createVideoInfoResponse).collect(Collectors.toList());
+        Slice<Video> videos = videoRepository.findByPatient(patient, lastIdx, size);
+        List<VideoInfoResponse> videoInfoResponses = getVideoInfoListResponses(videos);
+        return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
+    }
+
+    private List<VideoInfoResponse> getVideoInfoListResponses(Slice<Video> videos) {
+        return videos.getContent().stream()
+                .map(this::createVideoInfoResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
