@@ -73,7 +73,7 @@ public class CameraServiceImpl implements CameraService {
         return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
     }
 
-    public List<VideoInfoResponse> getVideoInfoListResponses(Slice<Video> videos) {
+    private List<VideoInfoResponse> getVideoInfoListResponses(Slice<Video> videos) {
         return videos.getContent().stream()
                 .map(this::createVideoInfoResponse)
                 .collect(Collectors.toList());
