@@ -32,6 +32,14 @@ public class NurseResponse {
 
     @Getter
     @Builder
+    public static class NursePreviewPageResponse {
+        private List<NursePreviewResponse> nurseList;
+        private boolean hasNext;
+        private Long nextCursor;
+    }
+
+    @Getter
+    @Builder
     public static class NurseInfoResponse {
         private Long id;
         private String name;

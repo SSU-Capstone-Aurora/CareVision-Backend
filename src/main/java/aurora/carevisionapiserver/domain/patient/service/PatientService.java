@@ -1,6 +1,5 @@
 package aurora.carevisionapiserver.domain.patient.service;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Slice;
@@ -13,17 +12,16 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 public interface PatientService {
     Map<PatientDocument, Bed> searchPatient(String patientName);
 
     Patient getPatient(Long patientId);
 
-    List<Patient> getPatients(Nurse nurse);
+    Slice<Patient> getPatients(Admin admin, PageRequest request);
 
-    List<Patient> getPatients(Long adminId);
-
-    Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size);
+    Slice<Patient> getPatientSlice(Nurse nurse, PageRequest request);
 
     void deletePatient(Long patientId);
 

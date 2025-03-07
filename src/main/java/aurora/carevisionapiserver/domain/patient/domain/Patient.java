@@ -13,6 +13,7 @@ import aurora.carevisionapiserver.domain.camera.domain.Video;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
+import aurora.carevisionapiserver.global.common.domain.Identifiable;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE patient SET deleted_at = NOW() WHERE patient_id = ?")
-public class Patient extends BaseEntity {
+public class Patient extends BaseEntity implements Identifiable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,6 +72,11 @@ public class Patient extends BaseEntity {
         this.bed = bed;
         this.videos = videos;
         this.department = department;
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
     }
 
     public void registerNurse(Nurse nurse) {

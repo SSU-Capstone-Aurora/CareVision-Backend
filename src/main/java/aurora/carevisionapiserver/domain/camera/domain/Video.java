@@ -10,6 +10,7 @@ import org.hibernate.annotations.SQLRestriction;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.common.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,12 @@ public class Video extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
+
+    @Builder
+    public Video(Long id, String name, String link, Patient patient) {
+        this.id = id;
+        this.name = name;
+        this.link = link;
+        this.patient = patient;
+    }
 }

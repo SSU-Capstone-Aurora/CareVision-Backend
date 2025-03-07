@@ -132,6 +132,51 @@ class CustomPatientRepositoryImplTest extends IntegrationTestSupport {
         assertThat(response.hasNext()).isFalse();
     }
 
+    @DisplayName("관리자 병원에 존재하는 환자를 처음 조회한다.")
+    @Test
+    void findPatientByAdminFirst() {
+        // given
+        Long lastIdx = -1L;
+        int size = 2;
+
+        Patient patientWhoId1 = patientList.get(1);
+        Patient patientWhoId2 = patientList.get(2);
+
+        // when
+        Slice<Patient> response = customPatientRepository.findPatientByNurse(nurse1, lastIdx, size);
+
+        // then
+        assertEquals(2, response.getContent().size());
+        assertThat(response.hasNext()).isTrue();
+        assertThat(response.getContent())
+                .extracting("id", "name")
+                .contains(
+                        tuple(patientWhoId1.getId(), patientWhoId1.getName()),
+                        tuple(patientWhoId2.getId(), patientWhoId2.getName()));
+    }
+
+    @DisplayName("관리자 병원에 존재하는 환자를 조회한다. 요청된 마지막 커서 값이 1L이며 조회되는 개수는 2개이다.")
+    @Test
+    void findPatientByAdmin() {
+        Long lastIdx = 1L;
+        int size = 2;
+
+        Patient patientWhoId2 = patientList.get(2);
+        Patient patientWhoId3 = patientList.get(3);
+
+        // when
+        Slice<Patient> response = customPatientRepository.findPatientByNurse(nurse1, lastIdx, size);
+
+        // then
+        assertEquals(2, response.getContent().size());
+        assertThat(response.hasNext()).isTrue();
+        assertThat(response.getContent())
+                .extracting("id", "name")
+                .contains(
+                        tuple(patientWhoId2.getId(), patientWhoId2.getName()),
+                        tuple(patientWhoId3.getId(), patientWhoId3.getName()));
+    }
+
     private Department createDepartment(String name) {
         Hospital hospital = createHospital();
         Department department = Department.builder().hospital(hospital).name(name).build();

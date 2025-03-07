@@ -22,15 +22,26 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Patient> findPatientByAdmin(Admin admin) {
+    public Slice<Patient> findPatientByAdmin(Admin admin, Long lastIdx, int size) {
         QPatient patient = QPatient.patient;
 
-        return queryFactory
-                .selectFrom(patient)
-                .where(
-                        patient.department.hospital.name.eq(
-                                admin.getDepartment().getHospital().getName()))
-                .fetch();
+        List<Patient> patients =
+                queryFactory
+                        .selectFrom(patient)
+                        .where(
+                                isEqualToHospital(patient, admin)
+                                        .and(isGreaterThan(patient, lastIdx)))
+                        .fetch();
+
+        boolean hasNext = patients.size() > size;
+        if (hasNext) {
+            patients = patients.subList(0, size);
+        }
+        return new SliceImpl<>(patients, Pageable.unpaged(), hasNext);
+    }
+
+    private static BooleanExpression isEqualToHospital(QPatient patient, Admin admin) {
+        return patient.department.hospital.name.eq(admin.getDepartment().getHospital().getName());
     }
 
     @Override
@@ -42,6 +53,7 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
                         .select(patient)
                         .from(patient)
                         .where(isGreaterThan(patient, lastIdx).and(isEqTo(patient, nurse)))
+                        .orderBy(patient.id.asc())
                         .limit(size + 1)
                         .fetch();
 
@@ -54,7 +66,7 @@ public class CustomPatientRepositoryImpl implements CustomPatientRepository {
     }
 
     private static BooleanExpression isEqTo(QPatient patient, Nurse nurse) {
-        return patient.nurse.eq(nurse);
+        return nurse != null ? patient.nurse.eq(nurse) : patient.nurse.isNull();
     }
 
     private static BooleanExpression isGreaterThan(QPatient patient, Long lastIdx) {

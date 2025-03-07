@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -63,8 +65,8 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public List<Nurse> getActiveNurses(Admin admin) {
-        return nurseRepository.findActiveNursesByAdmin(admin);
+    public Slice<Nurse> getActiveNurses(Admin admin, PageRequest request) {
+        return nurseRepository.findActiveNursesByAdmin(admin, request.lastIdx(), request.size());
     }
 
     @Override

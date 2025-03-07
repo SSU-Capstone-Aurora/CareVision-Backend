@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
-import aurora.carevisionapiserver.domain.admin.service.AdminService;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.bed.service.BedService;
 import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
@@ -25,6 +24,7 @@ import aurora.carevisionapiserver.domain.patient.repository.PatientEsRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientRegistrationService;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
+import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.PatientNameUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,6 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientEsRepository patientEsRepository;
     private final BedService bedService;
-    private final AdminService adminService;
     private final NurseService nurseService;
     private final PatientRegistrationService patientRegistrationService;
 
@@ -45,20 +44,13 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> getPatients(Nurse nurse) {
-        return patientRepository.findPatientByNurse(nurse);
+    public Slice<Patient> getPatients(Admin admin, PageRequest request) {
+        return patientRepository.findPatientByAdmin(admin, request.lastIdx(), request.size());
     }
 
     @Override
-    public List<Patient> getPatients(Long adminId) {
-        Admin admin = adminService.getAdmin(adminId);
-
-        return patientRepository.findPatientByAdmin(admin);
-    }
-
-    @Override
-    public Slice<Patient> getPatientSlice(Nurse nurse, Long lastIdx, int size) {
-        return patientRepository.findPatientByNurse(nurse, lastIdx, size);
+    public Slice<Patient> getPatientSlice(Nurse nurse, PageRequest request) {
+        return patientRepository.findPatientByNurse(nurse, request.lastIdx(), request.size());
     }
 
     @Override
