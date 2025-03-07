@@ -1,0 +1,34 @@
+{
+  "settings": {
+    "analysis": {
+      "tokenizer": {
+        "my_ngram_tokenizer": {
+          "type": "ngram",
+          "min_gram": 2,
+          "max_gram": 3,
+          "token_chars": ["letter", "digit"]
+        }
+      },
+      "analyzer": {
+        "my_ngram_analyzer": {
+          "type": "custom",
+          "tokenizer": "my_ngram_tokenizer"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text",
+        "analyzer": "my_ngram_analyzer"
+      },
+      "patientId": {
+        "type": "long"
+      },
+      "nurseId": {
+        "type": "long"
+      }
+    }
+  }
+}
