@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import aurora.carevisionapiserver.IntegrationTestSupport;
 import aurora.carevisionapiserver.domain.bed.repository.BedRepository;
+import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.repository.DepartmentRepository;
@@ -53,6 +54,24 @@ class PageServiceImplTest extends IntegrationTestSupport {
 
         // then
         assertThat(nextCursor).isEqualTo(3L);
+    }
+
+    @DisplayName("주어진 리스트에서 마지막 카메라 엔티티의 ID를 반환한다.")
+    @Test
+    void getNextCursorForCameras() {
+        // given
+        Camera camera1 = createCamera("CAM1");
+        Camera camera2 = createCamera("CAM2");
+
+        // when
+        String nextCursor = pageService.getNextCursorForCameras(List.of(camera1, camera2));
+
+        // then
+        assertThat(nextCursor).isEqualTo(camera2.getId());
+    }
+
+    private Camera createCamera(String id) {
+        return Camera.builder().id(id).build();
     }
 
     private Department createDepartment() {

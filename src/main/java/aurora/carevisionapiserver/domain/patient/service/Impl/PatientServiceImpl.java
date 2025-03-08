@@ -45,12 +45,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Slice<Patient> getPatients(Admin admin, PageRequest request) {
-        return patientRepository.findPatientByAdmin(admin, request.lastIdx(), request.size());
+        return patientRepository.findPatientByAdmin(admin, request.getLastIdx(), request.getSize());
     }
 
     @Override
     public Slice<Patient> getPatientSlice(Nurse nurse, PageRequest request) {
-        return patientRepository.findPatientByNurse(nurse, request.lastIdx(), request.size());
+        return patientRepository.findPatientByNurse(nurse, request.getLastIdx(), request.getSize());
     }
 
     @Override
