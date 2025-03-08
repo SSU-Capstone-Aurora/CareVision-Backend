@@ -17,7 +17,6 @@ public class PageServiceImpl implements PageService {
 
     @Override
     public String getNextCursorForCameras(List<Camera> cameras) {
-
-        return null;
+        return cameras.get(cameras.size() - 1).getId();
     }
 }
