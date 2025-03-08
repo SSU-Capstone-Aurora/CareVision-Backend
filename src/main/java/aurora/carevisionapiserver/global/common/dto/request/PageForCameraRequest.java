@@ -1,8 +1,15 @@
 package aurora.carevisionapiserver.global.common.dto.request;
 
-public record PageForCameraRequest(String cameraId, int size) {
+public final class PageForCameraRequest extends BasePageRequest<String> {
+    public PageForCameraRequest(String cameraId) {
+        super(cameraId);
+    }
+
     public PageForCameraRequest(String cameraId, int size) {
-        this.cameraId = cameraId;
-        this.size = (size > 0) ? size : 8;
+        super(cameraId, size);
+    }
+
+    public String getCameraId() {
+        return super.identifier;
     }
 }
