@@ -66,7 +66,8 @@ public class NurseServiceImpl implements NurseService {
 
     @Override
     public Slice<Nurse> getActiveNurses(Admin admin, PageRequest request) {
-        return nurseRepository.findActiveNursesByAdmin(admin, request.lastIdx(), request.size());
+        return nurseRepository.findActiveNursesByAdmin(
+                admin, request.getLastIdx(), request.getSize());
     }
 
     @Override

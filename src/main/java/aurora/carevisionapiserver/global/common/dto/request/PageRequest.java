@@ -1,8 +1,15 @@
 package aurora.carevisionapiserver.global.common.dto.request;
 
-public record PageRequest(Long lastIdx, int size) {
+public final class PageRequest extends BasePageRequest<Long> {
+    public PageRequest(Long lastIdx) {
+        super(lastIdx);
+    }
+
     public PageRequest(Long lastIdx, int size) {
-        this.lastIdx = lastIdx;
-        this.size = (size > 0) ? size : 8;
+        super(lastIdx, size);
+    }
+
+    public Long getLastIdx() {
+        return super.identifier;
     }
 }

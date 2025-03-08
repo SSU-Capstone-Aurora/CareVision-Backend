@@ -45,10 +45,10 @@ public class CameraServiceImpl implements CameraService {
 
     @Override
     public Slice<Camera> getAllCameraInfo(Admin admin, PageForCameraRequest request) {
-        Long lastIdx = CameraIdUtil.parseLongId(request.cameraId());
+        Long lastIdx = CameraIdUtil.parseLongId(request.getCameraId());
 
         return cameraRepository.findAllCamerasSortedByBed(
-                admin.getDepartment(), lastIdx, request.size());
+                admin.getDepartment(), lastIdx, request.getSize());
     }
 
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
@@ -72,7 +72,7 @@ public class CameraServiceImpl implements CameraService {
     public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, PageRequest request) {
         Patient patient = patientService.getPatient(patientId);
         Slice<Video> videos =
-                videoRepository.findByPatient(patient, request.lastIdx(), request.size());
+                videoRepository.findByPatient(patient, request.getLastIdx(), request.getSize());
         List<VideoInfoResponse> videoInfoResponses = getVideoInfoListResponses(videos);
         return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
     }
