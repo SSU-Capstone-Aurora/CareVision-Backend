@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.global.common.service.impl;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ConnectServiceImpl implements ConnectService {
     @Override
+    @Transactional
     public void connectNurseToPatient(Patient patient, Nurse nurse) {
         patient.registerNurse(nurse);
         nurse.getPatients().add(patient);
