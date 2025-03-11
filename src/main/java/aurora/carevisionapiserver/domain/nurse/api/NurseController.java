@@ -28,6 +28,7 @@ import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.Pa
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
+import aurora.carevisionapiserver.global.common.service.ConnectService;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
@@ -51,6 +52,7 @@ import lombok.RequiredArgsConstructor;
 public class NurseController {
     private final PatientService patientService;
     private final NurseService nurseService;
+    private final ConnectService connectService;
     private final FcmService fcmService;
     private final PageService pageService;
 
@@ -96,7 +98,7 @@ public class NurseController {
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestBody PatientSelectRequest patientSelectRequest) {
         Patient patient = patientService.getPatient(patientSelectRequest.getPatientId());
-        nurseService.connectPatient(nurse, patient);
+        connectService.connectNurseToPatient(patient, nurse);
         return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }
 

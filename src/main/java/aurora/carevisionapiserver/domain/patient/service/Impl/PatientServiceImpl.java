@@ -12,7 +12,6 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.bed.service.BedService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
@@ -24,6 +23,7 @@ import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientRegistrationService;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
+import aurora.carevisionapiserver.global.common.service.ConnectService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import aurora.carevisionapiserver.global.util.PatientNameUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientEsRepository patientEsRepository;
     private final BedService bedService;
-    private final NurseService nurseService;
+    private final ConnectService connectService;
     private final PatientRegistrationService patientRegistrationService;
 
     public Map<PatientDocument, Bed> searchPatient(String patientName) {
@@ -64,7 +64,7 @@ public class PatientServiceImpl implements PatientService {
         Patient patient =
                 patientRegistrationService.createPatient(
                         patientCreateRequest, nurse.getDepartment());
-        connectNurseToPatient(patient, nurse);
+        connectService.connectNurseToPatient(patient, nurse);
     }
 
     @Override
@@ -88,10 +88,6 @@ public class PatientServiceImpl implements PatientService {
         return patientRepository
                 .findById(patientId)
                 .orElseThrow(() -> new PatientException(ErrorStatus.PATIENT_NOT_FOUND));
-    }
-
-    private void connectNurseToPatient(Patient patient, Nurse nurse) {
-        nurseService.connectPatient(nurse, patient);
     }
 
     private List<PatientDocument> searchPatientsByNameOrAll(String patientName) {

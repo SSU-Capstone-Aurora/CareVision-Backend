@@ -9,7 +9,6 @@ import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
-import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 public interface NurseService {
@@ -38,8 +37,6 @@ public interface NurseService {
     long getNurseRegisterRequestCount(Admin admin);
 
     void deleteActiveNurse(Long nurseId);
-
-    void connectPatient(Nurse nurse, Patient patient);
 
     void retryAcceptanceRequest(String username);
 }
