@@ -6,7 +6,6 @@ import org.springframework.data.domain.Slice;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
@@ -25,15 +24,9 @@ public interface PatientService {
 
     void deletePatient(Long patientId);
 
-    void createAndConnectPatient(
-            PatientCreateRequest patientCreateRequest,
-            CameraSelectRequest cameraSelectRequest,
-            Nurse nurse);
+    void createAndConnectPatient(PatientCreateRequest patientCreateRequest, Nurse nurse);
 
-    void createAndConnectPatient(
-            PatientCreateRequest patientCreateRequest,
-            CameraSelectRequest cameraSelectRequest,
-            Admin admin);
+    void createAndConnectPatient(PatientCreateRequest patientCreateRequest, Admin admin);
 
     PatientSearchListResponse searchUnlinkedPatients(String patientName);
 

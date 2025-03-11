@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.bed.service.BedService;
-import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
@@ -61,10 +60,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Transactional
-    public void createAndConnectPatient(
-            PatientCreateRequest patientCreateRequest,
-            CameraSelectRequest cameraSelectRequest,
-            Nurse nurse) {
+    public void createAndConnectPatient(PatientCreateRequest patientCreateRequest, Nurse nurse) {
         Patient patient =
                 patientRegistrationService.createPatient(
                         patientCreateRequest, nurse.getDepartment());
@@ -72,10 +68,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public void createAndConnectPatient(
-            PatientCreateRequest patientCreateRequest,
-            CameraSelectRequest cameraSelectRequest,
-            Admin admin) {
+    public void createAndConnectPatient(PatientCreateRequest patientCreateRequest, Admin admin) {
         patientRegistrationService.createPatient(patientCreateRequest, admin.getDepartment());
     }
 
