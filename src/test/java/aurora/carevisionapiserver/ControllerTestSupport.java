@@ -19,6 +19,7 @@ import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.api.AdminPatientController;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.auth.util.JWTUtil;
+import aurora.carevisionapiserver.global.common.service.ConnectService;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
 
@@ -43,4 +44,5 @@ public abstract class ControllerTestSupport {
     @MockBean protected NurseRepository nurseRepository;
     @MockBean protected AdminRepository adminRepository;
     @MockBean protected FcmService fcmService;
+    @MockBean protected ConnectService connectService;
 }

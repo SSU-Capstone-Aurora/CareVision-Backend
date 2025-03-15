@@ -10,7 +10,7 @@ import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.converter.PatientDocumentConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
-import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest;
+import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.repository.PatientEsRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.global.util.PatientValidator;
@@ -25,8 +25,7 @@ public class PatientRegistrationService {
     private final PatientValidator patientValidator;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public Patient createPatient(
-            PatientRequest.PatientCreateRequest patientCreateRequest, Department department) {
+    public Patient createPatient(PatientCreateRequest patientCreateRequest, Department department) {
         Patient patient = registerPatientToBed(patientCreateRequest, department);
         savePatient(patient);
 
@@ -34,7 +33,7 @@ public class PatientRegistrationService {
     }
 
     private Patient registerPatientToBed(
-            PatientRequest.PatientCreateRequest patientCreateRequest, Department department) {
+            PatientCreateRequest patientCreateRequest, Department department) {
         Bed bed = bedService.findBed(patientCreateRequest.getBed());
 
         patientValidator.validatePatientCode(patientCreateRequest.getCode());

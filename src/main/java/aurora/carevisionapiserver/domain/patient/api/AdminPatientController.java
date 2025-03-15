@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.domain.PatientDocument;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
-import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchPageResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
@@ -78,12 +76,8 @@ public class AdminPatientController {
     @PostMapping("")
     public BaseResponse<Void> createPatient(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @RequestBody PatientRegisterRequest patientRegisterRequest) {
-
-        PatientCreateRequest patientCreateRequest = patientRegisterRequest.getPatient();
-        CameraSelectRequest cameraSelectRequest = patientRegisterRequest.getCamera();
-
-        patientService.createAndConnectPatient(patientCreateRequest, cameraSelectRequest, admin);
+            @RequestBody PatientCreateRequest request) {
+        patientService.createAndConnectPatient(request, admin);
 
         return BaseResponse.of(SuccessStatus._CREATED, null);
     }

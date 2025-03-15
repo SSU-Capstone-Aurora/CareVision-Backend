@@ -1,6 +1,7 @@
 package aurora.carevisionapiserver.domain.nurse.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -48,7 +49,7 @@ public class Nurse extends BaseEntity implements User, Identifiable {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "nurse", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Patient> patients;
+    private List<Patient> patients = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role;
