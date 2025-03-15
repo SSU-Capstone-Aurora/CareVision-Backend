@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.domain.bed.repository.impl;
+package aurora.carevisionapiserver.domain.bed.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import aurora.carevisionapiserver.IntegrationTestSupport;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
-import aurora.carevisionapiserver.domain.bed.repository.BedRepository;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.repository.DepartmentRepository;

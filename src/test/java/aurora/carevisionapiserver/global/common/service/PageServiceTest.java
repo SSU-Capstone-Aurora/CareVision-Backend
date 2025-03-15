@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.common.service.impl;
+package aurora.carevisionapiserver.global.common.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,9 +21,8 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.global.common.domain.Identifiable;
-import aurora.carevisionapiserver.global.common.service.PageService;
 
-class PageServiceImplTest extends IntegrationTestSupport {
+class PageServiceTest extends IntegrationTestSupport {
     @Autowired PatientRepository patientRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired HospitalRepository hospitalRepository;

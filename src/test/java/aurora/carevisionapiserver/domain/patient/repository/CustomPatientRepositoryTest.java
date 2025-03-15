@@ -26,7 +26,7 @@ import aurora.carevisionapiserver.domain.patient.domain.Patient;
 
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CustomPatientRepositoryImplTest extends IntegrationTestSupport {
+class CustomPatientRepositoryTest extends IntegrationTestSupport {
     @Autowired NurseRepository nurseRepository;
     @Autowired PatientRepository patientRepository;
     @Autowired HospitalRepository hospitalRepository;

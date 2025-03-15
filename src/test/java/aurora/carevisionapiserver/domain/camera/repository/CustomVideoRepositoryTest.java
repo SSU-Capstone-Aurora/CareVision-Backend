@@ -20,7 +20,7 @@ import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 
-class CustomVideoRepositoryImplTest extends IntegrationTestSupport {
+class CustomVideoRepositoryTest extends IntegrationTestSupport {
     @Autowired PatientRepository patientRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired HospitalRepository hospitalRepository;

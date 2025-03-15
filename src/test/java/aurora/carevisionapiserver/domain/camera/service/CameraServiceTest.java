@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.domain.camera.service.Impl;
+package aurora.carevisionapiserver.domain.camera.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +27,6 @@ import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.Vide
 import aurora.carevisionapiserver.domain.camera.repository.CameraRepository;
 import aurora.carevisionapiserver.domain.camera.repository.CustomVideoRepositoryImpl;
 import aurora.carevisionapiserver.domain.camera.repository.VideoRepository;
-import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.hospital.domain.Hospital;
 import aurora.carevisionapiserver.domain.hospital.repository.DepartmentRepository;
