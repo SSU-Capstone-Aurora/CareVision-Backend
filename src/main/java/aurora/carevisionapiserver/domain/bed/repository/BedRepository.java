@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Lock;
 
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 
-public interface BedRepository extends JpaRepository<Bed, Long> {
+public interface BedRepository extends JpaRepository<Bed, Long>, CustomBedRepository {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Bed> findByBedNumberAndInpatientWardNumberAndPatientRoomNumber(
             Long bedNumber, Long inpatientWardNumber, Long patientRoomNumber);

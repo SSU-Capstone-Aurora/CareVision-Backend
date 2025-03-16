@@ -18,7 +18,7 @@ import aurora.carevisionapiserver.domain.hospital.repository.HospitalRepository;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 
-class CustomNurseRepositoryImplTest extends IntegrationTestSupport {
+class CustomNurseRepositoryTest extends IntegrationTestSupport {
     @Autowired PatientRepository patientRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired HospitalRepository hospitalRepository;
