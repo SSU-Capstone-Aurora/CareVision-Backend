@@ -1,5 +1,7 @@
 package aurora.carevisionapiserver.domain.bed.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
@@ -7,6 +9,7 @@ import aurora.carevisionapiserver.domain.bed.dto.BedRequest;
 import aurora.carevisionapiserver.domain.bed.exception.BedException;
 import aurora.carevisionapiserver.domain.bed.repository.BedRepository;
 import aurora.carevisionapiserver.domain.bed.service.BedService;
+import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
@@ -30,5 +33,10 @@ public class BedServiceImpl implements BedService {
         return bedRepository
                 .findById(id)
                 .orElseThrow(() -> new BedException(ErrorStatus.BED_NOT_FOUND));
+    }
+
+    @Override
+    public List<Bed> findNextBeds(Department department, Bed lastBed, int size) {
+        return bedRepository.findNextBeds(department, lastBed, size);
     }
 }

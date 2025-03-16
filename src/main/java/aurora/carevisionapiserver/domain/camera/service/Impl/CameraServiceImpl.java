@@ -4,12 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
+import aurora.carevisionapiserver.domain.bed.domain.Bed;
+import aurora.carevisionapiserver.domain.bed.service.BedService;
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
 import aurora.carevisionapiserver.domain.camera.domain.Video;
@@ -25,30 +30,56 @@ import aurora.carevisionapiserver.global.common.dto.request.PageForCameraRequest
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.infra.aws.S3Service;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
-import aurora.carevisionapiserver.global.util.CameraIdUtil;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CameraServiceImpl implements CameraService {
     private static final int CAMERA_IP_INDEX = 0;
     private static final int CAMERA_PW_INDEX = 1;
-
-    private final S3Service s3Service;
-    private final PatientService patientService;
 
     @Value("${camera.streaming.url}")
     String urlFormat;
 
     private final CameraRepository cameraRepository;
     private final VideoRepository videoRepository;
+    private final BedService bedService;
+    private final S3Service s3Service;
+    private final PatientService patientService;
 
     @Override
     public Slice<Camera> getAllCameraInfo(Admin admin, PageForCameraRequest request) {
-        Long lastIdx = CameraIdUtil.parseLongId(request.getCameraId());
+        Camera camera = getCameraById(request.getCameraId());
+        List<Bed> beds = getNextBeds(admin, camera, request.getSize());
+        List<Camera> cameras = getCamerasByBeds(beds);
 
-        return cameraRepository.findAllCamerasSortedByBed(
-                admin.getDepartment(), lastIdx, request.getSize());
+        return createCameraSlice(cameras, request.getSize());
+    }
+
+    private Slice<Camera> createCameraSlice(List<Camera> cameras, int size) {
+        boolean hasNext = cameras.size() > size;
+        if (hasNext) {
+            cameras = cameras.subList(0, size);
+        }
+        return new SliceImpl<>(cameras, Pageable.unpaged(), hasNext);
+    }
+
+    private List<Camera> getCamerasByBeds(List<Bed> beds) {
+        List<String> cameraIds =
+                beds.stream().map(bed -> bed.getCamera().getId()).collect(Collectors.toList());
+
+        return cameraRepository.findByIdIn(cameraIds);
+    }
+
+    private List<Bed> getNextBeds(Admin admin, Camera camera, int size) {
+        return bedService.findNextBeds(admin.getDepartment(), camera.getBed(), size);
+    }
+
+    private Camera getCameraById(String id) {
+        return cameraRepository
+                .findById(id)
+                .orElseThrow(() -> new CameraException(ErrorStatus.CAMERA_NOT_FOUND));
     }
 
     public List<Camera> getCameraInfoUnlinkedToPatient(User user) {
