@@ -9,7 +9,6 @@ import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 public interface NurseService {
     boolean existsByNurseId(Long value);
@@ -22,7 +21,7 @@ public interface NurseService {
 
     Nurse getInactiveNurse(String username);
 
-    Slice<Nurse> getActiveNurses(Admin admin, PageRequest request);
+    Slice<Nurse> getActiveNurses(Admin admin, Long lastIdx, int size);
 
     List<Nurse> getInactiveNurses(Admin admin);
 
