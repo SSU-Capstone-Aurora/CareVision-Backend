@@ -61,10 +61,9 @@ public class CameraServiceImpl implements CameraService {
     }
 
     private List<Camera> getCamerasByBeds(List<Bed> beds) {
-        List<String> cameraIds =
-                beds.stream().map(bed -> bed.getCamera().getId()).collect(Collectors.toList());
+        List<String> cameraIds = beds.stream().map(bed -> bed.getCamera().getId()).toList();
 
-        return cameraRepository.findByIdIn(cameraIds);
+        return cameraIds.stream().map(id -> getCameraById(id)).collect(Collectors.toList());
     }
 
     private List<Bed> getNextBeds(Admin admin, Camera camera, int size) {
