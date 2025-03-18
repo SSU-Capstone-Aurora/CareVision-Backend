@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.global.common.service.impl;
+package aurora.carevisionapiserver.global.common.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,9 +20,8 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
-import aurora.carevisionapiserver.global.common.service.ConnectService;
 
-class ConnectServiceImplTest extends IntegrationTestSupport {
+class ConnectServiceTest extends IntegrationTestSupport {
     @Autowired PatientRepository patientRepository;
     @Autowired NurseRepository nurseRepository;
     @Autowired DepartmentRepository departmentRepository;
