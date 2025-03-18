@@ -1,6 +1,8 @@
 package aurora.carevisionapiserver.domain.camera.api;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -18,7 +20,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
 import aurora.carevisionapiserver.domain.camera.domain.Camera;
-import aurora.carevisionapiserver.global.common.dto.request.PageForCameraRequest;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class AdminCameraControllerTest extends ControllerTestSupport {
@@ -27,18 +28,18 @@ class AdminCameraControllerTest extends ControllerTestSupport {
     @Test
     void getCameras() throws Exception {
         // given
-        PageForCameraRequest request = new PageForCameraRequest("CAM1", 2);
         Slice<Camera> cameras = new SliceImpl<>(List.of());
 
         // when //then
-        when(cameraService.getAllCameraInfo(any(), any())).thenReturn(cameras);
+        when(cameraService.getAllCameraInfo(any(), anyString(), anyInt())).thenReturn(cameras);
         when(pageService.getNextCursorForCameras(any())).thenReturn("CAM2");
 
         mockMvc.perform(
                         get("/api/admin/cameras")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .content(objectMapper.writeValueAsString(request)))
+                                .param("cameraId", "CAM1")
+                                .param("size", "8"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.cameraInfoList").isArray())
