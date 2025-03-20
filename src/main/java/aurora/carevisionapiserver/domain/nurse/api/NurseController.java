@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import aurora.carevisionapiserver.domain.camera.dto.request.CameraRequest.CameraSelectRequest;
 import aurora.carevisionapiserver.domain.camera.dto.response.CameraResponse.StreamingInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
@@ -24,12 +23,12 @@ import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.converter.PatientConverter;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
-import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientRegisterRequest;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientSelectRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientProfilePageResponse;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
+import aurora.carevisionapiserver.global.common.service.ConnectService;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmPreviewResponse;
 import aurora.carevisionapiserver.global.fcm.dto.response.AlarmResponse.AlarmInfoListResponse;
@@ -53,6 +52,7 @@ import lombok.RequiredArgsConstructor;
 public class NurseController {
     private final PatientService patientService;
     private final NurseService nurseService;
+    private final ConnectService connectService;
     private final FcmService fcmService;
     private final PageService pageService;
 
@@ -98,7 +98,7 @@ public class NurseController {
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @RequestBody PatientSelectRequest patientSelectRequest) {
         Patient patient = patientService.getPatient(patientSelectRequest.getPatientId());
-        nurseService.connectPatient(nurse, patient);
+        connectService.connectNurseToPatient(patient, nurse);
         return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }
 
@@ -112,11 +112,8 @@ public class NurseController {
     @PostMapping("/patients")
     public BaseResponse<Object> createPatient(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            @RequestBody PatientRegisterRequest patientRegisterRequest) {
-        PatientCreateRequest patientCreateRequest = patientRegisterRequest.getPatient();
-        CameraSelectRequest cameraSelectRequest = patientRegisterRequest.getCamera();
-
-        patientService.createAndConnectPatient(patientCreateRequest, cameraSelectRequest, nurse);
+            @RequestBody PatientCreateRequest request) {
+        patientService.createAndConnectPatient(request, nurse);
 
         return BaseResponse.of(SuccessStatus._CREATED, new HashMap<>());
     }

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
+import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientSelectRequest;
 import aurora.carevisionapiserver.domain.patient.dto.response.PatientResponse.PatientSearchListResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
@@ -41,5 +43,23 @@ class NurseControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.patientList").isArray())
                 .andExpect(jsonPath("$.result.count").isNumber());
+    }
+
+    @WithMockUser
+    @DisplayName("환자와 간호사를 성공적으로 연결한다.")
+    @Test
+    void connectPatient() throws Exception {
+        // given
+        PatientSelectRequest request = PatientSelectRequest.builder().build();
+
+        // then
+        mockMvc.perform(
+                        patch("/api/patients")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(SuccessStatus._CREATED.getCode()))
+                .andExpect(jsonPath("$.result").isMap());
     }
 }
