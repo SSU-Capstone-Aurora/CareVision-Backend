@@ -11,6 +11,13 @@ public class NurseDocumentConverter {
     }
 
     public static NurseDocument toNurseDocument(Nurse nurse) {
-        return NurseDocument.builder().name(nurse.getName()).username(nurse.getUsername()).build();
+        return NurseDocument.builder()
+                .nurseId(nurse.getId())
+                .name(nurse.getName())
+                .username(nurse.getUsername())
+                .departmentId(nurse.getDepartment().getId())
+                .isActivated(nurse.isActivated())
+                .createdAt(nurse.getCreatedAt())
+                .build();
     }
 }
