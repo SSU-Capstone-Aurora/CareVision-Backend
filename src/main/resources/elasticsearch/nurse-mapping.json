@@ -28,6 +28,9 @@
       },
       "departmentId": {
         "type": "long"
+      },
+      "isActivated": {
+        "type": "boolean"
       }
     }
   }
