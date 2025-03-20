@@ -34,21 +34,26 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
     @AfterEach
     void tearDown() {
         nurseEsRepository.deleteAll();
+        patientRepository.deleteAllInBatch();
+        nurseRepository.deleteAllInBatch();
+        departmentRepository.deleteAllInBatch();
+        hospitalRepository.deleteAllInBatch();
+        bedRepository.deleteAllInBatch();
     }
 
-    @DisplayName("관리자의 부서에 근무하는 활성화된 간호사를 간호사 이름으로 검색한다. (처음 조회)")
+    @DisplayName("관리자가 속한 부서의 활성 간호사를 이름으로 검색하면, 첫 페이지 결과를 반환한다.")
     @Test
     void searchNurseByNameAndAdmin() {
         // given
         Department department = createDepartment();
         Admin admin = createAdmin(department);
-        Nurse nurse1 = createNurse("nurse1", "nurse1", department, true);
-        Nurse nurse2 = createNurse("nurse2", "nurse2", department, false);
+        Nurse nurse1 = createNurse("오로라", "nurse1", department, true);
+        Nurse nurse2 = createNurse("최로라", "nurse2", department, false);
 
         nurseEsRepository.saveAll(
                 NurseDocumentConverter.toNurseDocumentList(List.of(nurse1, nurse2)));
 
-        String nurseName = "nurse";
+        String nurseName = "로라";
         Long lastIdx = -1L;
         int size = 2;
 
@@ -62,6 +67,42 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
         assertThat(response.hasNext()).isFalse();
         assertThat(response).extracting("username").contains(nurse1.getUsername());
     }
+
+    @DisplayName("관리자의 부서에 근무하는 활성화된 간호사를 조회한다. 요청된 마지막 커서 값이 1L이며 조회되는 개수는 2개이다.")
+    @Test
+    void findActiveNursesByAdmin() {
+        // given
+        Department department = createDepartment();
+        Admin admin = createAdmin(department);
+        Nurse nurse1 = createNurse("오로라", "nurse1", department, true);
+        Nurse nurse2 = createNurse("최로라", "nurse2", department, true);
+        Nurse nurse3 = createNurse("정로라", "nurse3", department, true);
+        Nurse nurse4 = createNurse("홍로라", "nurse4", department, false);
+
+        nurseEsRepository.saveAll(
+                NurseDocumentConverter.toNurseDocumentList(
+                        List.of(nurse1, nurse2, nurse3, nurse4)));
+
+        String nurseName = "로라";
+        Long lastIdx = 1L;
+        int size = 2;
+
+        // when
+        Slice<NurseDocument> response =
+                customNurseEsRepository.findActiveNursesByNameAndAdmin(
+                        nurseName, admin, lastIdx, size);
+
+        // then
+        assertThat(response).hasSize(2);
+        assertThat(response.hasNext()).isFalse();
+        assertThat(response)
+                .extracting("username")
+                .contains(nurse2.getUsername(), nurse3.getUsername());
+    }
+
+    // TODO : 최신 등록순인지 확인
+
+    // TODO : 전체 조회되는지 확인
 
     private Admin createAdmin(Department department) {
         return Admin.builder().department(department).username("admin").build();
