@@ -43,7 +43,7 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("관리자가 속한 부서의 활성 간호사를 이름으로 검색하면, 첫 페이지 결과를 반환한다.")
     @Test
-    void searchNurseByNameAndAdmin() {
+    void findActiveNursesByNameAndAdmin() {
         // given
         Department department = createDepartment();
         Admin admin = createAdmin(department);
@@ -68,9 +68,9 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
         assertThat(response).extracting("username").contains(nurse1.getUsername());
     }
 
-    @DisplayName("관리자의 부서에 근무하는 활성화된 간호사를 조회한다. 요청된 마지막 커서 값이 1L이며 조회되는 개수는 2개이다.")
+    @DisplayName("마지막 조회된 간호사의 ID를 기준으로, 관리자의 부서에서 근무하는 활성화된 간호사를 다음 페이지로 조회한다.")
     @Test
-    void findActiveNursesByAdmin() {
+    void findActiveNursesByNameAndAdminInNextCursor() {
         // given
         Department department = createDepartment();
         Admin admin = createAdmin(department);
@@ -100,7 +100,40 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
                 .contains(nurse2.getUsername(), nurse3.getUsername());
     }
 
-    // TODO : 최신 등록순인지 확인
+    @DisplayName("관리자의 부서에서 근무하는 활성화된 간호사를 최신 등록순으로 정렬하여 조회한다.")
+    @Test
+    void findActiveNursesByNameAndAdminSortedByLatest() throws InterruptedException {
+        // given
+        Department department = createDepartment();
+        Admin admin = createAdmin(department);
+        Nurse nurse1 = createNurse("오로라", "nurse1", department, true);
+        Nurse nurse2 = createNurse("최로라", "nurse2", department, true);
+
+        Thread.sleep(10);
+        Nurse nurse3 = createNurse("정로라", "nurse3", department, true);
+
+        nurseEsRepository.saveAll(
+                NurseDocumentConverter.toNurseDocumentList(List.of(nurse1, nurse2, nurse3)));
+
+        String nurseName = "로라";
+        Long lastIdx = -1L;
+        int size = 3;
+
+        // when
+        Slice<NurseDocument> response =
+                customNurseEsRepository.findActiveNursesByNameAndAdmin(
+                        nurseName, admin, lastIdx, size);
+
+        // then
+        assertThat(response).hasSize(3);
+        assertThat(response.hasNext()).isFalse();
+
+        List<NurseDocument> nurses = response.getContent();
+        for (int i = 1; i < nurses.size(); i++) {
+            assertThat(nurses.get(i - 1).getCreatedAt())
+                    .isAfterOrEqualTo(nurses.get(i).getCreatedAt());
+        }
+    }
 
     // TODO : 전체 조회되는지 확인
 
