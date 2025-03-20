@@ -23,7 +23,7 @@ public class CustomNurseEsRepositoryImpl implements CustomNurseEsRepository {
         Long departmentId = admin.getDepartment().getId();
         List<NurseDocument> nurses =
                 nurseEsRepository
-                        .findByIsActivatedTrueAndNameAndDepartmentIdAndNurseIdIsGreaterThanOrderByCreatedAt(
+                        .findByIsActivatedTrueAndNameAndDepartmentIdAndNurseIdIsGreaterThanOrderByCreatedAtDesc(
                                 nurseName, departmentId, lastIdx);
 
         boolean hasNext = nurses.size() > size;
