@@ -25,6 +25,9 @@
       },
       "username": {
         "type": "text"
+      },
+      "departmentId": {
+        "type": "long"
       }
     }
   }
