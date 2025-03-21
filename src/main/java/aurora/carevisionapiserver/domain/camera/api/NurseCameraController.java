@@ -3,10 +3,11 @@ package aurora.carevisionapiserver.domain.camera.api;
 import java.util.Map;
 
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aurora.carevisionapiserver.domain.camera.converter.CameraConverter;
@@ -20,7 +21,6 @@ import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
@@ -65,8 +65,9 @@ public class NurseCameraController {
     @GetMapping("/streaming")
     public BaseResponse<StreamingPageResponse> getStreamingInfoList(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
-            @RequestBody PageRequest request) {
-        Slice<Patient> patients = patientService.getPatientSlice(nurse, request);
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<Patient> patients = patientService.getPatientSlice(nurse, lastIdx, size);
         Map<Patient, String> streamingInfo = cameraService.getStreamingInfo(patients.getContent());
 
         return BaseResponse.of(
@@ -88,8 +89,10 @@ public class NurseCameraController {
     public BaseResponse<VideoInfoPageResponse> getSavedVideoInfos(
             @Parameter(name = "nurse", hidden = true) @AuthUser Nurse nurse,
             @PathVariable(name = "patientId") Long patientId,
-            @RequestBody PageRequest request) {
-        Slice<VideoInfoResponse> videoInfo = cameraService.getSavedVideoInfos(patientId, request);
+            @RequestParam(value = "lastIdx") Long lastIdx,
+            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size) {
+        Slice<VideoInfoResponse> videoInfo =
+                cameraService.getSavedVideoInfos(patientId, lastIdx, size);
         return BaseResponse.of(
                 SuccessStatus._OK,
                 CameraConverter.toVideoInfoPageResponse(

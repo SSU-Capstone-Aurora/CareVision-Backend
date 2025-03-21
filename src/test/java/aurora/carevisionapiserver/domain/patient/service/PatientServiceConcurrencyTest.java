@@ -1,4 +1,4 @@
-package aurora.carevisionapiserver.domain.patient.service.Impl;
+package aurora.carevisionapiserver.domain.patient.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,9 +30,8 @@ import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.dto.request.PatientRequest.PatientCreateRequest;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
-import aurora.carevisionapiserver.domain.patient.service.PatientService;
 
-class PatientServiceImplConcurrencyTest extends IntegrationTestSupport {
+class PatientServiceConcurrencyTest extends IntegrationTestSupport {
     @Autowired PatientRepository patientRepository;
     @Autowired NurseRepository nurseRepository;
     @Autowired DepartmentRepository departmentRepository;
