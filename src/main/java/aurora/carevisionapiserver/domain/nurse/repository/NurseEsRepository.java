@@ -8,6 +8,6 @@ import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 
 public interface NurseEsRepository extends ElasticsearchRepository<NurseDocument, String> {
     List<NurseDocument>
-            findByIsActivatedTrueAndNameAndDepartmentIdAndNurseIdIsGreaterThanOrderByCreatedAtDesc(
+            findByIsActivatedTrueAndNameAndDepartmentIdAndNurseIdIsGreaterThanOrderByNurseId(
                     String name, Long departmentId, Long lastIdx);
 }
