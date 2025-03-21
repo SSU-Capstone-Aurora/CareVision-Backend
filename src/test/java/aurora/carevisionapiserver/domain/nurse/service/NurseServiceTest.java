@@ -71,7 +71,36 @@ class NurseServiceTest extends IntegrationTestSupport {
         assertThat(response.isHasNext()).isFalse();
     }
 
-    // TODO : 조회 API와 통합되었는지 확인하는 테스트 추가
+    @DisplayName("관리자의 부서에서 근무하는 활성화된 간호사를 간호사 이름으로 검색하면 첫 페이지 결과를 반환한다.")
+    @Test
+    void searchActiveNursesWhenNurseNameIsEmpty() {
+        // given
+        Department department = createDepartment();
+        Admin admin = createAdmin(department);
+        Nurse nurse1 = createNurse("오로라", "nurse1", department, true);
+        Nurse nurse2 = createNurse("김미미", "nurse2", department, true);
+        Nurse nurse3 = createNurse("정춘향", "nurse2", department, true);
+        Nurse nurse4 = createNurse("홍길동", "nurse3", department, true);
+
+        nurseEsRepository.saveAll(
+                NurseDocumentConverter.toNurseDocumentList(
+                        List.of(nurse1, nurse2, nurse3, nurse4)));
+
+        PageRequest request = new PageRequest(-1L, 2);
+        String nurseName = "";
+
+        // when
+        NursePreviewPageResponse response =
+                nurseService.searchActiveNurses(admin, request, nurseName);
+
+        // then
+        assertThat(response.getNurseList())
+                .hasSize(2)
+                .extracting("name", "id")
+                .containsExactlyInAnyOrder(tuple("오로라", "nurse1"), tuple("김미미", "nurse2"));
+        assertThat(response.getNextCursor()).isEqualTo(nurse2.getId());
+        assertThat(response.isHasNext()).isTrue();
+    }
 
     private Admin createAdmin(Department department) {
         return Admin.builder().department(department).username("admin").build();
