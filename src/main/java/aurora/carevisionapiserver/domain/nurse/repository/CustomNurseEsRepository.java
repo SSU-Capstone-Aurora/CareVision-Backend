@@ -6,6 +6,6 @@ import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 
 public interface CustomNurseEsRepository {
-    Slice<NurseDocument> findActiveNursesByNameAndAdmin(
+    Slice<NurseDocument> findActiveNursesByNameAndAdminOrAll(
             String nurseName, Admin admin, Long lastIdx, int size);
 }

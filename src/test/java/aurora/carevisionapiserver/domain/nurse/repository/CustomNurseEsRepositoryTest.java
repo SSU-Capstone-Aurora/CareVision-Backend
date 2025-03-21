@@ -59,7 +59,7 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
         // when
         Slice<NurseDocument> response =
-                customNurseEsRepository.findActiveNursesByNameAndAdmin(
+                customNurseEsRepository.findActiveNursesByNameAndAdminOrAll(
                         nurseName, admin, lastIdx, size);
 
         // then
@@ -89,7 +89,7 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
         // when
         Slice<NurseDocument> response =
-                customNurseEsRepository.findActiveNursesByNameAndAdmin(
+                customNurseEsRepository.findActiveNursesByNameAndAdminOrAll(
                         nurseName, admin, lastIdx, size);
 
         // then

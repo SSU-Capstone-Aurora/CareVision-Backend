@@ -17,15 +17,27 @@ public class CustomNurseEsRepositoryImpl implements CustomNurseEsRepository {
     private final NurseEsRepository nurseEsRepository;
 
     @Override
-    public Slice<NurseDocument> findActiveNursesByNameAndAdmin(
+    public Slice<NurseDocument> findActiveNursesByNameAndAdminOrAll(
             String nurseName, Admin admin, Long lastIdx, int size) {
 
         Long departmentId = admin.getDepartment().getId();
-        List<NurseDocument> nurses =
-                nurseEsRepository
-                        .findByIsActivatedTrueAndNameAndDepartmentIdAndNurseIdIsGreaterThanOrderByNurseId(
-                                nurseName, departmentId, lastIdx);
+        List<NurseDocument> nurses = fetchNurses(nurseName, departmentId, lastIdx);
 
+        return createSlice(nurses, size);
+    }
+
+    private List<NurseDocument> fetchNurses(String nurseName, Long departmentId, Long lastIdx) {
+        if (nurseName == null || nurseName.isEmpty()) {
+            return nurseEsRepository
+                    .findByIsActivatedTrueAndDepartmentIdAndNurseIdIsGreaterThanOrderByNurseId(
+                            departmentId, lastIdx);
+        }
+        return nurseEsRepository
+                .findByIsActivatedTrueAndNameAndDepartmentIdAndNurseIdIsGreaterThanOrderByNurseId(
+                        nurseName, departmentId, lastIdx);
+    }
+
+    private Slice<NurseDocument> createSlice(List<NurseDocument> nurses, int size) {
         boolean hasNext = nurses.size() > size;
         if (hasNext) {
             nurses = nurses.subList(0, size);
