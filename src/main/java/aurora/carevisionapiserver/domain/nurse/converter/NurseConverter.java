@@ -54,14 +54,6 @@ public class NurseConverter {
         return NursePreviewResponse.builder().name(nurse.getName()).id(nurse.getUsername()).build();
     }
 
-    public static NursePreviewListResponse toNurseDocumentPreviewListResponse(
-            List<NurseDocument> nurses) {
-        return NursePreviewListResponse.builder()
-                .nurseList(nurses.stream().map(NurseConverter::toNursePreviewResponse).toList())
-                .count(nurses.size())
-                .build();
-    }
-
     public static NurseInfoResponse toNurseInfoResponse(Nurse nurse) {
         return NurseInfoResponse.builder().id(nurse.getId()).name(nurse.getName()).build();
     }
