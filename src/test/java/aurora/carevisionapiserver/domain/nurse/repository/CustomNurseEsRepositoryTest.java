@@ -135,8 +135,6 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
         }
     }
 
-    // TODO : 전체 조회되는지 확인
-
     private Admin createAdmin(Department department) {
         return Admin.builder().department(department).username("admin").build();
     }
