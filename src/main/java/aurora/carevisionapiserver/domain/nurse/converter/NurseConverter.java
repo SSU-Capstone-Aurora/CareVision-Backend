@@ -38,12 +38,8 @@ public class NurseConverter {
                 .build();
     }
 
-    public static NursePreviewResponse toNursePreviewResponse(Nurse nurse) {
-        return NursePreviewResponse.builder().name(nurse.getName()).id(nurse.getUsername()).build();
-    }
-
     public static NursePreviewPageResponse toNursePreviewPageResponse(
-            Slice<Nurse> nurses, Long nextCursor) {
+            Slice<NurseDocument> nurses, Long nextCursor) {
         return NursePreviewPageResponse.builder()
                 .nurseList(
                         nurses.getContent().stream()

@@ -3,7 +3,6 @@ package aurora.carevisionapiserver.domain.nurse.api;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.converter.NurseConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
-import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
@@ -43,34 +39,22 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin")
 public class AdminNurseController {
     private final NurseService nurseService;
-    private final PageService pageService;
 
-    @Operation(summary = "간호사 리스트 조회 API", description = "전체 간호사 리스트를 조회합니다 (등록 최신순)_숙희")
-    @ApiResponses({
-        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
-    })
-    @RefreshTokenApiResponse
-    @GetMapping("/nurses")
-    public BaseResponse<NursePreviewPageResponse> getNurseList(
-            @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @RequestBody PageRequest request) {
-        Slice<Nurse> nurses = nurseService.getActiveNurses(admin, request);
-        return BaseResponse.onSuccess(
-                NurseConverter.toNursePreviewPageResponse(
-                        nurses, pageService.getNextCursor(nurses.getContent())));
-    }
-
-    @Operation(summary = "간호사 검색 API", description = "입력받은 간호사 명으로 간호사를 검색합니다._숙희")
+    @Operation(
+            summary = "간호사 검색 API",
+            description = "입력받은 간호사 명으로 간호사를 검색합니다. 검색어 없이 요청하면 전체 목록을 반환합니다._숙희")
     @ApiResponses({
         @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @RefreshTokenApiResponse
     @GetMapping("/nurses/search")
-    public BaseResponse<NursePreviewListResponse> searchNurse(
+    public BaseResponse<NursePreviewPageResponse> searchNurseList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
+            @RequestBody PageRequest request,
             @RequestParam(name = "search") String nurseName) {
-        List<NurseDocument> nurses = nurseService.searchNurse(nurseName);
-        return BaseResponse.onSuccess(NurseConverter.toNurseDocumentPreviewListResponse(nurses));
+        NursePreviewPageResponse response =
+                nurseService.searchActiveNurses(admin, request, nurseName);
+        return BaseResponse.onSuccess(response);
     }
 
     @Operation(summary = "간호사 요청 리스트 조회 API", description = "간호사 등록 요청 리스트를 조회합니다_예림")

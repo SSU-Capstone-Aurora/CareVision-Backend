@@ -41,6 +41,6 @@ public class NurseDocument implements Identifiable {
 
     @Override
     public Long getId() {
-        return Long.parseLong(this.id);
+        return nurseId;
     }
 }

@@ -2,13 +2,11 @@ package aurora.carevisionapiserver.domain.nurse.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Slice;
-
 import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
-import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 public interface NurseService {
@@ -22,11 +20,9 @@ public interface NurseService {
 
     Nurse getInactiveNurse(String username);
 
-    Slice<Nurse> getActiveNurses(Admin admin, PageRequest request);
-
     List<Nurse> getInactiveNurses(Admin admin);
 
-    List<NurseDocument> searchNurse(String nurseName);
+    NursePreviewPageResponse searchActiveNurses(Admin admin, PageRequest request, String nurseName);
 
     Nurse createNurse(NurseCreateRequest nurseCreateRequest, Department department);
 
