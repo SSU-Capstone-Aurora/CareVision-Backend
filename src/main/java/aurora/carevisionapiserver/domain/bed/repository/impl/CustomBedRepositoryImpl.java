@@ -24,9 +24,9 @@ public class CustomBedRepositoryImpl implements CustomBedRepository {
         QBed bed = QBed.bed;
         return queryFactory
                 .selectFrom(bed)
-                .leftJoin(QDepartment.department)
-                .on(isEqualToDepartment(bed, department))
-                .where(findBedsGreaterThan(bed, lastBed))
+                .leftJoin(bed.department, QDepartment.department)
+                .fetchJoin()
+                .where(isEqualToDepartment(bed, department), findBedsGreaterThan(bed, lastBed))
                 .orderBy(
                         bed.inpatientWardNumber.asc(),
                         bed.patientRoomNumber.asc(),
