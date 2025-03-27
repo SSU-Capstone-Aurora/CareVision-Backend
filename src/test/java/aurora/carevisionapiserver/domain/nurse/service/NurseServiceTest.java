@@ -22,7 +22,6 @@ import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 class NurseServiceTest extends IntegrationTestSupport {
 
@@ -55,12 +54,13 @@ class NurseServiceTest extends IntegrationTestSupport {
         nurseEsRepository.saveAll(
                 NurseDocumentConverter.toNurseDocumentList(List.of(nurse1, nurse2, nurse3)));
 
-        PageRequest request = new PageRequest(-1L, 2);
+        Long lastIdx = -1L;
+        int size = 2;
         String nurseName = "로라";
 
         // when
         NursePreviewPageResponse response =
-                nurseService.searchActiveNurses(admin, request, nurseName);
+                nurseService.searchActiveNurses(admin, lastIdx, size, nurseName);
 
         // then
         assertThat(response.getNurseList())
@@ -86,12 +86,13 @@ class NurseServiceTest extends IntegrationTestSupport {
                 NurseDocumentConverter.toNurseDocumentList(
                         List.of(nurse1, nurse2, nurse3, nurse4)));
 
-        PageRequest request = new PageRequest(-1L, 2);
+        Long lastIdx = -1L;
+        int size = 2;
         String nurseName = "";
 
         // when
         NursePreviewPageResponse response =
-                nurseService.searchActiveNurses(admin, request, nurseName);
+                nurseService.searchActiveNurses(admin, lastIdx, size, nurseName);
 
         // then
         assertThat(response.getNurseList())

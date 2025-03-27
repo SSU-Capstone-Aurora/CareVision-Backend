@@ -7,7 +7,6 @@ import aurora.carevisionapiserver.domain.hospital.domain.Department;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 
 public interface NurseService {
     boolean existsByNurseId(Long value);

@@ -21,7 +21,6 @@ import aurora.carevisionapiserver.domain.nurse.repository.CustomNurseEsRepositor
 import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;

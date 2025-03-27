@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,7 +21,6 @@ import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseReg
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.BaseResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 import aurora.carevisionapiserver.global.security.handler.annotation.AuthUser;
@@ -52,11 +50,10 @@ public class AdminNurseController {
     public BaseResponse<NursePreviewPageResponse> searchNurseList(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
             @RequestParam(value = "lastIdx") Long lastIdx,
-            @PageableDefault(size = 8, sort = "id") @RequestParam(value = "size") int size,
-            @RequestBody PageRequest request,
+            @PageableDefault(size = 8, sort = "id") int size,
             @RequestParam(name = "search") String nurseName) {
         NursePreviewPageResponse response =
-                nurseService.searchActiveNurses(admin, request, nurseName);
+                nurseService.searchActiveNurses(admin, lastIdx, size, nurseName);
         return BaseResponse.onSuccess(response);
     }
 
