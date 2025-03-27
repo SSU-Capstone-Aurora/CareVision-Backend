@@ -24,9 +24,9 @@ public class CustomBedRepositoryImpl implements CustomBedRepository {
         QBed bed = QBed.bed;
         return queryFactory
                 .selectFrom(bed)
-                .leftJoin(QDepartment.department)
-                .on(isEqualToDepartment(bed, department))
-                .where(findBedsGreaterThan(bed, lastBed))
+                .leftJoin(bed.department, QDepartment.department)
+                .fetchJoin()
+                .where(isEqualToDepartment(bed, department), findBedsGreaterThan(bed, lastBed))
                 .orderBy(
                         bed.inpatientWardNumber.asc(),
                         bed.patientRoomNumber.asc(),
@@ -40,23 +40,25 @@ public class CustomBedRepositoryImpl implements CustomBedRepository {
     }
 
     private static BooleanExpression findBedsGreaterThan(QBed bed, Bed lastBed) {
-        return bed.id
-                .ne(lastBed.getId())
-                .and(
-                        bed.inpatientWardNumber
-                                .gt(lastBed.getInpatientWardNumber())
-                                .or(
-                                        bed.inpatientWardNumber
-                                                .eq(lastBed.getInpatientWardNumber())
-                                                .and(
-                                                        bed.patientRoomNumber.gt(
-                                                                lastBed.getPatientRoomNumber())))
-                                .or(
-                                        bed.inpatientWardNumber
-                                                .eq(lastBed.getInpatientWardNumber())
-                                                .and(
-                                                        bed.patientRoomNumber.eq(
-                                                                lastBed.getPatientRoomNumber()))
-                                                .and(bed.bedNumber.gt(lastBed.getBedNumber()))));
+        return findConditionForWardNumber(bed, lastBed)
+                .or(findConditionForPatientRoomNumber(bed, lastBed))
+                .or(findConditionForBedNumber(bed, lastBed));
+    }
+
+    private static BooleanExpression findConditionForWardNumber(QBed bed, Bed lastBed) {
+        return bed.ne(lastBed).and(bed.inpatientWardNumber.gt(lastBed.getInpatientWardNumber()));
+    }
+
+    private static BooleanExpression findConditionForPatientRoomNumber(QBed bed, Bed lastBed) {
+        return bed.inpatientWardNumber
+                .eq(lastBed.getInpatientWardNumber())
+                .and(bed.patientRoomNumber.gt(lastBed.getPatientRoomNumber()));
+    }
+
+    private static BooleanExpression findConditionForBedNumber(QBed bed, Bed lastBed) {
+        return bed.inpatientWardNumber
+                .eq(lastBed.getInpatientWardNumber())
+                .and(bed.patientRoomNumber.eq(lastBed.getPatientRoomNumber()))
+                .and(bed.bedNumber.gt(lastBed.getBedNumber()));
     }
 }
