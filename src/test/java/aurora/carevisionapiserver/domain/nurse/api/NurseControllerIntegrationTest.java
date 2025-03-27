@@ -1,6 +1,8 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,8 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import aurora.carevisionapiserver.IntegrationTestSupport;
 import aurora.carevisionapiserver.domain.bed.domain.Bed;
 import aurora.carevisionapiserver.domain.bed.repository.BedRepository;
@@ -34,14 +34,12 @@ import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.repository.PatientRepository;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 @AutoConfigureMockMvc
 public class NurseControllerIntegrationTest extends IntegrationTestSupport {
     @Autowired MockMvc mockMvc;
-    @Autowired ObjectMapper objectMapper;
     @Autowired PatientRepository patientRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired HospitalRepository hospitalRepository;
@@ -57,8 +55,6 @@ public class NurseControllerIntegrationTest extends IntegrationTestSupport {
     @Test
     void getPatientList() throws Exception {
         // given
-        PageRequest request = new PageRequest(-1L, 2);
-
         Department department = createDepartment();
         Nurse nurse = createNurse(department);
         Bed bed = createBed(department);
@@ -67,7 +63,8 @@ public class NurseControllerIntegrationTest extends IntegrationTestSupport {
         Slice<Patient> patientSlice = new SliceImpl<>(List.of(patient));
 
         // when
-        when(patientService.getPatientSlice(any(Nurse.class), any())).thenReturn(patientSlice);
+        when(patientService.getPatientSlice(any(Nurse.class), anyLong(), anyInt()))
+                .thenReturn(patientSlice);
         when(pageService.getNextCursor(any())).thenReturn(1L);
 
         // then
@@ -75,7 +72,8 @@ public class NurseControllerIntegrationTest extends IntegrationTestSupport {
                         get("/api/patients")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .content(objectMapper.writeValueAsString(request)))
+                                .param("lastIdx", "0")
+                                .param("size", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.patients").isArray())

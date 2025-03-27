@@ -22,7 +22,8 @@ public interface NurseService {
 
     List<Nurse> getInactiveNurses(Admin admin);
 
-    NursePreviewPageResponse searchActiveNurses(Admin admin, PageRequest request, String nurseName);
+    NursePreviewPageResponse searchActiveNurses(
+            Admin admin, Long lastIdx, int size, String nurseName);
 
     Nurse createNurse(NurseCreateRequest nurseCreateRequest, Department department);
 

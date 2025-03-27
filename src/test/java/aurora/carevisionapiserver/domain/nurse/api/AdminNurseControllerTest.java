@@ -1,6 +1,8 @@
 package aurora.carevisionapiserver.domain.nurse.api;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,7 +18,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class AdminNurseControllerTest extends ControllerTestSupport {
@@ -28,7 +29,6 @@ class AdminNurseControllerTest extends ControllerTestSupport {
     @Test
     void searchNurseList() throws Exception {
         // given
-        PageRequest request = new PageRequest(-1L, 2);
         NursePreviewPageResponse response =
                 NursePreviewPageResponse.builder()
                         .nurseList(List.of())
@@ -37,14 +37,16 @@ class AdminNurseControllerTest extends ControllerTestSupport {
                         .build();
 
         // when
-        when(nurseService.searchActiveNurses(any(), any(), any())).thenReturn(response);
+        when(nurseService.searchActiveNurses(any(), anyLong(), anyInt(), any()))
+                .thenReturn(response);
 
         // then
         mockMvc.perform(
                         get("/api/admin/nurses/search")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
-                                .content(objectMapper.writeValueAsString(request))
+                                .param("lastIdx", "0")
+                                .param("size", "2")
                                 .param("search", "간호사명"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))

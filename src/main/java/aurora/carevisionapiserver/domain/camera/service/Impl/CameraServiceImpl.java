@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -26,15 +24,12 @@ import aurora.carevisionapiserver.domain.camera.service.CameraService;
 import aurora.carevisionapiserver.domain.patient.domain.Patient;
 import aurora.carevisionapiserver.domain.patient.service.PatientService;
 import aurora.carevisionapiserver.global.auth.domain.User;
-import aurora.carevisionapiserver.global.common.dto.request.PageForCameraRequest;
-import aurora.carevisionapiserver.global.common.dto.request.PageRequest;
 import aurora.carevisionapiserver.global.infra.aws.S3Service;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CameraServiceImpl implements CameraService {
     private static final int CAMERA_IP_INDEX = 0;
     private static final int CAMERA_PW_INDEX = 1;
@@ -49,12 +44,12 @@ public class CameraServiceImpl implements CameraService {
     private final PatientService patientService;
 
     @Override
-    public Slice<Camera> getAllCameraInfo(Admin admin, PageForCameraRequest request) {
-        Camera camera = getCameraById(request.getCameraId());
-        List<Bed> beds = getNextBeds(admin, camera, request.getSize());
+    public Slice<Camera> getAllCameraInfo(Admin admin, String cameraId, int size) {
+        Camera camera = getCameraById(cameraId);
+        List<Bed> beds = getNextBeds(admin, camera, size);
         List<Camera> cameras = getCamerasByBeds(beds);
 
-        return createCameraSlice(cameras, request.getSize());
+        return createCameraSlice(cameras, size);
     }
 
     private Slice<Camera> createCameraSlice(List<Camera> cameras, int size) {
@@ -66,10 +61,9 @@ public class CameraServiceImpl implements CameraService {
     }
 
     private List<Camera> getCamerasByBeds(List<Bed> beds) {
-        List<String> cameraIds =
-                beds.stream().map(bed -> bed.getCamera().getId()).collect(Collectors.toList());
+        List<String> cameraIds = beds.stream().map(bed -> bed.getCamera().getId()).toList();
 
-        return cameraRepository.findByIdIn(cameraIds);
+        return cameraIds.stream().map(id -> getCameraById(id)).collect(Collectors.toList());
     }
 
     private List<Bed> getNextBeds(Admin admin, Camera camera, int size) {
@@ -100,10 +94,9 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, PageRequest request) {
+    public Slice<VideoInfoResponse> getSavedVideoInfos(Long patientId, Long lastIdx, int size) {
         Patient patient = patientService.getPatient(patientId);
-        Slice<Video> videos =
-                videoRepository.findByPatient(patient, request.getLastIdx(), request.getSize());
+        Slice<Video> videos = videoRepository.findByPatient(patient, lastIdx, size);
         List<VideoInfoResponse> videoInfoResponses = getVideoInfoListResponses(videos);
         return new SliceImpl<>(videoInfoResponses, videos.getPageable(), videos.hasNext());
     }
