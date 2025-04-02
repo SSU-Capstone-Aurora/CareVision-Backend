@@ -43,7 +43,7 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("관리자가 속한 부서의 활성 간호사를 이름으로 검색하면, 첫 페이지 결과를 반환한다.")
     @Test
-    void findActiveNursesByNameAndAdmin() {
+    void findActiveNursesByNameAndDepartmentOrAllFirst() {
         // given
         Department department = createDepartment();
         Admin admin = createAdmin(department);
@@ -70,7 +70,7 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("마지막 조회된 간호사의 ID를 기준으로, 관리자의 부서에서 근무하는 활성화된 간호사를 다음 페이지로 조회한다.")
     @Test
-    void findActiveNursesByNameAndAdminInNextCursor() {
+    void findActiveNursesByNameAndDepartmentOrAllInNextCursor() {
         // given
         Department department = createDepartment();
         Admin admin = createAdmin(department);
