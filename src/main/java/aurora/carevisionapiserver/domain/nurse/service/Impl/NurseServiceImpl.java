@@ -71,8 +71,8 @@ public class NurseServiceImpl implements NurseService {
     public NursePreviewPageResponse searchActiveNurses(
             Admin admin, Long lastIdx, int size, String nurseName) {
         Slice<NurseDocument> nurseDocuments =
-                customNurseEsRepository.findActiveNursesByNameAndAdminOrAll(
-                        nurseName, admin, lastIdx, size);
+                customNurseEsRepository.findActiveNursesByNameAndDepartmentOrAll(
+                        nurseName, admin.getDepartment().getId(), lastIdx, size);
         return NurseConverter.toNursePreviewPageResponse(
                 nurseDocuments, pageService.getNextCursor(nurseDocuments.getContent()));
     }

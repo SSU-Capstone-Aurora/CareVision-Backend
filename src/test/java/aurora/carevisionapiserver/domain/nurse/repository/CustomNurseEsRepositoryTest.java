@@ -59,8 +59,8 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
         // when
         Slice<NurseDocument> response =
-                customNurseEsRepository.findActiveNursesByNameAndAdminOrAll(
-                        nurseName, admin, lastIdx, size);
+                customNurseEsRepository.findActiveNursesByNameAndDepartmentOrAll(
+                        nurseName, admin.getDepartment().getId(), lastIdx, size);
 
         // then
         assertThat(response).hasSize(1);
@@ -89,8 +89,8 @@ class CustomNurseEsRepositoryTest extends IntegrationTestSupport {
 
         // when
         Slice<NurseDocument> response =
-                customNurseEsRepository.findActiveNursesByNameAndAdminOrAll(
-                        nurseName, admin, lastIdx, size);
+                customNurseEsRepository.findActiveNursesByNameAndDepartmentOrAll(
+                        nurseName, admin.getDepartment().getId(), lastIdx, size);
 
         // then
         assertThat(response).hasSize(2);

@@ -7,7 +7,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
-import aurora.carevisionapiserver.domain.admin.domain.Admin;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import lombok.RequiredArgsConstructor;
 
@@ -17,12 +16,9 @@ public class CustomNurseEsRepositoryImpl implements CustomNurseEsRepository {
     private final NurseEsRepository nurseEsRepository;
 
     @Override
-    public Slice<NurseDocument> findActiveNursesByNameAndAdminOrAll(
-            String nurseName, Admin admin, Long lastIdx, int size) {
-
-        Long departmentId = admin.getDepartment().getId();
+    public Slice<NurseDocument> findActiveNursesByNameAndDepartmentOrAll(
+            String nurseName, Long departmentId, Long lastIdx, int size) {
         List<NurseDocument> nurses = fetchNurses(nurseName, departmentId, lastIdx);
-
         return createSlice(nurses, size);
     }
 
