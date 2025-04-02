@@ -15,18 +15,23 @@ import aurora.carevisionapiserver.domain.nurse.converter.NurseDocumentConverter;
 import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
 import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseCreateRequest;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.exception.NurseException;
+import aurora.carevisionapiserver.domain.nurse.repository.CustomNurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseEsRepository;
 import aurora.carevisionapiserver.domain.nurse.repository.NurseRepository;
 import aurora.carevisionapiserver.domain.nurse.service.NurseService;
+import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class NurseServiceImpl implements NurseService {
+    private final PageService pageService;
     private final NurseRepository nurseRepository;
     private final NurseEsRepository nurseEsRepository;
+    private final CustomNurseEsRepository customNurseEsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -63,18 +68,18 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public Slice<Nurse> getActiveNurses(Admin admin, Long lastIdx, int size) {
-        return nurseRepository.findActiveNursesByAdmin(admin, lastIdx, size);
+    public NursePreviewPageResponse searchActiveNurses(
+            Admin admin, Long lastIdx, int size, String nurseName) {
+        Slice<NurseDocument> nurseDocuments =
+                customNurseEsRepository.findActiveNursesByNameAndDepartmentOrAll(
+                        nurseName, admin.getDepartment().getId(), lastIdx, size);
+        return NurseConverter.toNursePreviewPageResponse(
+                nurseDocuments, pageService.getNextCursor(nurseDocuments.getContent()));
     }
 
     @Override
     public List<Nurse> getInactiveNurses(Admin admin) {
         return nurseRepository.findInactiveNursesByAdmin(admin);
-    }
-
-    @Override
-    public List<NurseDocument> searchNurse(String nurseName) {
-        return nurseEsRepository.findAllByName(nurseName);
     }
 
     @Override

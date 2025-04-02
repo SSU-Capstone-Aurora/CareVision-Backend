@@ -13,39 +13,45 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import aurora.carevisionapiserver.ControllerTestSupport;
-import aurora.carevisionapiserver.domain.nurse.domain.Nurse;
+import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.global.response.code.status.SuccessStatus;
 
 class AdminNurseControllerTest extends ControllerTestSupport {
-    @WithMockUser
-    @DisplayName("활성화된 담당 간호사 조회에 성공한다.")
+
+    @WithMockUser(
+            username = "admin",
+            roles = {"ADMIN"})
+    @DisplayName("간호사의 이름 검색에 성공한다.")
     @Test
-    void getNurseList() throws Exception {
+    void searchNurseList() throws Exception {
         // given
-        Nurse nurse = Nurse.builder().build();
-        Slice<Nurse> nurses = new SliceImpl<>(List.of(nurse));
+        NursePreviewPageResponse response =
+                NursePreviewPageResponse.builder()
+                        .nurseList(List.of())
+                        .nextCursor(-1L)
+                        .hasNext(false)
+                        .build();
 
         // when
-        when(nurseService.getActiveNurses(any(), anyLong(), anyInt())).thenReturn(nurses);
-        when(pageService.getNextCursor(any())).thenReturn(1L);
+        when(nurseService.searchActiveNurses(any(), anyLong(), anyInt(), any()))
+                .thenReturn(response);
 
         // then
         mockMvc.perform(
-                        get("/api/admin/nurses")
+                        get("/api/admin/nurses/search")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .with(csrf())
                                 .param("lastIdx", "0")
-                                .param("size", "2"))
+                                .param("size", "2")
+                                .param("search", "간호사명"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(SuccessStatus._OK.getCode()))
                 .andExpect(jsonPath("$.result.nurseList").isArray())
-                .andExpect(jsonPath("$.result.hasNext").value(false))
-                .andExpect(jsonPath("$.result.nextCursor").value(1L));
+                .andExpect(jsonPath("$.result.hasNext").isBoolean())
+                .andExpect(jsonPath("$.result.nextCursor").isNumber());
     }
 }

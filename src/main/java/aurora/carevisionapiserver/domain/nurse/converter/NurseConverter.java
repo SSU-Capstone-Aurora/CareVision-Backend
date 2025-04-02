@@ -16,7 +16,6 @@ import aurora.carevisionapiserver.domain.nurse.domain.NurseDocument;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestCountResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestInfoResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.request.NurseRequest.NurseRegisterRequestListResponse;
-import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewListResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewPageResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NursePreviewResponse;
 import aurora.carevisionapiserver.domain.nurse.dto.response.NurseResponse.NurseProfileResponse;
@@ -38,12 +37,8 @@ public class NurseConverter {
                 .build();
     }
 
-    public static NursePreviewResponse toNursePreviewResponse(Nurse nurse) {
-        return NursePreviewResponse.builder().name(nurse.getName()).id(nurse.getUsername()).build();
-    }
-
     public static NursePreviewPageResponse toNursePreviewPageResponse(
-            Slice<Nurse> nurses, Long nextCursor) {
+            Slice<NurseDocument> nurses, Long nextCursor) {
         return NursePreviewPageResponse.builder()
                 .nurseList(
                         nurses.getContent().stream()
@@ -56,14 +51,6 @@ public class NurseConverter {
 
     public static NursePreviewResponse toNursePreviewResponse(NurseDocument nurse) {
         return NursePreviewResponse.builder().name(nurse.getName()).id(nurse.getUsername()).build();
-    }
-
-    public static NursePreviewListResponse toNurseDocumentPreviewListResponse(
-            List<NurseDocument> nurses) {
-        return NursePreviewListResponse.builder()
-                .nurseList(nurses.stream().map(NurseConverter::toNursePreviewResponse).toList())
-                .count(nurses.size())
-                .build();
     }
 
     public static NurseInfoResponse toNurseInfoResponse(Nurse nurse) {

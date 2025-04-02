@@ -73,7 +73,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientSearchListResponse searchUnlinkedPatients(String patientName) {
-        List<PatientDocument> patients = searchPatientsByNameOrAll(patientName);
+        List<PatientDocument> patients = findPatientsByNameOrAll(patientName);
         Map<PatientDocument, Bed> patientDocumentBedMap = getPatientDocumentBedMap(patients);
         return PatientConverter.toPatientSearchListResponse(patientDocumentBedMap);
     }
@@ -89,7 +89,7 @@ public class PatientServiceImpl implements PatientService {
                 .orElseThrow(() -> new PatientException(ErrorStatus.PATIENT_NOT_FOUND));
     }
 
-    private List<PatientDocument> searchPatientsByNameOrAll(String patientName) {
+    private List<PatientDocument> findPatientsByNameOrAll(String patientName) {
 
         if (patientName == null || patientName.isEmpty()) {
             return patientEsRepository.findAllByNurseIdIsNull();

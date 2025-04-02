@@ -135,9 +135,9 @@ public class NurseController {
 
     @Operation(
             summary = "간호사와 연결되지 않은 환자 리스트 검색 API",
-            description = "간호사와 아직 연결되지 않은 등록된 환자 목록을 조회합니다. 검색어 없이 요청하면 전체 목록을 반환합니다._예림")
+            description = "간호사와 아직 연결되지 않은 등록된 환자 목록을 검색합니다. 검색어 없이 요청하면 전체 목록을 반환합니다._예림")
     @ApiResponses({
-        @ApiResponse(responseCode = "COMMON202", description = "OK, 요청 성공 및 반환할 콘텐츠 없음"),
+        @ApiResponse(responseCode = "COMMON200", description = "OK, 성공"),
     })
     @RefreshTokenApiResponse
     @GetMapping("/patients/unlinked/search")

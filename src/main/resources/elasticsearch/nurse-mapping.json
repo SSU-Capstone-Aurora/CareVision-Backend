@@ -19,12 +19,25 @@
   },
   "mappings": {
     "properties": {
+      "nurseId":  {
+        "type": "long"
+      },
       "name": {
         "type": "text",
         "analyzer": "my_ngram_analyzer"
       },
       "username": {
         "type": "text"
+      },
+      "departmentId": {
+        "type": "long"
+      },
+      "isActivated": {
+        "type": "boolean"
+      },
+      "createdAt": {
+        "type": "date",
+        "format": "strict_date_optional_time||epoch_millis"
       }
     }
   }

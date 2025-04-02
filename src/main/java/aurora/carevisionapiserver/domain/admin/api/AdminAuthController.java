@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -101,7 +100,7 @@ public class AdminAuthController {
     @PostMapping("/logout")
     public BaseResponse<Object> logout(
             @Parameter(name = "admin", hidden = true) @AuthUser Admin admin,
-            @RequestHeader("refreshToken") @ExtractToken String refreshToken) {
+            @Parameter(hidden = true) @ExtractToken String refreshToken) {
         authService.logout(admin.getId(), refreshToken);
         return BaseResponse.of(SuccessStatus._NO_CONTENT, new HashMap<>());
     }
