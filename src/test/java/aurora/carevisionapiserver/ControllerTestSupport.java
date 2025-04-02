@@ -22,6 +22,7 @@ import aurora.carevisionapiserver.global.auth.util.JWTUtil;
 import aurora.carevisionapiserver.global.common.service.ConnectService;
 import aurora.carevisionapiserver.global.common.service.PageService;
 import aurora.carevisionapiserver.global.fcm.service.FcmService;
+import aurora.carevisionapiserver.global.query.ApiQueryCounter;
 
 @WebMvcTest(
         controllers = {
@@ -45,4 +46,5 @@ public abstract class ControllerTestSupport {
     @MockBean protected AdminRepository adminRepository;
     @MockBean protected FcmService fcmService;
     @MockBean protected ConnectService connectService;
+    @MockBean protected ApiQueryCounter apiQueryCounter;
 }
